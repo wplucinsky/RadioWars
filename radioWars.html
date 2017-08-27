@@ -1,0 +1,290 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<link rel="icon" type="image/png" href="http://www.logotypes101.com/logos/146/56F008125B0C4EB7E78F921998E3F5AB/Drexel_University.png">
+		<title>Radio Wars</title>
+
+		<style type="text/css">
+			.nav-header{
+				padding: 10px 5px;
+			}
+			.nav-header:hover{
+				text-decoration: none;
+				background-color: #eee;
+			}
+			.top-pad{
+				padding-top: 25px;
+			}
+			.countdownTimer{
+				width: 100px; margin: auto;
+			}
+			.nav-modules{
+				margin-right: 10px;
+			}
+			.nav-modules-icon{
+				float: right; padding-right: 25px;
+			}
+			.lineChart{
+				width: 400px; margin: auto;
+			}
+			.radarPlot{
+				width: 400px; margin: auto;
+			}
+			.w-100{
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row top-pad">
+				<div class="col-md-2">
+					<img class="w-100" src="http://archived.materials.drexel.edu/News/Logos/drexel-vert-blue.png">
+				</div>
+				<div class="col-md-8 text-center">
+					<div class="row">
+						<div class="col-md-12">
+							<h1>Radio Wars</h1>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							ECE Senior Design - Group 1
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="canvas countdownTimer">
+						<canvas id="countdownTimer" width="100" height="100"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="row top-pad">
+				<div class="col-md-2">
+					<ul class="nav flex-column">
+						<li class="nav-item nav-header">
+							<span class="nav-modules">Modules</span><span class="glyphicon glyphicon-th-list"></span>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="#">Statistics</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Jamming</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Video</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-10">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="canvas lineChart">
+								<canvas id="lineChart" width="100" height="100"></canvas>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="canvas radarPlot">
+								<canvas id="radarPlot" width="100" height="100"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var randomScalingFactor = function() {
+				return Math.round(Math.random() * 100);
+			};
+
+			window.chartColors = {
+				red: 'rgb(255, 99, 132)',
+				orange: 'rgb(255, 159, 64)',
+				yellow: 'rgb(255, 205, 86)',
+				green: 'rgb(75, 192, 192)',
+				blue: 'rgb(54, 162, 235)',
+				purple: 'rgb(153, 102, 255)',
+				grey: 'rgb(201, 203, 207)'
+			};
+
+
+			// http://www.chartjs.org/
+			var countdownTimer = {
+				type: 'doughnut',
+				data: {
+					datasets: [{
+						data: [
+							0,
+							100
+						],
+						backgroundColor: [
+							"#95a5a6",
+							"#34495e"
+						],
+						label: 'Countdown Timer'
+					}],
+					labels: [
+						"Time Elapsed",
+						"Time Remaining"
+					]
+				},
+				options: {
+					responsive: true,
+					legend: {
+						display: false
+					},
+					title: {
+						display: false,
+						text: 'Countdown Timer'
+					},
+					animation: {
+						animateScale: true,
+						animateRotate: true
+					},
+					tooltips: {
+						enabled: false
+					}
+				}
+			};
+
+			var lineChart = {
+				type: 'line',
+				data: {
+					labels: ["0", "1", "2", "3", "4", "5", "6"],
+					datasets: [{
+						fill: false,
+						borderColor: window.chartColors.red,
+						backgroundColor: window.chartColors.red,
+						data: [
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor()
+						]
+					}, {
+						label: "My Second dataset ",
+						fill: false,
+						borderColor: window.chartColors.blue,
+						backgroundColor: window.chartColors.blue,
+						data: [
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor()
+						]
+					}]
+				},
+				options: {
+					responsive: true,
+					legend: {
+						display: false
+					},
+					title: {
+						display: false,
+						text: 'Example Chart'
+					},
+					animation: {
+						animateScale: true,
+						animateRotate: true
+					},
+					tooltips: {
+						enabled: false
+					}
+				}
+			};
+			
+			var radarPlot = {
+				type: 'polarArea',
+				data: {
+					datasets: [{
+						data: [
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+							randomScalingFactor(),
+						],
+						backgroundColor: [
+							window.chartColors.red,
+							window.chartColors.yellow,
+							window.chartColors.green,
+							window.chartColors.blue,
+							window.chartColors.purple,
+						],
+						label: 'Radar Plot'
+					}],
+					labels: [
+						"0",
+						"1",
+						"2",
+						"3",
+						"4"
+					]
+				},
+				options: {
+					responsive: true,
+					legend: {
+						display: false
+					},
+					title: {
+						display: false,
+						text: 'Example Chart'
+					},
+					animation: {
+						animateScale: true,
+						animateRotate: true
+					},
+					tooltips: {
+						enabled: false
+					}
+				}
+			};
+
+
+			window.onload = function() {
+				var countdownCTX = document.getElementById("countdownTimer").getContext("2d");
+				window.countdownTimer = new Chart(countdownCTX, countdownTimer);
+
+				var lineCTX = document.getElementById("lineChart").getContext("2d");
+				window.lineChart = new Chart(lineCTX, lineChart);
+
+				var radarCTX = document.getElementById("radarPlot").getContext("2d");
+				window.radarPlot = new Chart(radarCTX, radarPlot);
+			};
+
+			// refresh clock every 1 second
+			window.setInterval(function(){
+				countdownTimer.data.datasets[0].data[0]++;
+				countdownTimer.data.datasets[0].data[1]--;
+				window.countdownTimer.update();
+			}, 1000);
+
+			// refresh graphs with random data every 10 seconds
+			window.setInterval(function(){
+				lineChart.data.datasets.forEach(function(dataset) {
+					dataset.data = dataset.data.map(function() {
+						return randomScalingFactor();
+					});
+				});
+				window.lineChart.update();
+				radarPlot.data.datasets.forEach(function(dataset) {
+					dataset.data = dataset.data.map(function() {
+						return randomScalingFactor();
+					});
+				});
+				window.radarPlot.update();
+			}, 10000);
+
+			var chartColors = window.chartColors;
+			
+		</script>
+	</body>
+</html>
