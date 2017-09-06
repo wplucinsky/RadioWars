@@ -1,5 +1,34 @@
 <html>
 	<head>
+
+
+		<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+		<script>
+			// Initialize Firebase
+			var config = {
+			apiKey: "AIzaSyA7XkhEaCGCwkGzti8hRkv7kZR7_hoalp4",
+			authDomain: "dwslgrid.firebaseapp.com",
+			databaseURL: "https://dwslgrid.firebaseio.com",
+			projectId: "dwslgrid",
+			storageBucket: "dwslgrid.appspot.com",
+			messagingSenderId: "222394513574"
+			};
+
+			console.log(firebase.initializeApp(config));
+
+			var defaultDatabase = firebase.database();
+
+			//return 
+
+			firebase.database().ref('/Grid/').once('value').then(function(snapshot) {
+				console.log(snapshot)
+  // var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+  // // ...
+});
+
+			console.log("initialized fb")
+		</script>
+
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
