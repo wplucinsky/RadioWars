@@ -140,7 +140,7 @@
 						<li class="nav-item modules active">
 							<a class="nav-link" data="statistics" onclick="modules(this)">Statistics</a>
 						</li>
-						<li class="nav-item modules">
+						<li class="nav-item modules active">
 							<a class="nav-link" data="jamming" onclick="modules(this)">Jamming</a>
 						</li>
 						<li class="nav-item modules">
@@ -168,9 +168,11 @@
 							</div>
 						</div>
 						<div class="col-md-6">
-							<img class="fullscreen" src="Images/fullscreen.png" >
-							<div class="canvas chart">
-								<canvas id="radarPlot" width="100" height="100"></canvas>
+							<div id="jammingCont">
+								<img class="fullscreen" src="Images/fullscreen.png" >
+								<div class="canvas chart">
+									<canvas id="jamming" width="100" height="100"></canvas>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -425,6 +427,9 @@
 				if (chartType == 'dataViewer'){
 					return getFirebaseData();
 				} 
+				if ( chartType == 'jamming'){
+					return chartData['radar']
+				}
 
 				// placeholder until real firebase data is used
 				return chartData['line'];
@@ -449,7 +454,7 @@
 				var lineCTX = document.getElementById("statistics").getContext("2d");
 				chart['line'] = new Chart(lineCTX, chartData['line']);
 
-				var radarCTX = document.getElementById("radarPlot").getContext("2d");
+				var radarCTX = document.getElementById("jamming").getContext("2d");
 				chart['radar'] = new Chart(radarCTX, chartData['radar']);
 			};
 
