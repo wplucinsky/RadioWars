@@ -1,0 +1,39 @@
+.nav-header{
+	padding: 10px 5px; cursor: pointer;
+}
+.nav-header:hover{
+	text-decoration: none;
+}
+.nav-item{
+	cursor: pointer;
+}
+.nav-item.active{
+	background-color: #eee;
+}
+.top-pad{
+	padding-top: 25px;
+}
+.countdownTimer{
+	width: 100px; margin: auto;
+}
+.nav-modules{
+	margin-right: 10px;
+}
+.nav-modules-icon{
+	float: right; padding-right: 25px;
+}
+.chart{
+	width: 400px; margin: auto;
+}
+.logo{
+	width: 131px; display: block; margin: auto;
+}
+.no-select{
+	-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; 
+}
+.fullscreen{
+	width: 25px; float: right; cursor: pointer;
+}
+@media screen and (max-width:992px){
+	
+}

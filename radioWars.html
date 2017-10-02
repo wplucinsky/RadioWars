@@ -1,108 +1,18 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<!-- 3rd party files -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-		<link rel="icon" type="image/png" href="http://www.logotypes101.com/logos/146/56F008125B0C4EB7E78F921998E3F5AB/Drexel_University.png">
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
-		<script>
-			/*
-				This script is used to setup and constantly read from firebase.
-			*/
-			var config = {
-				apiKey: "AIzaSyA7XkhEaCGCwkGzti8hRkv7kZR7_hoalp4",
-				authDomain: "dwslgrid.firebaseapp.com",
-				databaseURL: "https://dwslgrid.firebaseio.com",
-				projectId: "dwslgrid",
-				storageBucket: "dwslgrid.appspot.com",
-				messagingSenderId: "222394513574"
-			};
-			firebase.initializeApp(config)
-			setupFirebaseData();
-			
-			function setupFirebaseData(){ 
-				firebase.database().ref('/Grid/').once('value').then(function(snapshot) {
-					s = ''
-					for ( let v in snapshot.val().TestGrid1 ) {
-						if ( Array.isArray(snapshot.val().TestGrid1[v]) ) {
-							s += v + ':<br/>'
-							for ( let k in snapshot.val().TestGrid1[v] ) {
-								s += '&nbsp		' + k + ': ' + snapshot.val().TestGrid1[v][k] + '<br/>'
-							}
-						} else {
-							s += v + ': ' + snapshot.val().TestGrid1[v] + '<br/>'
-						}
-					}
-					$('#dataViewerCont p').html(s).html()
-					console.log(snapshot.val());
-				});
-			}
+		
+		<!-- javascript -->
+		<script src="src/js/firebase.js"></script>
 
-			function getFirebaseData(){ 
-				return firebase.database().ref('/Grid/').once('value').then(function(snapshot) {
-					s = ''
-					for ( let v in snapshot.val().TestGrid1 ) {
-						if ( Array.isArray(snapshot.val().TestGrid1[v]) ) {
-							s += v + ':<br/>'
-							for ( let k in snapshot.val().TestGrid1[v] ) {
-								s += '&nbsp		' + k + ': ' + snapshot.val().TestGrid1[v][k] + '<br/>'
-							}
-						} else {
-							s += v + ': ' + snapshot.val().TestGrid1[v] + '<br/>'
-						}
-					}
-					return s;
-				});
-			}
-
-			
-		</script>
+		<!-- layout -->
+		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
 		<title>Radio Wars</title>
-
-		<style type="text/css">
-			.nav-header{
-				padding: 10px 5px; cursor: pointer;
-			}
-			.nav-header:hover{
-				text-decoration: none;
-			}
-			.nav-item{
-				cursor: pointer;
-			}
-			.nav-item.active{
-				background-color: #eee;
-			}
-			.top-pad{
-				padding-top: 25px;
-			}
-			.countdownTimer{
-				width: 100px; margin: auto;
-			}
-			.nav-modules{
-				margin-right: 10px;
-			}
-			.nav-modules-icon{
-				float: right; padding-right: 25px;
-			}
-			.chart{
-				width: 400px; margin: auto;
-			}
-			.w-100{
-				width: 100%;
-			}
-			.no-select{
-				-moz-user-select: none;
-				-webkit-user-select: none;
-				-ms-user-select: none;
-				-o-user-select: none;
-				user-select: none; 
-			}
-			.fullscreen{
-				width: 25px;
-				float: right;
-				cursor: pointer;
-			}
-		</style>
+		<link rel="icon" type="image/png" href="src/img/logo.png">
 	</head>
 	<body>
 		<div class="container">
@@ -111,7 +21,7 @@
 		<div class="container">
 			<div class="row top-pad">
 				<div class="col-md-2">
-					<img class="w-100" src="http://archived.materials.drexel.edu/News/Logos/drexel-vert-blue.png">
+					<img class="logo" src="src/img/logo.png">
 				</div>
 				<div class="col-md-8 text-center">
 					<div class="row">
@@ -155,6 +65,9 @@
 						<li class="nav-item modules active">
 							<a class="nav-link" data="dataViewer" onclick="modules(this)">Firebase Data Viewer</a>
 						</li>
+						<li class="nav-item modules active">
+							<a class="nav-link" data="packetsSent" onclick="modules(this)">Packet Status</a>
+						</li>
 					</ul>
 				</div>
 				<div class="col-md-10" id="charts">
@@ -186,300 +99,22 @@
 							</div>
 						</div>
 						<div class="col-md-6 empty">
-						
+							<div id="packetsSentCont">
+								<img class="fullscreen" src="Images/fullscreen.png" >
+								<div class="canvas chart">
+									<canvas id="packetsSent" width="100" height="100"></canvas>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div>
+				</div>
 			</div>
 		</div>
-		<script type="text/javascript">
-		/*
-			This script is to be used to control the non-module elemnts
-			on the page.
-
-			References:
-				http://api.jquery.com/toggle/
-		*/
-			function collapse(item){
-				$('.'+$(item).attr('id')).toggle('slow');
-			}
-		</script>
-		<script type="text/javascript">
-		/*
-			This script is used to control the data of graph modules.
-			
-			References:
-				http://www.chartjs.org/
-		*/
-			var chartData = [];
-			var randomScalingFactor = function() {
-				return Math.round(Math.random() * 100);
-			};
-
-			window.chartColors = {
-				red: 'rgb(255, 99, 132)',
-				orange: 'rgb(255, 159, 64)',
-				yellow: 'rgb(255, 205, 86)',
-				green: 'rgb(75, 192, 192)',
-				blue: 'rgb(54, 162, 235)',
-				purple: 'rgb(153, 102, 255)',
-				grey: 'rgb(201, 203, 207)'
-			};
-
-			chartData['countdownTimer'] = {
-				type: 'doughnut',
-				data: {
-					datasets: [{
-						data: [
-							0,
-							100
-						],
-						backgroundColor: [
-							"#95a5a6",
-							"#34495e"
-						],
-						label: 'Countdown Timer'
-					}],
-					labels: [
-						"Time Elapsed",
-						"Time Remaining"
-					]
-				},
-				options: {
-					responsive: true,
-					legend: {
-						display: false
-					},
-					title: {
-						display: false,
-						text: 'Countdown Timer'
-					},
-					animation: {
-						animateScale: true,
-						animateRotate: true
-					},
-					tooltips: {
-						enabled: false
-					}
-				}
-			};
-
-			chartData['line'] = {
-				type: 'line',
-				data: {
-					labels: ["0", "1", "2", "3", "4", "5", "6"],
-					datasets: [{
-						fill: false,
-						borderColor: window.chartColors.red,
-						backgroundColor: window.chartColors.red,
-						data: [
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor()
-						]
-					}, {
-						label: "My Second dataset ",
-						fill: false,
-						borderColor: window.chartColors.blue,
-						backgroundColor: window.chartColors.blue,
-						data: [
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor()
-						]
-					}]
-				},
-				options: {
-					responsive: true,
-					legend: {
-						display: false
-					},
-					title: {
-						display: false,
-						text: 'Example Chart'
-					},
-					animation: {
-						animateScale: true,
-						animateRotate: true
-					},
-					tooltips: {
-						enabled: false
-					}
-				}
-			};
-			
-			chartData['radar'] = {
-				type: 'polarArea',
-				data: {
-					datasets: [{
-						data: [
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-							randomScalingFactor(),
-						],
-						backgroundColor: [
-							window.chartColors.red,
-							window.chartColors.yellow,
-							window.chartColors.green,
-							window.chartColors.blue,
-							window.chartColors.purple,
-						],
-						label: 'Radar Plot'
-					}],
-					labels: [
-						"0",
-						"1",
-						"2",
-						"3",
-						"4"
-					]
-				},
-				options: {
-					responsive: true,
-					legend: {
-						display: false
-					},
-					title: {
-						display: false,
-						text: 'Example Chart'
-					},
-					animation: {
-						animateScale: true,
-						animateRotate: true
-					},
-					tooltips: {
-						enabled: false
-					}
-				}
-			};
-		</script>
-		<script type="text/javascript">
-		/*
-			This script is used to control adding modules.
-		*/
-			var baseCanvas = "<img class='fullscreen' src='Images/fullscreen.png'><div class='canvas chart'></div>"
-			var chart = [];			// updates everytime new data comes in
-			var chartStatic = [];	// custom update cycle
-
-
-			function modules(item){
-				// removes if active, adds if inactive
-				var chartType = $(item).attr('data');
-				
-				if ($('#'+chartType).is('*')) {
-					$($('#'+chartType+'Cont').parent()).addClass('empty');
-					$('#'+chartType+'Cont').fadeOut(600, function(){
-						$(this).remove();
-						$(item).parent().removeClass('active');
-					});
-					delete chart[chartType];
-				} else {
-					$(item).parent().addClass('active');
-					if( $('.empty')[0] === undefined ){
-						$("<div class='row top-pad'><div class='col-md-6 empty'></div><div class='col-md-6 empty'></div></div>").appendTo($('#charts'));
-					}
-					addModule(chartType)
-				}
-			}
-
-			function addModule(chartType){
-				// add module to 1st empty div
-				var elem = "<div id='"+chartType+"Cont'>";
-				chartData[chartType] = getChartData(chartType);
-
-				if ( isChartJSChart(chartType) ) {
-					elem += baseCanvas;
-					var canvas = "<canvas id='"+chartType+"' width='100' height='100'></canvas>";
-				
-					$(elem).appendTo($('.empty')[0]);
-					$(canvas).appendTo($('.empty .canvas')[0]);
-					$($('.empty')[0]).removeClass('empty');
-
-					var chartCTX = document.getElementById(chartType).getContext("2d");
-				} else {
-					if ( chartType == 'dataViewer' ){
-						elem += "<img class='fullscreen' src='Images/fullscreen.png'><p id='"+chartType+"'></p>";
-						$(elem).appendTo($('.empty')[0]);
-					}
-				}
-				$($('.empty')[0]).removeClass('empty');
-
-				if ( isChartJSChart(chartType) ) {
-					chart[chartType] = new Chart(chartCTX, chartData[chartType]);
-				} else {
-					if ( chartType == 'dataViewer' ){
-						setupFirebaseData();
-					}
-				}
-			}
-
-			function getChartData(chartType){
-				if (chartType == 'dataViewer'){
-					return getFirebaseData();
-				} 
-				if ( chartType == 'jamming'){
-					return chartData['radar']
-				}
-
-				// placeholder until real firebase data is used
-				return chartData['line'];
-			}
-
-			function isChartJSChart(chartType){
-				if (chartType != 'dataViewer'){
-					return true;
-				}
-
-				return false;
-			}
-		</script>
-		<script type="text/javascript">
-		/*
-			This script is used to update all module data.
-		*/
-			window.onload = function() {
-				var countdownCTX = document.getElementById("countdownTimer").getContext("2d");
-				chartStatic['countdownTimer'] = new Chart(countdownCTX, chartData['countdownTimer']);
-
-				var lineCTX = document.getElementById("statistics").getContext("2d");
-				chart['line'] = new Chart(lineCTX, chartData['line']);
-
-				var radarCTX = document.getElementById("jamming").getContext("2d");
-				chart['radar'] = new Chart(radarCTX, chartData['radar']);
-			};
-
-			// refresh clock every 1 second
-			window.setInterval(function(){
-				chartData['countdownTimer'].data.datasets[0].data[0]++;
-				chartData['countdownTimer'].data.datasets[0].data[1]--;
-				if ( chartData['countdownTimer'].data.datasets[0].data[0] == 100 ){
-					chartData['countdownTimer'].data.datasets[0].data[0] = 0;
-					chartData['countdownTimer'].data.datasets[0].data[1] = 100;
-				}
-				chartStatic['countdownTimer'].update();
-			}, 1000);
-
-			// refresh graphs with random data every 10 seconds
-			window.setInterval(function(){
-				for(let chartType in chart) {
-					chartData[chartType].data.datasets.forEach(function(dataset) {
-						dataset.data = dataset.data.map(function() {
-							return randomScalingFactor();
-						});
-					});
-					chart[chartType].update();
-				}
-			}, 10000);
-		</script>
+		<script src="src/js/refresh.js"></script>
+		<script src="src/js/modules.js"></script>
+		<script src="src/js/chart_options.js"></script>
+		<script src="src/js/interactive.js"></script>
 	</body>
 </html>
