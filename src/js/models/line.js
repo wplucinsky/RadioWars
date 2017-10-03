@@ -1,11 +1,11 @@
-chartData['line'] = {
+var line_model = {
 		type: 'line',
 		data: {
 			labels: ["0", "1", "2", "3", "4", "5", "6"],
 			datasets: [{
 				fill: false,
-				borderColor: window.chartColors.red,
-				backgroundColor: window.chartColors.red,
+				borderColor: colors.red,
+				backgroundColor: colors.red,
 				data: [
 					randomScalingFactor(),
 					randomScalingFactor(),
@@ -18,8 +18,8 @@ chartData['line'] = {
 			}, {
 				label: "My Second dataset ",
 				fill: false,
-				borderColor: window.chartColors.blue,
-				backgroundColor: window.chartColors.blue,
+				borderColor: colors.blue,
+				backgroundColor: colors.blue,
 				data: [
 					randomScalingFactor(),
 					randomScalingFactor(),
@@ -49,3 +49,9 @@ chartData['line'] = {
 			}
 		}
 	};
+
+line_default = {
+	type: 'chart',
+	position: 1,
+	size: '100x100'
+}

@@ -1,39 +1,36 @@
 /*
-	This script is used to update all module data.
+	This script is used to set and add all module data. Also used for
+	set timing of certain modules.
 */
 	window.onload = function() {
-		var countdownCTX = document.getElementById("countdownTimer").getContext("2d");
-		chartStatic['countdownTimer'] = new Chart(countdownCTX, chartData['countdownTimer']);
+		Object.keys(user.modules.active).map(function(m){ 
+			if ( user.modules.active[m].type == 'chart' ) {
+				var elem = document.getElementById(m).getContext("2d");
+				user.modules.active[m].elem = new Chart(elem, user.modules.active[m].data);
+			}
+		});
 
-		var lineCTX = document.getElementById("statistics").getContext("2d");
-		chart['line'] = new Chart(lineCTX, chartData['line']);
-
-		var radarCTX = document.getElementById("jamming").getContext("2d");
-		chart['radar'] = new Chart(radarCTX, chartData['radar']);
-
-		var packetsCTX = document.getElementById("packetsSent").getContext("2d");
-		chartStatic['packetsSent'] = new Chart(packetsCTX, chartData['packetsSent']);
+		Object.keys(user.modules.default).map(function(m){ 
+			if ( user.modules.default[m].type == 'chart' ) {
+				var elem = document.getElementById(m).getContext("2d");
+				user.modules.default[m].elem = new Chart(elem, user.modules.default[m].data);
+			}
+		});
 	};
 
-	// refresh clock every 1 second
+	// 1 Second
 	window.setInterval(function(){
-		chartData['countdownTimer'].data.datasets[0].data[0]++;
-		chartData['countdownTimer'].data.datasets[0].data[1]--;
-		if ( chartData['countdownTimer'].data.datasets[0].data[0] == 100 ){
-			chartData['countdownTimer'].data.datasets[0].data[0] = 0;
-			chartData['countdownTimer'].data.datasets[0].data[1] = 100;
-		}
-		chartStatic['countdownTimer'].update();
+		countdownTimer(user)
 	}, 1000);
 
-	// refresh graphs with random data every 10 seconds
-	window.setInterval(function(){
-		for(let chartType in chart) {
-			chartData[chartType].data.datasets.forEach(function(dataset) {
-				dataset.data = dataset.data.map(function() {
-					return randomScalingFactor();
-				});
-			});
-			chart[chartType].update();
-		}
-	}, 10000);
+	// 10 Seconds
+	// window.setInterval(function(){
+	// 	for(let chartType in chart) {
+	// 		chartData[chartType].data.datasets.forEach(function(dataset) {
+	// 			dataset.data = dataset.data.map(function() {
+	// 				return randomScalingFactor();
+	// 			});
+	// 		});
+	// 		chart[chartType].update();
+	// 	}
+	// }, 10000);

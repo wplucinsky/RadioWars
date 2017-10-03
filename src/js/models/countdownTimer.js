@@ -1,4 +1,4 @@
-chartData['countdownTimer'] = {
+var countdownTimer_model = {
 	type: 'doughnut',
 	data: {
 		datasets: [{
@@ -35,3 +35,9 @@ chartData['countdownTimer'] = {
 		}
 	}
 };
+
+countdownTimer_default = {
+	type: 'chart',
+	position: 1,
+	size: '100x100'
+}

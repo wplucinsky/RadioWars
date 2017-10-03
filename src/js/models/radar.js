@@ -1,4 +1,4 @@
-chartData['radar'] = {
+var radar_model = {
 	type: 'polarArea',
 	data: {
 		datasets: [{
@@ -10,11 +10,11 @@ chartData['radar'] = {
 				randomScalingFactor(),
 			],
 			backgroundColor: [
-				window.chartColors.red,
-				window.chartColors.yellow,
-				window.chartColors.green,
-				window.chartColors.blue,
-				window.chartColors.purple,
+				colors.red,
+				colors.yellow,
+				colors.green,
+				colors.blue,
+				colors.purple,
 			],
 			label: 'Radar Plot'
 		}],
@@ -44,3 +44,9 @@ chartData['radar'] = {
 		}
 	}
 };
+
+radar_default = {
+	type: 'chart',
+	position: 2,
+	size: '100x100'
+}

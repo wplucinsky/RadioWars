@@ -1,39 +1,58 @@
 /*
-	This script is used to setup and constantly read from firebase.
+	This script is used to handle the connection with firebase on each active node
+	and call the worker with user and snapshot data.
 */
-	var config = {
-		apiKey: "AIzaSyA7XkhEaCGCwkGzti8hRkv7kZR7_hoalp4",
-		authDomain: "dwslgrid.firebaseapp.com",
-		databaseURL: "https://dwslgrid.firebaseio.com",
-		projectId: "dwslgrid",
-		storageBucket: "dwslgrid.appspot.com",
-		messagingSenderId: "222394513574"
-	};
-	firebase.initializeApp(config)
-
-	var competitionTime = '123456789';
-	var node = 'Grid11';
-	firebase.database().ref('/Competitions/'+competitionTime+'/nodes/'+node+'/Logs/').on('child_added',function(snapshot){
-			s = Object.keys(snapshot.val()).map(function(k){ 
-				return k+': '+snapshot.val()[k]
-			}).join('<br>');
-			$('#dataViewerCont p').html(s).html()
-
-			chartData['packetsSent'].data.datasets[0].data[0] = snapshot.val().PacketsSent;
-			chartData['packetsSent'].data.datasets[1].data[0] = snapshot.val().PacketsRecieved;
-			chartStatic['packetsSent'].update();
-		}
-	);
-
-	function getFirebaseData(){ 
-		firebase.database().ref('/Competitions/'+competitionTime+'/nodes/Grid11/Logs/').on('value', function(snapshot){
-			s = Object.keys(snapshot.val()).map(function(k){ 
-				return k+': '+snapshot.val()[k]
-			}).join('<br>');
+	
+	for ( let n in user.nodes.active ){
+		var q = firebase.database().ref('/Competitions/'+competitionTime+'/nodes/Grid'+user.nodes.active[n]+'/Logs/')
+		user.nodes.connected[user.nodes.active[n]] = q
+		q.on('child_added',function(snapshot){
+			handleData(user.nodes.active[n], snapshot.val())
 		});
-		console.log(s)
-		$('#dataViewerCont p').html(s).html()
-
-		return s
-
 	}
+
+	function startConnection(node) {
+		if ($.inArray(node.toString(), Object.keys(user.nodes.connected)) !== -1) {
+			// node already connected
+			return;
+		}
+
+		if ($.inArray(node.toString(), Object.keys(user.nodes.active)) === -1) {
+			// node not in active
+			user.nodes.active.push(node)
+		}
+		
+
+		var q = firebase.database().ref('/Competitions/'+competitionTime+'/nodes/Grid'+node+'/Logs/')
+		user.nodes.connected[node] = q
+		q.on('child_added',function(snapshot){
+			handleData(user.nodes.active[n], snapshot.val())
+		});
+	}
+
+	function stopConnection(node){
+		if ($.inArray(node.toString(), Object.keys(user.nodes.connected)) === -1) {
+			// node already disconnected
+			return;
+		}
+
+		user.nodes.connected[node].off()
+		delete user.nodes.connected[node]
+	}
+
+	function handleData(node, data){
+		if ($.inArray('packetsSent', Object.keys(user.modules.active)) !== -1) {
+			packetsSent(user, data)
+		}
+
+		// more firebase variable graph functionality will be added here
+
+		console.log(node, data)
+
+		// dataViewer
+		// s = Object.keys(snapshot.val()).map(function(k){ 
+		// 	return k+': '+snapshot.val()[k]
+		// }).join('<br>');
+		// $('#dataViewerCont p').html(s).html()
+	}
+

@@ -1,4 +1,4 @@
-chartData['packetsSent'] = {
+var packetsSent_model = {
 	type: 'horizontalBar',
 	data: {
 		datasets: [{
@@ -6,7 +6,7 @@ chartData['packetsSent'] = {
 				0
 			],
 			backgroundColor: [
-				window.chartColors.green
+				colors.green
 			],
 			label: 'Packets Sent'
 		},
@@ -15,7 +15,7 @@ chartData['packetsSent'] = {
 				0
 			],
 			backgroundColor: [
-				window.chartColors.blue
+				colors.blue
 			],
 			label: 'Packets Received'
 		}],
@@ -48,3 +48,9 @@ chartData['packetsSent'] = {
 		}
 	}
 };
+
+packetsSent_default = {
+	type: 'chart',
+	position: 3,
+	size: '100x100'
+}
