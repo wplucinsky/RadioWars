@@ -1,7 +1,7 @@
 /*
 	This script is used to control adding and removing modules from view.
 */
-var baseCanvas = "<img class='fullscreen' src='Images/fullscreen.png'><div class='canvas chart'></div>";
+var baseCanvas = "<img class='fullscreen' src='src/img/fullscreen.png'><div class='canvas chart'></div>";
 
 
 function modules(item){
