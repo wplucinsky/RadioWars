@@ -11,4 +11,5 @@
 	// user changeable
 	user.modules.active.statistics.data 		= line_model;
 	user.modules.active.jamming.data 			= radar_model;
-	user.modules.active.packetsSent.data 		= packetsSent_model;
+	user.modules.active.packetsSent11.data 		= packetsSent_model;
+	user.modules.active.packetsSent01.data 		= packetsSent_model;

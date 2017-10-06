@@ -4,7 +4,8 @@
 */
 	
 	for ( let n in user.nodes.active ){
-		var q = firebase.database().ref('/Competitions/'+competitionTime+'/nodes/Grid'+user.nodes.active[n]+'/Logs/')
+		console.log('/Competitions/'+competitionTime+'/nodes/grid'+user.nodes.active[n]+'/Logs/')
+		var q = firebase.database().ref('/Competitions/'+competitionTime+'/nodes/grid'+user.nodes.active[n]+'/Logs/')
 		user.nodes.connected[user.nodes.active[n]] = q
 		q.on('child_added',function(snapshot){
 			handleData(user.nodes.active[n], snapshot.val())
@@ -41,13 +42,13 @@
 	}
 
 	function handleData(node, data){
-		if ($.inArray('packetsSent', Object.keys(user.modules.active)) !== -1) {
-			packetsSent(user, data)
+		if ($.inArray('packetsSent'+node, Object.keys(user.modules.active)) !== -1) {
+			packetsSent(user, data, node)
 		}
 
 		// more firebase variable graph functionality will be added here
 
-		console.log(node, data)
+		// console.log(node, data)
 
 		// dataViewer
 		// s = Object.keys(snapshot.val()).map(function(k){ 

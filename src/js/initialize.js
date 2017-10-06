@@ -10,13 +10,13 @@
 			name: 'Senior Design'
 		},
 		nodes: {
-			available: [11],
-			active: [11],
+			available: ['01', '11'],
+			active: ['01', '11'],
 			connected: [],
-			control: [11]
+			control: ['11']
 		},
 		modules: {
-			available: ['statistics', 'jamming', 'video', 'dataViewer', 'packetsSent'],
+			available: ['statistics', 'jamming', 'video', 'dataViewer', 'packetsSent11', 'packetsSent01'],
 			active: {
 				statistics: {
 					type: 'chart',
@@ -35,9 +35,15 @@
 					position: 3,
 					size: '400x400'
 				},  
-				packetsSent: {
+				packetsSent11: {
 					type: 'chart',
 					node: 11,
+					position: 4,
+					size: '400x400'
+				},
+				packetsSent01: {
+					type: 'chart',
+					node: 1,
 					position: 4,
 					size: '400x400'
 				}
@@ -78,7 +84,8 @@
 		jamming: 'radar',
 		video: 'line',
 		logs: 'radar',
-		packetsSent: 'packetsSent'
+		packetsSent11: 'packetsSent',
+		packetsSent01: 'packetsSent'
 	}
 
 	var models = []
