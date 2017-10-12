@@ -65,6 +65,9 @@
 						<li class="nav-item modules active">
 							<a class="nav-link" data="packetsSent" onclick="modules(this)">Packet Status</a>
 						</li>
+						<li class="nav-item modules active">
+							<a class="nav-link" data="gridView" onclick="modules(this)">Grid View</a>
+						</li>
 					</ul>
 				</div>
 				<div class="col-md-10" id="charts">
@@ -104,8 +107,18 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div>
+					<div class="row top-pad">
+						<div class="col-md-6">
+							<div id="gridViewContainer">
+								<img class="fullscreen" src="src/img/fullscreen.png" >
+								<div class="canvas chart">
+									<canvas id="gridView" width="275" height="275"></canvas>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 empty">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -119,6 +132,8 @@
 			<script src="src/js/models/packetsSent.js"></script>
 			<script src="src/js/workers/packetsSent.js"></script>
 			<script src="src/js/models/radar.js"></script>
+			<script src="src/js/models/gridView.js"></script>
+			<script src="src/js/workers/gridView.js"></script>
 		<script src="src/js/firebase.js"></script>
 		<script src="src/js/refresh.js"></script>
 		<script src="src/js/modules.js"></script>

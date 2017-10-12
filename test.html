@@ -1,71 +1,142 @@
 <html>
-  <head>
-    <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="myCanvas" width="578" height="200"></canvas>
-    <script>
-      window.requestAnimFrame = (function(callback) {
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-        function(callback) {
-          window.setTimeout(callback, 1000 / 60);
-        };
-      })();
+	<head>
+		<style>
+			body {
+				margin: 0px;
+				padding: 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="400" height="400"></canvas>
+		<script>
+			var colors = {
+				red: 'rgb(255, 99, 132)',
+				orange: 'rgb(255, 159, 64)',
+				yellow: 'rgb(255, 205, 86)',
+				green: 'rgb(75, 192, 192)',
+				blue: 'rgb(54, 162, 235)',
+				purple: 'rgb(153, 102, 255)',
+				grey: 'rgb(201, 203, 207)'
+			};
 
-      function drawRectangle(myRectangle, context) {
-        context.beginPath();
-        context.rect(myRectangle.x, myRectangle.y, myRectangle.width, myRectangle.height);
-        context.fillStyle = '#8ED6FF';
-        context.fill();
-        context.lineWidth = myRectangle.borderWidth;
-        context.strokeStyle = 'black';
-        context.stroke();
-      }
-      function animate(myRectangle, canvas, context, startTime) {
-        // update
-        var time = (new Date()).getTime() - startTime;
+			function getRandomColor() {
+				var letters = '0123456789ABCDEF';
+				var color = '#';
+				for (var i = 0; i < 6; i++) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				return color;
+			}
 
-        var linearSpeed = 100;
-        // pixels / second
-        var newX = linearSpeed * time / 1000;
 
-        if(newX < canvas.width - myRectangle.width - myRectangle.borderWidth / 2) {
-          myRectangle.x = newX;
-        }
+			window.requestAnimFrame = (function(callback) {
+				return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+				function(callback) {
+					window.setTimeout(callback, 1000 / 60);
+				};
+			})();
 
-        // clear
-        context.clearRect(0, 0, canvas.width, canvas.height);
+			function on(node, myRectangles, canvas, context){
+				// clear the spot
+				context.clearRect(myRectangles[node].x-3, myRectangles[node].y-3, myRectangles[node].width+8, myRectangles[node].height+8);
 
-        drawRectangle(myRectangle, context);
+				// right over it
+				context.beginPath();
+				context.rect(myRectangles[node].x, myRectangles[node].y, myRectangles[node].width, myRectangles[node].height);
+				context.fillStyle = colors.green;
+				context.fill();
+				context.lineWidth = myRectangles[node].borderWidth;
+				context.strokeStyle = colors.grey;
+				context.stroke();
+			}
 
-        // request new frame
-        requestAnimFrame(function() {
-          animate(myRectangle, canvas, context, startTime);
-        });
-      }
-      var canvas = document.getElementById('myCanvas');
-      var context = canvas.getContext('2d');
+			function off(node, myRectangles, canvas, context){
+				// clear the spot
+				context.clearRect(myRectangles[node].x-3, myRectangles[node].y-3, myRectangles[node].width+8, myRectangles[node].height+8);
 
-      var myRectangle = {
-        x: 0,
-        y: 75,
-        width: 100,
-        height: 50,
-        borderWidth: 5
-      };
+				// right over it
+				context.beginPath();
+				context.rect(myRectangles[node].x, myRectangles[node].y, myRectangles[node].width, myRectangles[node].height);
+				context.fillStyle = colors.grey;
+				context.fill();
+				context.lineWidth = myRectangles[node].borderWidth;
+				context.strokeStyle = colors.grey;
+				context.stroke();
+			}
 
-      drawRectangle(myRectangle, context);
+			function createNodes(){
+				var rects = []
+				for (let i=0; i<=3; i++){
+					for (let j=0; j<=3; j++){
+						var rect = {}
+						rect.x = (50 * i) + (i * 5) + 5;
+						rect.y = (50 * j) + (j * 5) + 5;
+						rect.width = 25;
+						rect.height = 25;
+						rect.borderWidth = 5;
+						rects.push(rect);
+					}
+				}
+				return rects
+			}
 
-      // wait one second before starting animation
-      setTimeout(function() {
-        var startTime = (new Date()).getTime();
-        animate(myRectangle, canvas, context, startTime);
-      }, 1000);
-    </script>
-  </body>
+			function drawRectangles(myRectangles, context) {
+				for (let i in myRectangles){
+					context.beginPath();
+					context.rect(myRectangles[i].x, myRectangles[i].y, myRectangles[i].width, myRectangles[i].height);
+					if ( i % 3 == 0) {
+						context.fillStyle = colors.green;
+
+					} else {
+						context.fillStyle = colors.grey;
+					}
+					context.fill();
+					context.lineWidth = myRectangles[i].borderWidth;
+					context.strokeStyle = colors.grey;
+					context.stroke();
+				}
+			}
+
+			function animate(myRectangle, canvas, context, startTime) {
+				// update
+				var time = (new Date()).getTime() - startTime;
+
+				var linearSpeed = 100;
+				// pixels / second
+				var newX = linearSpeed * time / 1000;
+
+				if(newX < canvas.width - myRectangle.width - myRectangle.borderWidth / 2) {
+					myRectangle.x = newX;
+				}
+
+				// clear
+				context.clearRect(0, 0, canvas.width, canvas.height);
+
+				drawRectangle(myRectangle, context);
+
+				// request new frame
+				requestAnimFrame(function() {
+					animate(myRectangle, canvas, context, startTime);
+				});
+			}
+			var canvas = document.getElementById('myCanvas');
+			var context = canvas.getContext('2d');
+
+
+			myRectangles = createNodes();
+			drawRectangles(myRectangles, context);
+
+			// wait one second before starting animation
+			window.setInterval(function(){
+				on(12, myRectangles, canvas, context);
+				on(5, myRectangles, canvas, context);
+				setTimeout(function() {
+					off(12, myRectangles, canvas, context);
+					off(5, myRectangles, canvas, context);
+				}, 1000);
+			}, 2000)
+			
+		</script>
+	</body>
 </html>

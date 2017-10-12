@@ -46,6 +46,10 @@
 			packetsSent(user, data, node)
 		}
 
+		if ($.inArray('gridView', Object.keys(user.modules.active)) !== -1) {
+			gridView_update(user, data, node)
+		}
+
 		// more firebase variable graph functionality will be added here
 
 		// console.log(node, data)

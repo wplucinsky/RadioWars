@@ -9,13 +9,15 @@ function modules(item){
 	
 	if ($('#'+chartType).is('*')) {
 		// remove if active
+		console.log('#'+chartType+'Container')
 		$($('#'+chartType+'Container').parent()).addClass('empty');
 		$('#'+chartType+'Container').fadeOut(600, function(){
 			$(this).remove();
 			$(item).parent().removeClass('active');
 		});
 
-		delete user.modules.active.statistics
+		stopAllIntervals(user, chartType)
+		delete user.modules.active[chartType]
 	} else {
 		// add if inactive
 		$(item).parent().addClass('active');
@@ -41,15 +43,19 @@ function addModule(chartType){
 	
 		$(elem).appendTo($('.empty')[0]);
 		$(canvas).appendTo($('.empty .canvas')[0]);
-		$($('.empty')[0]).removeClass('empty');
 
 		var elem = document.getElementById(chartType).getContext("2d");
 		user.modules.active[chartType].elem
 		user.modules.active[chartType].elem = new Chart(elem, user.modules.active[chartType].data);
 	} else {
 		if ( chartType == 'dataViewer' ){
-			elem += "<img class='fullscreen' src='Images/fullscreen.png'><p id='"+chartType+"'></p>";
+			elem += "<img class='fullscreen' src='src/img/fullscreen.png'><p id='"+chartType+"'></p>";
 			$(elem).appendTo($('.empty')[0]);
+		}
+		if ( chartType == 'gridView' ){
+			elem += "<img class='fullscreen' src='src/img/fullscreen.png'><div class='canvas chart'><canvas id='gridView' width='275' height='275'></canvas></div>";
+			$(elem).appendTo($('.empty')[0]);
+			gridView_start(chartType)
 		}
 	}
 	$($('.empty')[0]).removeClass('empty');

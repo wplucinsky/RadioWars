@@ -37,3 +37,9 @@
 @media screen and (max-width:992px){
 	
 }
+#gridView{
+	margin-left: 60px;
+}
+#charts{
+	margin-bottom: 100px;
+}

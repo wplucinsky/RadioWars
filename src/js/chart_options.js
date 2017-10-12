@@ -13,3 +13,6 @@
 	user.modules.active.jamming.data 			= radar_model;
 	user.modules.active.packetsSent11.data 		= packetsSent_model;
 	user.modules.active.packetsSent01.data 		= packetsSent_model;
+
+	// custom
+	user.modules.active.gridView.data			= gridView_model;

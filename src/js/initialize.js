@@ -1,5 +1,7 @@
 /*
 	This script is used to initalize the user and start the firebase connection.
+
+	4x4 grid with blinking colors and packets moving
 */
 	var competitionTime = '123456789';
 
@@ -10,8 +12,8 @@
 			name: 'Senior Design'
 		},
 		nodes: {
-			available: ['01', '11'],
-			active: ['01', '11'],
+			available: ['01', '03', '05', '11', '13'],
+			active: ['01', '03', '05', '11', '13'],
 			connected: [],
 			control: ['11']
 		},
@@ -45,6 +47,11 @@
 					type: 'chart',
 					node: 1,
 					position: 4,
+					size: '400x400'
+				},
+				gridView: {
+					type: 'custom',
+					position: 5,
 					size: '400x400'
 				}
 			},
@@ -85,7 +92,8 @@
 		video: 'line',
 		logs: 'radar',
 		packetsSent11: 'packetsSent',
-		packetsSent01: 'packetsSent'
+		packetsSent01: 'packetsSent',
+		gridView: 'gridView'
 	}
 
 	var models = []
