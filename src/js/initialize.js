@@ -12,8 +12,8 @@
 			name: 'Senior Design'
 		},
 		nodes: {
-			available: ['01', '03', '05', '11', '13'],
-			active: ['01', '03', '05', '11', '13'],
+			available: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'],
+			active: ['01', '03', '05', '11', '13', '20'],
 			connected: [],
 			control: ['11']
 		},
@@ -64,7 +64,9 @@
 			}
 		}
 	}
+
 	console.log(user)
+	setDisplay(user)
 
 	var config = {
 		apiKey: "AIzaSyA7XkhEaCGCwkGzti8hRkv7kZR7_hoalp4",

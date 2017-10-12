@@ -40,8 +40,13 @@
 			</div>
 			<div class="row top-pad">
 				<div class="col-md-2">
+					<ul class="nav flex-column" id="nodes">
+						<li class="nav-item nav-header no-select" onclick="collapse(this);" data="nodes">
+							<span class="nav-modules">Nodes</span><span class="glyphicon glyphicon-th-list"></span>
+						</li>
+					</ul>
 					<ul class="nav flex-column">
-						<li class="nav-item nav-header no-select" onclick="collapse(this);" id="modules">
+						<li class="nav-item nav-header no-select" onclick="collapse(this);" data="modules">
 							<span class="nav-modules">Modules</span><span class="glyphicon glyphicon-th-list"></span>
 						</li>
 						<li class="nav-item modules active">
@@ -112,7 +117,7 @@
 							<div id="gridViewContainer">
 								<img class="fullscreen" src="src/img/fullscreen.png" >
 								<div class="canvas chart">
-									<canvas id="gridView" width="275" height="275"></canvas>
+									<canvas id="gridView" width="350" height="350"></canvas>
 								</div>
 							</div>
 						</div>
@@ -124,6 +129,7 @@
 		</div>
 
 		<!-- javascript -->
+		<script src="src/js/interactive.js"></script>
 		<script src="src/js/initialize.js"></script>
 			<!-- models & workers -->
 			<script src="src/js/models/countdownTimer.js"></script>

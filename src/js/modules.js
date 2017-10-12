@@ -9,7 +9,6 @@ function modules(item){
 	
 	if ($('#'+chartType).is('*')) {
 		// remove if active
-		console.log('#'+chartType+'Container')
 		$($('#'+chartType+'Container').parent()).addClass('empty');
 		$('#'+chartType+'Container').fadeOut(600, function(){
 			$(this).remove();
@@ -53,7 +52,7 @@ function addModule(chartType){
 			$(elem).appendTo($('.empty')[0]);
 		}
 		if ( chartType == 'gridView' ){
-			elem += "<img class='fullscreen' src='src/img/fullscreen.png'><div class='canvas chart'><canvas id='gridView' width='275' height='275'></canvas></div>";
+			elem += "<img class='fullscreen' src='src/img/fullscreen.png'><div class='canvas chart'><canvas id='gridView' width='350' height='350'></canvas></div>";
 			$(elem).appendTo($('.empty')[0]);
 			gridView_start(chartType)
 		}

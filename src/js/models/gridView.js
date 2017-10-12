@@ -6,12 +6,12 @@ var gridView_model = {
 gridView_default = {
 	type: 'custom',
 	position: 5,
-	size: '400x400'
+	size: '350x350'
 }
 
 function gridView_initialize(){
 	var rects = []
-	for (let i=0; i<=3; i++){
+	for (let i=0; i<=4; i++){
 		for (let j=0; j<=3; j++){
 			var rect = {}
 			rect.x = (75 * i) + (i * 5) + 5;
