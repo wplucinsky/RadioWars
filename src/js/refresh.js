@@ -45,8 +45,8 @@
 				if ( user.modules.active[m].data.intervals[node].cnt == user.modules.active[m].data.intervals[node].reps) {
 					stopInterval(user, node, m)
 				}
-			}, 1000);
-		}, 2000)
+			}, 500);
+		}, 1000)
 	}
 
 	function startInterval(user, node, m, reps) {

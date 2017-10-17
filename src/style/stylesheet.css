@@ -43,3 +43,28 @@
 #charts{
 	margin-bottom: 100px;
 }
+.title{
+	text-align: center;
+}
+.node-select{
+	position: relative; float: right; top: -30px; right: 8px; border: none;
+}
+.team-select{
+	top: -32px; float: right; right: 50px;
+}
+.border {
+	border: 2px solid black;
+	border-radius: 15px;
+}
+#packetsSent11{
+	width: 90% !important;
+}
+#bitsLeft{
+	height: 95px !important;
+}
+.packetsSent_val{
+	position: relative; top: 5px; padding-bottom: 25px;
+}
+.bitsLeft_val{
+	position: relative; top: -12px;
+}

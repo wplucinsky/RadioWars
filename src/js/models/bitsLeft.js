@@ -1,16 +1,22 @@
-var packetsSent_model = {
-	type: 'bar',
+var bitsLeft_model = {
+	type: 'horizontalBar',
 	data: {
 		datasets: [{
 			data: [
-				0,
-				1
+				90
 			],
 			backgroundColor: [
-				colors.green,
+				colors.green
+			],
+			label: 'Bits Left'
+		},{
+			data: [
+				10
+			],
+			backgroundColor: [
 				colors.blue
 			],
-			label: 'Packets Sent/Received'
+			label: 'Bits Sent'
 		}],
 		labels: [
 			'Tx: 0',
@@ -24,6 +30,7 @@ var packetsSent_model = {
 			}
 		},
 		responsive: true,
+		maintainAspectRatio: false,
 		title: {
 			display: false
 		},
@@ -32,10 +39,7 @@ var packetsSent_model = {
 		},
 		scales: {
 			yAxes: [{
-				ticks: {
-					min: 0,
-					max: 100,
-				},
+				stacked: true,
 				display: false
 			}],
 			xAxes: [{
@@ -45,7 +49,8 @@ var packetsSent_model = {
 				gridLines: {
 					display: false
 				},
-				display: false
+				display: false,
+				stacked: true
 			}]
 		},
 		tooltips: {
@@ -54,7 +59,7 @@ var packetsSent_model = {
 	}
 };
 
-packetsSent_default = {
+bitsLeft_default = {
 	type: 'chart',
 	position: 3,
 	size: '100x100'

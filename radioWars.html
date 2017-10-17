@@ -8,6 +8,7 @@
 
 		<!-- layout -->
 		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
+		<link rel="stylesheet" type="text/css" href="src/style/dropdowns.css">
 		<title>Radio Wars</title>
 		<link rel="icon" type="image/png" href="src/img/logo.png">
 	</head>
@@ -51,33 +52,42 @@
 						</li>
 						<li class="nav-item modules active">
 							<a class="nav-link" data="statistics" onclick="modules(this)">Statistics</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules active">
 							<a class="nav-link" data="jamming" onclick="modules(this)">Jamming</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules">
 							<a class="nav-link" data="video" onclick="modules(this)">Video</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules">
 							<a class="nav-link" data="logs" onclick="modules(this)">Logs</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules">
 							<a class="nav-link" data="codeViewer" onclick="modules(this)">Code Viewer</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules">
-							<a class="nav-link" data="dataViewer" onclick="modules(this)">Firebase Data Viewer</a>
+							<a class="nav-link" data="dataViewer" onclick="modules(this)">Data Viewer</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules active">
 							<a class="nav-link" data="packetsSent" onclick="modules(this)">Packet Status</a>
+							<select class="node-select"></select>
 						</li>
 						<li class="nav-item modules active">
 							<a class="nav-link" data="gridView" onclick="modules(this)">Grid View</a>
+							<select class="node-select"></select>
 						</li>
 					</ul>
 				</div>
 				<div class="col-md-10" id="charts">
 					<div class="row">
 						<div class="col-md-6">
+							<div class="title" id="statisticsTitle">Statistics - Example</div>
 							<div id="statisticsContainer">
 								<img class="fullscreen" src="src/img/fullscreen.png" >
 								<div class="canvas chart">
@@ -86,6 +96,7 @@
 							</div>
 						</div>
 						<div class="col-md-6">
+							<div class="title" id="jammingTitle">Statistics - Example</div>
 							<div id="jammingContainer">
 								<img class="fullscreen" src="src/img/fullscreen.png" >
 								<div class="canvas chart">
@@ -96,6 +107,7 @@
 					</div>
 					<div class="row top-pad">
 						<div class="col-md-6">
+							<div class="title" id="packetsSent01Title">Packets Sent - Node 01</div>
 							<div id="packetsSent1Container">
 								<img class="fullscreen" src="src/img/fullscreen.png" >
 								<div class="canvas chart">
@@ -104,6 +116,7 @@
 							</div>
 						</div>
 						<div class="col-md-6">
+							<div class="title" id="packetsSent11Title">Packets Sent - Node 11</div>
 							<div id="packetsSent11Container">
 								<img class="fullscreen" src="src/img/fullscreen.png" >
 								<div class="canvas chart">
@@ -114,10 +127,11 @@
 					</div>
 					<div class="row top-pad">
 						<div class="col-md-6">
+							<div class="title" id="gridViewTitle">Grid View - Node 1-20</div>
 							<div id="gridViewContainer">
 								<img class="fullscreen" src="src/img/fullscreen.png" >
 								<div class="canvas chart">
-									<canvas id="gridView" width="350" height="350"></canvas>
+									<canvas id="gridView" width="355" height="355"></canvas>
 								</div>
 							</div>
 						</div>

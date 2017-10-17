@@ -18,34 +18,11 @@
 			control: ['11']
 		},
 		modules: {
-			available: ['statistics', 'jamming', 'video', 'dataViewer', 'packetsSent11', 'packetsSent01'],
-			active: {
-				statistics: {
-					type: 'chart',
-					node: 11,
-					position: 1,
-					size: '400x400'
-				}, 
-				jamming: {
-					type: 'chart',
-					node: 11,
-					position: 2,
-					size: '400x400'
-				},  
-				dataViewer: {
-					node: 11,
-					position: 3,
-					size: '400x400'
-				},  
+			available: ['packetsSent11', 'gridView'],
+			active: {  
 				packetsSent11: {
 					type: 'chart',
 					node: 11,
-					position: 4,
-					size: '400x400'
-				},
-				packetsSent01: {
-					type: 'chart',
-					node: 1,
 					position: 4,
 					size: '400x400'
 				},
@@ -57,6 +34,11 @@
 			},
 			default: {
 				countdownTimer: {
+					type: 'chart',
+					position: 1,
+					size: '100x100'
+				},
+				bitsLeft: {
 					type: 'chart',
 					position: 1,
 					size: '100x100'
@@ -95,7 +77,8 @@
 		logs: 'radar',
 		packetsSent11: 'packetsSent',
 		packetsSent01: 'packetsSent',
-		gridView: 'gridView'
+		gridView: 'gridView',
+		bitsLeft: 'bitsLeft'
 	}
 
 	var models = []
