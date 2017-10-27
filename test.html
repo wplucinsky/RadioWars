@@ -1,15 +1,47 @@
 <html>
 	<head>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 		<style>
 			body {
 				margin: 0px;
 				padding: 0px;
 			}
+			#myCanvasCont{
+				width: 50%; float: left;
+			}
+			#myCanvasCont canvas{
+				padding-left: 50px; padding-top: 50px;
+			}
 		</style>
+		<title>Grid View Module</title>
+		<link rel="icon" type="image/png" href="src/img/logo.png">
 	</head>
 	<body>
-		<canvas id="myCanvas" width="400" height="400"></canvas>
+		<div style="width: 50%; float: left;" id="myCanvasCont">
+			<canvas id="myCanvas" width="400" height="450" style="padding-left: 50px; padding-top: 50px;"></canvas>
+		</div>
+		<div style="width: 50%; float: right;">
+			<p id="Yellow">
+
+			</p>
+			<p id="Red">
+
+			</p>
+			<p id="Green">
+
+			</p>
+			<p id="Blue">
+
+			</p>
+			<p id="Purple">
+
+			</p>
+			<p id="Black">
+
+			</p>
+		</div>
 		<script>
+			var delta = 0.05;
 			var colors = {
 				red: 'rgb(255, 99, 132)',
 				orange: 'rgb(255, 159, 64)',
@@ -19,6 +51,22 @@
 				purple: 'rgb(153, 102, 255)',
 				grey: 'rgb(201, 203, 207)'
 			};
+			var teamColor = {
+				15: "#f1c40f",
+				16: "#c0392b",
+				17: "#27ae60",
+				18: "#2980b9",
+				19: "#8e44ad",
+				20: "#34495e"
+			}
+			var teamName = {
+				"#f1c40f": "Yellow",
+				"#c0392b": "Red",
+				"#27ae60": "Green",
+				"#2980b9": "Blue",
+				"#8e44ad": "Purple",
+				"#34495e": "Black"
+			}
 
 			function getRandomColor() {
 				var letters = '0123456789ABCDEF';
@@ -37,7 +85,7 @@
 				};
 			})();
 
-			function on(node, myRectangles, canvas, context){
+			function on(node, myRectangles, context){
 				// clear the spot
 				context.clearRect(myRectangles[node].x-3, myRectangles[node].y-3, myRectangles[node].width+8, myRectangles[node].height+8);
 
@@ -51,7 +99,7 @@
 				context.stroke();
 			}
 
-			function off(node, myRectangles, canvas, context){
+			function off(node, myRectangles, context){
 				// clear the spot
 				context.clearRect(myRectangles[node].x-3, myRectangles[node].y-3, myRectangles[node].width+8, myRectangles[node].height+8);
 
@@ -65,17 +113,163 @@
 				context.stroke();
 			}
 
+			function fade(node, myRectangles, context, color, last_node){
+				if ( myRectangles[node].taken == 0 ) {
+					$('#'+teamName[color]).append("Team "+teamName[color]+" going for Node #"+node);
+					myRectangles[node].taken = color
+				} else if(myRectangles[node].taken !== color ){
+					console.log('ALREADY TAKEN!', node, color, myRectangles)
+					return
+				}
+
+				context.globalAlpha = myRectangles[node].alpha;
+				// clear the spot
+				context.clearRect(myRectangles[node].x-3, myRectangles[node].y-3, myRectangles[node].width+8, myRectangles[node].height+8);
+
+
+				// right over it
+				context.beginPath();
+				context.rect(myRectangles[node].x, myRectangles[node].y, myRectangles[node].width, myRectangles[node].height);
+				context.fillStyle = color;
+				context.fill();
+
+				context.globalAlpha = 1;
+				context.lineWidth = myRectangles[node].borderWidth;
+				context.strokeStyle = colors.grey;
+				context.stroke();
+
+				// draw line from old node to new node
+				line(node, myRectangles, context, color, last_node)
+
+				if ( myRectangles[node].alpha < 1.0) {
+					myRectangles[node].alpha = myRectangles[node].alpha + delta
+					window.setTimeout(function(){
+						fade(node, myRectangles, context, color, last_node)
+					}, (Math.random()*100));
+				} else {
+					$('#'+teamName[color]).append(", and they got Node #"+node+"! <br>\n");
+					getNextNode(node, color, context)
+				}
+			}
+
+			function line(node, myRectangles, context, color, last_node){
+				if ( last_node !== null ){
+					context.beginPath();
+					context.setLineDash([5, 15]);
+					context.moveTo(myRectangles[last_node].x, myRectangles[last_node].y);
+					context.lineTo(myRectangles[node].x, myRectangles[node].y);
+					context.stroke();
+				}
+			}
+
+			function getNextNode(node, color, context){
+				// yellow
+				if (node == 15){
+					fade(0, myRectangles, context, color, 15)
+				}
+				if (node == 0){
+					fade(5, myRectangles, context, color, 0)
+				}
+				if (node == 5){
+					fade(6, myRectangles, context, color, 5)
+				}
+
+				// red
+				if (node == 16){
+					fade(2, myRectangles, context, color, 16)
+				}
+				if (node == 2){
+					fade(1, myRectangles, context, color, 2)
+				}
+				if (node == 1){
+					fade(7, myRectangles, context, color, 1)
+				}
+
+
+				// green
+				if (node == 17){
+					fade(4, myRectangles, context, color, 17)
+				}
+				if (node == 4){
+					fade(3, myRectangles, context, color, 4)
+				}
+				if (node == 3){
+					fade(8, myRectangles, context, color, 3)
+				}
+
+				// blue
+				if (node == 18){
+					fade(10, myRectangles, context, color, 18)
+				}
+				if (node == 10){
+					fade(11, myRectangles, context, color, 10)
+				}
+				if (node == 11){
+					fade(6, myRectangles, context, color, 11)
+				}
+
+				// purple
+				if (node == 19){
+					fade(12, myRectangles, context, color, 19)
+				}
+				if (node == 12){
+					fade(13, myRectangles, context, color, 12)
+				}
+				if (node == 13){
+					fade(8, myRectangles, context, color, 13)
+				}
+
+				// black
+				if (node == 20){
+					fade(14, myRectangles, context, color, 20)
+				} 
+				if (node == 14){
+					fade(9, myRectangles, context, color, 14)
+				} 
+				if (node == 9){
+					fade(8, myRectangles, context, color, 9)
+				} 
+			}
+
 			function createNodes(){
+			/*
+				15 	0	5	10	18
+					1	6	11
+				16	2	7	12 	19
+				 	3 	8 	13
+				17	4	9	14	20 	
+			*/
+
 				var rects = []
-				for (let i=0; i<=3; i++){
-					for (let j=0; j<=3; j++){
+				c = 0;
+				for (let i=0; i<=2; i++){
+					for (let j=0; j<=4; j++){
 						var rect = {}
-						rect.x = (50 * i) + (i * 5) + 5;
-						rect.y = (50 * j) + (j * 5) + 5;
+						rect.x = (75 * i) + (i * 5) + 80;
+						rect.y = (75 * j) + (j * 5) + 5;
 						rect.width = 25;
 						rect.height = 25;
 						rect.borderWidth = 5;
+						rect.alpha = 0;
+						rect.taken = 0;
 						rects.push(rect);
+						c+=1;
+					}
+				}
+				for (let i=0; i<=1; i++){
+					for (let j=0; j<=2; j++){
+						k = (i == 0) ? 5 : 235;
+						var rect = {}
+						rect.x = (75 * i) + (i * 5) + k;
+						rect.y = (180 * j) + (j * 5) + 5;
+						rect.width = 25;
+						rect.height = 25;
+						rect.alpha = 0;
+						rect.color = teamColor[c];
+						rect.borderWidth = 5;
+						rect.taken = 0;
+						rects.push(rect);
+						c+=1;
 					}
 				}
 				return rects
@@ -85,12 +279,7 @@
 				for (let i in myRectangles){
 					context.beginPath();
 					context.rect(myRectangles[i].x, myRectangles[i].y, myRectangles[i].width, myRectangles[i].height);
-					if ( i % 3 == 0) {
-						context.fillStyle = colors.green;
-
-					} else {
-						context.fillStyle = colors.grey;
-					}
+					context.fillStyle = colors.grey;
 					context.fill();
 					context.lineWidth = myRectangles[i].borderWidth;
 					context.strokeStyle = colors.grey;
@@ -98,7 +287,7 @@
 				}
 			}
 
-			function animate(myRectangle, canvas, context, startTime) {
+			function animate(myRectangle, context, startTime) {
 				// update
 				var time = (new Date()).getTime() - startTime;
 
@@ -117,25 +306,32 @@
 
 				// request new frame
 				requestAnimFrame(function() {
-					animate(myRectangle, canvas, context, startTime);
+					animate(myRectangle, context, startTime);
 				});
 			}
+
 			var canvas = document.getElementById('myCanvas');
 			var context = canvas.getContext('2d');
 
-
 			myRectangles = createNodes();
+			context.clearRect(0, 0, canvas.width, canvas.height);
 			drawRectangles(myRectangles, context);
+			
+			for ( let i = 15; i <= 20; i++) {
+				fade(i, myRectangles, context, teamColor[i], null);
+			}
+
 
 			// wait one second before starting animation
-			window.setInterval(function(){
-				on(12, myRectangles, canvas, context);
-				on(5, myRectangles, canvas, context);
-				setTimeout(function() {
-					off(12, myRectangles, canvas, context);
-					off(5, myRectangles, canvas, context);
-				}, 1000);
-			}, 2000)
+			// window.setInterval(function(){
+			// 		fade(15, myRectangles, context);
+			// 	on(12, myRectangles, context);
+			// 	on(5, myRectangles, context);
+			// 	setTimeout(function() {
+			// 		off(12, myRectangles, context);
+			// 		off(5, myRectangles, context);
+			// 	}, 1000);
+			// }, 2000)
 			
 		</script>
 	</body>
