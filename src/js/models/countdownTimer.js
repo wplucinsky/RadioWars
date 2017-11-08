@@ -35,9 +35,3 @@ var countdownTimer_model = {
 		}
 	}
 };
-
-countdownTimer_default = {
-	type: 'chart',
-	position: 1,
-	size: '100x100'
-}

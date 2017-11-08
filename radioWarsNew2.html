@@ -22,6 +22,12 @@
 							<canvas id="gridView" width="400" height="450" style="padding-top: 50px;"></canvas>
 						</div>
 					</div>
+					<div id="countdownTimerContainer">
+						<h6 class="text-center">Time Left</h6>
+						<div class="canvas chart">
+							<canvas id="countdownTimer" width="50" height="50"></canvas>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-8">
 					<div class="row top-pad">
@@ -210,7 +216,7 @@
 					</div>
 					<div class="row top-pad">
 						<div class="col-md-6" id="team_3">
-							<h3 class="text-center">Team <span id="team_id">0</span></h3>
+							<h3 class="text-center">Team <span id="team_id">3</span></h3>
 							<div class="line"></div>
 							<div class="row">	
 								<div class="col-md-8">
@@ -303,7 +309,8 @@
 				</div>
 			</div>
 		</div>
-		<button onclick="clearcanvas()">clear</button>
+	<script src="src/js/models/countdownTimer.js"></script>
+	<script src="src/js/workers/countdownTimer.js"></script>
 	<script>
 		var delta = 0.05;
 		var colors = {
@@ -337,7 +344,8 @@
 				1: {
 					information:{
 						colorName: "Yellow",
-						colorHex: "#f1c40f"
+						colorHex: "#f1c40f",
+						queue: []
 					},
 					radio:{
 						rxGain: {
@@ -381,7 +389,8 @@
 				2: {
 					information:{
 						colorName: "Red",
-						colorHex: "#c0392b"
+						colorHex: "#c0392b",
+						queue: []
 					},
 					radio:{
 						rxGain: {
@@ -425,7 +434,8 @@
 				3: {
 					information:{
 						colorName: "Green",
-						colorHex: "#27ae60"
+						colorHex: "#27ae60",
+						queue: []
 					},
 					radio:{
 						rxGain: {
@@ -469,7 +479,8 @@
 				4: {
 					information:{
 						colorName: "Blue",
-						colorHex: "#2980b9"
+						colorHex: "#2980b9",
+						queue: []
 					},
 					radio:{
 						rxGain: {
@@ -513,7 +524,8 @@
 				5: {
 					information:{
 						colorName: "Purple",
-						colorHex: "#8e44ad"
+						colorHex: "#8e44ad",
+						queue: []
 					},
 					radio:{
 						rxGain: {
@@ -557,7 +569,8 @@
 				6: {
 					information:{
 						colorName: "Black",
-						colorHex: "#34495e"
+						colorHex: "#34495e",
+						queue: []
 					},
 					radio:{
 						rxGain: {
@@ -603,23 +616,205 @@
 				rectangles: null,
 				context: null,
 				canvas: null
+			},
+			graphs: {
+				countdownTimer: {
+					data: countdownTimer_model,
+					elem: null
+				}
 			}
 		}
 
+		// https://stackoverflow.com/questions/12036966/generic-tree-implementation-in-javascript
+		function Team(team_id){
+			this.id = team_id;
+			this.radio = {};
+			this.information = {};
+			// this.tree = new Tree(); // wait to implement
+
+			this.setInformation = function(data){
+				for ( let i in data ){
+					this.information[i] = data[i]
+				}
+				$('#team_'+this.id+' .line').css('background-color', this.getTeamColorHex());
+			}
+
+			this.setRadio = function(data){
+				for ( let i in data ){
+					this.radio[i] = {}
+					this.radio[i].value = data[i].value
+					if ( data[i].type != undefined ){
+						this.radio[i].type = data[i].type
+					} else {
+						this.radio[i].type = 'text';
+					}
+
+					if (data[i].type == 'text') {
+						$('#'+i+'_'+this.id).text(data[i].value)
+					}
+					if (data[i].type == 'imgSrc') {
+						$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+data[i].value+'.png')
+					}
+				}
+			}
+
+			this.getTeamColor = function(){
+				if ( this.information.colorName === undefined ) {
+					this.information.colorName = 'Grey'
+				}
+
+				return this.information.colorName;
+			}
+
+			this.getTeamColorHex = function(){
+				if ( this.information.colorHex === undefined ) {
+					this.information.colorHex = this.getRandomColor();
+				}
+
+				return this.information.colorHex;
+			}
+
+			this.getRandomColor = function(){
+				var letters = '0123456789ABCDEF';
+				var color = '#';
+				for (var i = 0; i < 6; i++) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				return color;
+			}
+		}
+
+		function Nodes(){
+			this.takenNodes = [];
+			this.direction = ['Up', 'UpLeft', 'Left', 'DownLeft', 'Down', 'DownRight', 'Right', 'Up'];
+
+			this.takeNode = function(node_id) {
+				this.takenNodes.push(node_id);
+			}
+
+			this.untakeNode = function(node_id) {
+				delete this.takenNodes[this.takenNodes.indexOf(node_id)];
+			}
+
+			this.getSurroundingNodes = function(node_id) {
+				// in form [ U, UL, L, DL, D, DR, R, UP]
+				if (node_id == 15) {	// yellow start
+					return [ -1, -1, -1, -1, -1, -1, 0, -1];
+				} 
+				if ( node_id == 16) {	// red start
+					return [ -1, -1, -1, -1, -1, -1, 2, -1];
+				}
+				if ( node_id == 17) {	// green start
+					return [ -1, -1, -1, -1, -1, -1, 4, -1];
+				}
+				if ( node_id == 18) {	// blue start
+					return [ -1, -1, 10, -1, -1, -1, -1, -1];
+				}
+				if ( node_id == 19) {	// purple start
+					return [ -1, -1, 12, -1, -1, -1, -1, -1];
+				}
+				if ( node_id == 20) {	// black start
+					return [ -1, -1, 14, -1, -1, -1, -1, -1];
+				}
+				if ( node_id == 0 ){
+					return [ -1, -1, 15, -1, 1, 6, 5, -1];
+				}
+				if ( node_id == 1 ){
+					return [ 0, -1, -1, -1, 2, 7, 6, 0];
+				}
+				if ( node_id == 2 ){
+					return [ 1, -1, 16, -1, 3, 8, 7, 1];
+				} 
+				if ( node_id == 3 ){
+					return [ 2, -1, -1, -1, 4, 9, 8, 2];
+				} 
+				if ( node_id == 4 ){
+					return [ 3, -1, 17, -1, -1, -1, 9, 3];
+				}
+				if ( node_id == 5 ){
+					return [ -1, -1, 0, 1, 6, 11, 10, -1];
+				} 
+				if ( node_id == 6 ){
+					return [ 5, 0, 1, 2, 7, 12, 11, 5];
+				}
+				if ( node_id == 7 ){
+					return [ 6, 1, 2, 3, 8, 13, 12, 6];
+				}
+				if ( node_id == 8 ){
+					return [ 7, 2, 3, 4, 9, 14, 13, 7];
+				} 
+				if ( node_id == 9 ){
+					return [ 8, 3, 4, -1, -1, -1, 14, 8];
+				} 
+				if ( node_id == 10 ){
+					return [ -1, -1, 5, 6, 11, -1, 18, -1];
+				}
+				if ( node_id == 11 ){
+					return [ 10, 5, 6, 7, 12, -1, -1, 10];
+				}
+				if ( node_id == 12 ){
+					return [ 11, 6, 7, 8, 13, -1, 19, 11];
+				} 
+				if ( node_id == 13 ){
+					return [ 12, 7, 8, 9, 14, -1, -1, 12];
+				} 
+				if ( node_id == 14 ){
+					return [ 13, 8, 9, -1, -1, -1, 20, 13];
+				} 
+			}
+
+			this.getNodeDirection = function(new_node, last_node){
+				dir = this.getSurroundingNodes(last_node);
+				return this.direction[dir.indexOf(new_node)];
+			}
+
+			this.getRandomNode = function(node_id){
+				possible = this.getSurroundingNodes(node_id).filter(function(data){
+					return data != -1;
+				});
+				return possible[Math.floor(Math.random()*possible.length)];
+			}
+
+			this.getPseduoRandomNode = function(node_id, chosen){
+				// gets a node that hasn't been visited yet, based on chosen
+				possible = this.getSurroundingNodes(node_id).filter(function(data){
+					return data != -1 && chosen.indexOf(data) == -1;
+				});
+
+				if (possible.length == 0) {
+					return null;
+				}
+				return possible[Math.floor(Math.random()*possible.length)];
+			}
+
+			this.getUntakenNode = function(node_id){
+				let chosen = [];
+				do {
+					new_node = this.getPseduoRandomNode(node_id, chosen);
+					chosen.push(new_node);
+				} while (new_node != null && this.takenNodes.indexOf(new_node) != -1) 
+
+				return new_node;
+			}
+		}
+
+
 		function setup() {
+			for (let graph_name in data.graphs) {
+				var elem = document.getElementById(graph_name).getContext("2d");
+				data.graphs[graph_name].elem = new Chart(elem, data.graphs[graph_name].data);
+			}
+
 			for (let team_id in data.teams) {
-				$('#team_'+team_id+' .line').css('background-color', data.teams[team_id].information.colorHex);
-				setData(team_id, data.teams[team_id].radio)
+				data.nodes = new Nodes();
+				data.teams[team_id].team = new Team(team_id);
+				data.teams[team_id].team.setInformation(data.teams[team_id].information)
+				data.teams[team_id].team.setRadio(data.teams[team_id].radio)
 			}
 
 			for ( let i = 15; i <= 20; i++) {
 				fade(i, i-14, teamColor[i], null);
 			}
-		}
-
-		function clearcanvas(){
-			fadeOut(15, 1, "#f1c40f", null)
-			fadeOut(18, 1, "#2980b9", null)
 		}
 
 
@@ -667,7 +862,7 @@
 				data.grid.rectangles[node].taken = color
 			} else if(data.grid.rectangles[node].taken !== color ){
 				console.log('ALREADY TAKEN!', node, color, data.grid.rectangles)
-				setRadioDirection(team, 'Omni');
+				data.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
 				return
 			}
 
@@ -691,26 +886,40 @@
 			line(node, color, last_node)
 
 			if ( data.grid.rectangles[node].alpha < 1.0) {
+				// fade from 0 to 1 opacity
 				data.grid.rectangles[node].alpha = data.grid.rectangles[node].alpha + delta
 				window.setTimeout(function(){
 					fade(node, team, color, last_node)
 				}, (Math.random()*100));
 			} else {
-				getNextNode(node, team, color)
+				// go to new random node
+				new_node = data.nodes.getUntakenNode(node);
+				if ( new_node == null && last_node != null) {
+					new_node = data.nodes.getUntakenNode(last_node);
+					if ( new_node != null ) {
+						data.nodes.takeNode(new_node)
+						data.teams[team].team.setRadio({radioDirection: {value: data.nodes.getNodeDirection(new_node, last_node), type: "imgSrc"}});
+						fade(new_node, team, color, last_node);
+					} else {
+						data.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
+					}
+				} else {
+					data.nodes.takeNode(new_node);
+					data.teams[team].team.setRadio({radioDirection: {value: data.nodes.getNodeDirection(new_node, node), type: "imgSrc"}});
+					fade(new_node, team, color, node);
+				}
 			}
 		}
 
 		function fadeOut(node, team, color, last_node){
-			console.log(data.grid.rectangles[node].taken, color)
 			if ( data.grid.rectangles[node].taken == 0 ) {
 				data.grid.rectangles[node].taken = color
 			} else if(data.grid.rectangles[node].taken !== color ){
 				console.log('ALREADY TAKEN!', node, color, data.grid.rectangles)
-				setRadioDirection(team, 'Omni');
+				data.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
 				return
 			}
 
-			console.log(data.grid.rectangles[node].alpha)
 			data.grid.context.globalAlpha = data.grid.rectangles[node].alpha;
 			// clear the spot
 			data.grid.context.clearRect(data.grid.rectangles[node].x-3, data.grid.rectangles[node].y-3, data.grid.rectangles[node].width+8, data.grid.rectangles[node].height+8);
@@ -747,27 +956,6 @@
 					- remove lines pointing to/from that node
 					- draw line from previous node to next node
 				*/
-				// clear lines
-				next = getNextNodeIdAndDirection(node)
-				var xMax = Math.max(data.grid.rectangles[node].x, data.grid.rectangles[next[0]].x);
-				var xMin = Math.min(data.grid.rectangles[node].x, data.grid.rectangles[next[0]].x);
-				var yMax = Math.max(data.grid.rectangles[node].y, data.grid.rectangles[next[0]].y);
-				var yMin = Math.min(data.grid.rectangles[node].y, data.grid.rectangles[next[0]].y);
-
-				console.log(data.grid.rectangles[node], data.grid.rectangles[next[0]])
-
-				if (next[1] == 'Right') { 
-					data.grid.context.clearRect(xMin-5, yMin-5, xMax-5, yMax+30);
-				} else if ( next[1] == 'Left' ){
-					data.grid.context.clearRect(xMin+30, yMin-5, xMax-5, yMax+30);
-				}
-				
-				data.grid.context.beginPath();
-				data.grid.context.rect(data.grid.rectangles[node].x, data.grid.rectangles[node].y, data.grid.rectangles[node].width, data.grid.rectangles[node].height);
-				data.grid.context.fillStyle = colors.grey;
-				data.grid.context.fill();
-
-				// getNextNode(node, team, color)
 			}
 		}
 
@@ -779,171 +967,6 @@
 				data.grid.context.lineTo(data.grid.rectangles[node].x, data.grid.rectangles[node].y);
 				data.grid.context.stroke();
 			}
-		}
-
-		function setRadioDirection(team, direction){
-			data.teams[team].radio.radioDirection.value = direction;
-			setData(team, data.teams[team].radio)
-		}
-
-		function getNextNode(node, team, color){
-			// yellow
-			if (node == 15){
-				setRadioDirection(team, 'Right');
-				return fade(0, team, color, 15)
-			}
-			if (node == 0){
-				setRadioDirection(team, 'Right');
-				return fade(5, team, color, 0)
-			}
-			if (node == 5){
-				setRadioDirection(team, 'Down');
-				return fade(6, team, color, 5)
-			}
-
-			// red
-			if (node == 16){
-				setRadioDirection(team, 'Right');
-				return fade(2, team, color, 16)
-			}
-			if (node == 2){
-				setRadioDirection(team, 'Up');
-				return fade(1, team, color, 2)
-			}
-			if (node == 1){
-				setRadioDirection(team, 'Right');
-				return fade(7, team, color, 1)
-			}
-
-
-			// green
-			if (node == 17){
-				setRadioDirection(team, 'Right');
-				return fade(4, team, color, 17)
-			}
-			if (node == 4){
-				setRadioDirection(team, 'Up');
-				return fade(3, team, color, 4)
-			}
-			if (node == 3){
-				setRadioDirection(team, 'Right');
-				return fade(8, team, color, 3)
-			}
-
-			// blue
-			if (node == 18){
-				setRadioDirection(team, 'Left');
-				return fade(10, team, color, 18)
-			}
-			if (node == 10){
-				setRadioDirection(team, 'Down');
-				return fade(11, team, color, 10)
-			}
-			if (node == 11){
-				setRadioDirection(team, 'Left');
-				return fade(6, team, color, 11)
-			}
-
-			// purple
-			if (node == 19){
-				setRadioDirection(team, 'Left');
-				return fade(12, team, color, 19)
-			}
-			if (node == 12){
-				setRadioDirection(team, 'Down');
-				return fade(13, team, color, 12)
-			}
-			if (node == 13){
-				setRadioDirection(team, 'Left');
-				return fade(8, team, color, 13)
-			}
-
-			// black
-			if (node == 20){
-				setRadioDirection(team, 'Left');
-				return fade(14, team, color, 20)
-			} 
-			if (node == 14){
-				setRadioDirection(team, 'Left');
-				return fade(9, team, color, 14)
-			} 
-			if (node == 9){
-				setRadioDirection(team, 'Up');
-				return fade(8, team, color, 9)
-			} 
-
-			setRadioDirection(team, 'Omni');
-		}
-
-		function getNextNodeIdAndDirection(node, team, color){
-			// yellow
-			if (node == 15){
-				return [0, 'Right']
-			}
-			if (node == 0){
-				return [5, 'Right']
-			}
-			if (node == 5){
-				return [6, 'Down']
-			}
-
-			// red
-			if (node == 16){
-				return [2, 'Right']
-			}
-			if (node == 2){
-				return [1, 'Up']
-			}
-			if (node == 1){
-				return [7, 'Right']
-			}
-
-
-			// green
-			if (node == 17){
-				return [4, 'Right']
-			}
-			if (node == 4){
-				return [3, 'Up']
-			}
-			if (node == 3){
-				return [8, 'Right']
-			}
-
-			// blue
-			if (node == 18){
-				return [10, 'Left']
-			}
-			if (node == 10){
-				return [11, 'Down']
-			}
-			if (node == 11){
-				return [6, 'Left']
-			}
-
-			// purple
-			if (node == 19){
-				return [12, 'Left']
-			}
-			if (node == 12){
-				return [13, 'Down']
-			}
-			if (node == 13){
-				return [8, 'Left']
-			}
-
-			// black
-			if (node == 20){
-				return [14, 'Left']
-			} 
-			if (node == 14){
-				return [9, 'Left']
-			} 
-			if (node == 9){
-				return [8, 'Up']
-			} 
-
-			return null
 		}
 
 		function createNodes(){
@@ -964,7 +987,6 @@
 					rect.y = (75 * j) + (j * 5) + 5;
 					rect.width = 25;
 					rect.height = 25;
-					// rect.borderWidth = 5;
 					rect.alpha = 0;
 					rect.taken = 0;
 					rects.push(rect);
@@ -981,7 +1003,6 @@
 					rect.height = 25;
 					rect.alpha = 0;
 					rect.color = teamColor[c];
-					// rect.borderWidth = 5;
 					rect.taken = 0;
 					rects.push(rect);
 					c+=1;
@@ -996,9 +1017,6 @@
 				data.grid.context.rect(data.grid.rectangles[i].x, data.grid.rectangles[i].y, data.grid.rectangles[i].width, data.grid.rectangles[i].height);
 				data.grid.context.fillStyle = colors.grey;
 				data.grid.context.fill();
-				// data.grid.context.lineWidth = data.grid.rectangles[i].borderWidth;
-				// data.grid.context.strokeStyle = colors.grey;
-				// data.grid.context.stroke();
 			}
 		}
 
@@ -1008,12 +1026,11 @@
 		data.grid.rectangles = createNodes();
 		data.grid.context.clearRect(0, 0, data.grid.canvas.width, data.grid.canvas.height);
 		drawRectangles();
-		
-		// for ( let i = 15; i <= 20; i++) {
-		// 	fade(i, i-14, data.grid.rectangles, context, teamColor[i], null);
-		// }
-
 		setup()
+
+		window.setInterval(function(){
+			countdownTimer(data)
+		}, 50);
 	</script>
 	</body>
 </html>

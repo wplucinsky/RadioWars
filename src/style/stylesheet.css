@@ -69,8 +69,15 @@
 	position: relative; top: -12px;
 }
 .line{
-	width: 100%; height: 2px; margin-bottom: 15px;
+	width: 100%; height: 3px; margin-bottom: 15px;
 }
 .team_data{
 	width: 245px;
+}
+#countdownTimerContainer{
+	width: 50%;
+	float: right;
+}
+#countdownTimerContainer .canvas{
+	width: 140px;
 }
