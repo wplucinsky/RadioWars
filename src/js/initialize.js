@@ -37,11 +37,6 @@
 					type: 'chart',
 					position: 1,
 					size: '100x100'
-				},
-				bitsLeft: {
-					type: 'chart',
-					position: 1,
-					size: '100x100'
 				}
 			}
 		}

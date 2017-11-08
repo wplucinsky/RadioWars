@@ -26,7 +26,7 @@
 	width: 400px; margin: auto;
 }
 .logo{
-	width: 131px; display: block; margin: auto;
+	width: 100px; display: block; margin: auto;
 }
 .no-select{
 	-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; 
@@ -67,4 +67,10 @@
 }
 .bitsLeft_val{
 	position: relative; top: -12px;
+}
+.line{
+	width: 100%; height: 2px; margin-bottom: 15px;
+}
+.team_data{
+	width: 245px;
 }

@@ -1,0 +1,1019 @@
+<html>
+	<head>
+		<!-- 3rd party files -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>			
+
+		<!-- layout -->
+		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
+		<title>Radio Wars</title>
+		<link rel="icon" type="image/png" href="src/img/logo.png">
+	</head>
+	<body>		
+		<div class="container" style="width: 95%;">
+			<div class="row top-pad">
+				<div class="col-md-4">
+					<h3 class="text-center">DWSL Grid</h3>
+					<div id="gridViewContainer">
+						<div class="canvas chart">
+							<canvas id="gridView" width="400" height="450" style="padding-top: 50px;"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="row top-pad">
+						<div class="col-md-6" id="team_1">
+							<h3 class="text-center">Team <span id="team_id">1</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_1">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_1">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_1">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_1">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_1">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_1">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_1">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_1">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_1" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6" id="team_4">
+							<h3 class="text-center">Team <span id="team_id">4</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_4">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_4">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_4">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_4">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_4">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_4">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_4">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_4">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_4" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row top-pad">
+						<div class="col-md-6" id="team_2">
+							<h3 class="text-center">Team <span id="team_id">2</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_2">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_2">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_2">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_2">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_2">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_2">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_2">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_2">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_2" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6" id="team_5">
+							<h3 class="text-center">Team <span id="team_id">5</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_5">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_5">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_5">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_5">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_5">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_5">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_5">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_5">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_5" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row top-pad">
+						<div class="col-md-6" id="team_3">
+							<h3 class="text-center">Team <span id="team_id">0</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_3">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_3">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_3">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_3">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_3">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_3">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_3">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_3">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_3" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6" id="team_6">
+							<h3 class="text-center">Team <span id="team_id">6</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_6">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_6">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_6">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_6">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_6">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_6">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_6">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_6">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_6" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button onclick="clearcanvas()">clear</button>
+	<script>
+		var delta = 0.05;
+		var colors = {
+			red: 'rgb(255, 99, 132)',
+			orange: 'rgb(255, 159, 64)',
+			yellow: 'rgb(255, 205, 86)',
+			green: 'rgb(75, 192, 192)',
+			blue: 'rgb(54, 162, 235)',
+			purple: 'rgb(153, 102, 255)',
+			grey: 'rgb(201, 203, 207)'
+		};
+		var teamColor = {
+			15: "#f1c40f",
+			16: "#c0392b",
+			17: "#27ae60",
+			18: "#2980b9",
+			19: "#8e44ad",
+			20: "#34495e"
+		}
+		var teamName = {
+			"#f1c40f": "Yellow",
+			"#c0392b": "Red",
+			"#27ae60": "Green",
+			"#2980b9": "Blue",
+			"#8e44ad": "Purple",
+			"#34495e": "Black"
+		}
+
+		var data = {
+			teams: {
+				1: {
+					information:{
+						colorName: "Yellow",
+						colorHex: "#f1c40f"
+					},
+					radio:{
+						rxGain: {
+							value: "35.0",
+							type: "text"
+						},
+						txGain: {
+							value: "35.0",
+							type: "text"
+						},
+						normalFrequency: {
+							value: "900e6",
+							type: "text"
+						},
+						sampleRate: {
+							value: "250e3",
+							type: "text"
+						},
+						frameSize: {
+							value: "1024",
+							type: "text"
+						},
+						nodeId: {
+							value: "15",
+							type: "text"
+						},
+						usrpAddress: {
+							value: "192.168.11.15",
+							type: "text"
+						},
+						nodeAddress: {
+							value: "10.10.10.15",
+							type: "text"
+						},
+						radioDirection: {
+							value: "Omni",
+							type: "imgSrc"
+						}
+					}
+				},
+				2: {
+					information:{
+						colorName: "Red",
+						colorHex: "#c0392b"
+					},
+					radio:{
+						rxGain: {
+							value: "35.0",
+							type: "text"
+						},
+						txGain: {
+							value: "35.0",
+							type: "text"
+						},
+						normalFrequency: {
+							value: "900e6",
+							type: "text"
+						},
+						sampleRate: {
+							value: "250e3",
+							type: "text"
+						},
+						frameSize: {
+							value: "1024",
+							type: "text"
+						},
+						nodeId: {
+							value: "16",
+							type: "text"
+						},
+						usrpAddress: {
+							value: "192.168.11.16",
+							type: "text"
+						},
+						nodeAddress: {
+							value: "10.10.10.16",
+							type: "text"
+						},
+						radioDirection: {
+							value: "Omni",
+							type: "imgSrc"
+						}
+					}
+				},
+				3: {
+					information:{
+						colorName: "Green",
+						colorHex: "#27ae60"
+					},
+					radio:{
+						rxGain: {
+							value: "35.0",
+							type: "text"
+						},
+						txGain: {
+							value: "35.0",
+							type: "text"
+						},
+						normalFrequency: {
+							value: "900e6",
+							type: "text"
+						},
+						sampleRate: {
+							value: "250e3",
+							type: "text"
+						},
+						frameSize: {
+							value: "1024",
+							type: "text"
+						},
+						nodeId: {
+							value: "17",
+							type: "text"
+						},
+						usrpAddress: {
+							value: "192.168.11.17",
+							type: "text"
+						},
+						nodeAddress: {
+							value: "10.10.10.17",
+							type: "text"
+						},
+						radioDirection: {
+							value: "Omni",
+							type: "imgSrc"
+						}
+					}
+				},
+				4: {
+					information:{
+						colorName: "Blue",
+						colorHex: "#2980b9"
+					},
+					radio:{
+						rxGain: {
+							value: "35.0",
+							type: "text"
+						},
+						txGain: {
+							value: "35.0",
+							type: "text"
+						},
+						normalFrequency: {
+							value: "900e6",
+							type: "text"
+						},
+						sampleRate: {
+							value: "250e3",
+							type: "text"
+						},
+						frameSize: {
+							value: "1024",
+							type: "text"
+						},
+						nodeId: {
+							value: "18",
+							type: "text"
+						},
+						usrpAddress: {
+							value: "192.168.11.18",
+							type: "text"
+						},
+						nodeAddress: {
+							value: "10.10.10.18",
+							type: "text"
+						},
+						radioDirection: {
+							value: "Omni",
+							type: "imgSrc"
+						}
+					}
+				},
+				5: {
+					information:{
+						colorName: "Purple",
+						colorHex: "#8e44ad"
+					},
+					radio:{
+						rxGain: {
+							value: "35.0",
+							type: "text"
+						},
+						txGain: {
+							value: "35.0",
+							type: "text"
+						},
+						normalFrequency: {
+							value: "900e6",
+							type: "text"
+						},
+						sampleRate: {
+							value: "250e3",
+							type: "text"
+						},
+						frameSize: {
+							value: "1024",
+							type: "text"
+						},
+						nodeId: {
+							value: "19",
+							type: "text"
+						},
+						usrpAddress: {
+							value: "192.168.11.19",
+							type: "text"
+						},
+						nodeAddress: {
+							value: "10.10.10.19",
+							type: "text"
+						},
+						radioDirection: {
+							value: "Omni",
+							type: "imgSrc"
+						}
+					}
+				},
+				6: {
+					information:{
+						colorName: "Black",
+						colorHex: "#34495e"
+					},
+					radio:{
+						rxGain: {
+							value: "35.0",
+							type: "text"
+						},
+						txGain: {
+							value: "35.0",
+							type: "text"
+						},
+						normalFrequency: {
+							value: "900e6",
+							type: "text"
+						},
+						sampleRate: {
+							value: "250e3",
+							type: "text"
+						},
+						frameSize: {
+							value: "1024",
+							type: "text"
+						},
+						nodeId: {
+							value: "20",
+							type: "text"
+						},
+						usrpAddress: {
+							value: "192.168.11.20",
+							type: "text"
+						},
+						nodeAddress: {
+							value: "10.10.10.20",
+							type: "text"
+						},
+						radioDirection: {
+							value: "Omni",
+							type: "imgSrc"
+						}
+					}
+				}
+			},
+			grid: {
+				rectangles: null,
+				context: null,
+				canvas: null
+			}
+		}
+
+		function setup() {
+			for (let team_id in data.teams) {
+				$('#team_'+team_id+' .line').css('background-color', data.teams[team_id].information.colorHex);
+				setData(team_id, data.teams[team_id].radio)
+			}
+
+			for ( let i = 15; i <= 20; i++) {
+				fade(i, i-14, teamColor[i], null);
+			}
+		}
+
+		function clearcanvas(){
+			fadeOut(15, 1, "#f1c40f", null)
+			fadeOut(18, 1, "#2980b9", null)
+		}
+
+
+		function setData(team, data) {
+			for (let i in data) {
+				if (data[i].type == 'text') {
+					$('#'+i+'_'+team).text(data[i].value)
+				}
+				if (data[i].type == 'imgSrc') {
+					$('#'+i+'_'+team).attr('src', 'src/img/Pattern'+data[i].value+'.png')
+				}
+			}
+		}
+
+		function on(node){
+			// clear the spot
+			data.grid.context.clearRect(data.grid.rectangles[node].x-3, data.grid.rectangles[node].y-3, data.grid.rectangles[node].width+8, data.grid.rectangles[node].height+8);
+
+			// right over it
+			data.grid.context.beginPath();
+			data.grid.context.rect(data.grid.rectangles[node].x, data.grid.rectangles[node].y, data.grid.rectangles[node].width, data.grid.rectangles[node].height);
+			data.grid.context.fillStyle = colors.green;
+			data.grid.context.fill();
+			data.grid.context.lineWidth = data.grid.rectangles[node].borderWidth;
+			data.grid.context.strokeStyle = colors.grey;
+			data.grid.context.stroke();
+		}
+
+		function off(node){
+			// clear the spot
+			data.grid.context.clearRect(data.grid.rectangles[node].x-3, data.grid.rectangles[node].y-3, data.grid.rectangles[node].width+8, data.grid.rectangles[node].height+8);
+
+			// right over it
+			data.grid.context.beginPath();
+			data.grid.context.rect(data.grid.rectangles[node].x, data.grid.rectangles[node].y, data.grid.rectangles[node].width, data.grid.rectangles[node].height);
+			data.grid.context.fillStyle = colors.grey;
+			data.grid.context.fill();
+			data.grid.context.lineWidth = data.grid.rectangles[node].borderWidth;
+			data.grid.context.strokeStyle = colors.grey;
+			data.grid.context.stroke();
+		}
+
+		function fade(node, team, color, last_node){
+			if ( data.grid.rectangles[node].taken == 0 ) {
+				data.grid.rectangles[node].taken = color
+			} else if(data.grid.rectangles[node].taken !== color ){
+				console.log('ALREADY TAKEN!', node, color, data.grid.rectangles)
+				setRadioDirection(team, 'Omni');
+				return
+			}
+
+			data.grid.context.globalAlpha = data.grid.rectangles[node].alpha;
+			// clear the spot
+			data.grid.context.clearRect(data.grid.rectangles[node].x-3, data.grid.rectangles[node].y-3, data.grid.rectangles[node].width+8, data.grid.rectangles[node].height+8);
+
+
+			// right over it
+			data.grid.context.beginPath();
+			data.grid.context.rect(data.grid.rectangles[node].x, data.grid.rectangles[node].y, data.grid.rectangles[node].width, data.grid.rectangles[node].height);
+			data.grid.context.fillStyle = color;
+			data.grid.context.fill();
+
+			data.grid.context.globalAlpha = 1;
+			data.grid.context.lineWidth = data.grid.rectangles[node].borderWidth;
+			data.grid.context.strokeStyle = colors.grey;
+			data.grid.context.stroke();
+
+			// draw line from old node to new node
+			line(node, color, last_node)
+
+			if ( data.grid.rectangles[node].alpha < 1.0) {
+				data.grid.rectangles[node].alpha = data.grid.rectangles[node].alpha + delta
+				window.setTimeout(function(){
+					fade(node, team, color, last_node)
+				}, (Math.random()*100));
+			} else {
+				getNextNode(node, team, color)
+			}
+		}
+
+		function fadeOut(node, team, color, last_node){
+			console.log(data.grid.rectangles[node].taken, color)
+			if ( data.grid.rectangles[node].taken == 0 ) {
+				data.grid.rectangles[node].taken = color
+			} else if(data.grid.rectangles[node].taken !== color ){
+				console.log('ALREADY TAKEN!', node, color, data.grid.rectangles)
+				setRadioDirection(team, 'Omni');
+				return
+			}
+
+			console.log(data.grid.rectangles[node].alpha)
+			data.grid.context.globalAlpha = data.grid.rectangles[node].alpha;
+			// clear the spot
+			data.grid.context.clearRect(data.grid.rectangles[node].x-3, data.grid.rectangles[node].y-3, data.grid.rectangles[node].width+8, data.grid.rectangles[node].height+8);
+
+
+			// right over it
+			data.grid.context.beginPath();
+			data.grid.context.rect(data.grid.rectangles[node].x, data.grid.rectangles[node].y, data.grid.rectangles[node].width, data.grid.rectangles[node].height);
+			data.grid.context.fillStyle = color;
+			data.grid.context.fill();
+
+			data.grid.context.globalAlpha = 1;
+			data.grid.context.lineWidth = data.grid.rectangles[node].borderWidth;
+			data.grid.context.strokeStyle = colors.grey;
+			data.grid.context.stroke();
+
+			// draw line from old node to new node
+			line(node, color, last_node)
+
+			if ( data.grid.rectangles[node].alpha >= 0.05) {
+				data.grid.rectangles[node].alpha = data.grid.rectangles[node].alpha - delta
+				window.setTimeout(function(){
+					fadeOut(node, team, color, last_node)
+				}, (Math.random()*100));
+			} else if ( data.grid.rectangles[node].alpha != 0.0 ) { // to deal with js fractions
+				data.grid.rectangles[node].alpha = 0.0;
+				window.setTimeout(function(){
+					fadeOut(node, team, color, last_node)
+				}, (Math.random()*100));
+			} else {
+				/* Process 
+					- remove node from queue
+					- update queue & queue head
+					- remove lines pointing to/from that node
+					- draw line from previous node to next node
+				*/
+				// clear lines
+				next = getNextNodeIdAndDirection(node)
+				var xMax = Math.max(data.grid.rectangles[node].x, data.grid.rectangles[next[0]].x);
+				var xMin = Math.min(data.grid.rectangles[node].x, data.grid.rectangles[next[0]].x);
+				var yMax = Math.max(data.grid.rectangles[node].y, data.grid.rectangles[next[0]].y);
+				var yMin = Math.min(data.grid.rectangles[node].y, data.grid.rectangles[next[0]].y);
+
+				console.log(data.grid.rectangles[node], data.grid.rectangles[next[0]])
+
+				if (next[1] == 'Right') { 
+					data.grid.context.clearRect(xMin-5, yMin-5, xMax-5, yMax+30);
+				} else if ( next[1] == 'Left' ){
+					data.grid.context.clearRect(xMin+30, yMin-5, xMax-5, yMax+30);
+				}
+				
+				data.grid.context.beginPath();
+				data.grid.context.rect(data.grid.rectangles[node].x, data.grid.rectangles[node].y, data.grid.rectangles[node].width, data.grid.rectangles[node].height);
+				data.grid.context.fillStyle = colors.grey;
+				data.grid.context.fill();
+
+				// getNextNode(node, team, color)
+			}
+		}
+
+		function line(node, color, last_node){
+			if ( last_node !== null ){
+				data.grid.context.beginPath();
+				data.grid.context.setLineDash([5, 15]);
+				data.grid.context.moveTo(data.grid.rectangles[last_node].x, data.grid.rectangles[last_node].y);
+				data.grid.context.lineTo(data.grid.rectangles[node].x, data.grid.rectangles[node].y);
+				data.grid.context.stroke();
+			}
+		}
+
+		function setRadioDirection(team, direction){
+			data.teams[team].radio.radioDirection.value = direction;
+			setData(team, data.teams[team].radio)
+		}
+
+		function getNextNode(node, team, color){
+			// yellow
+			if (node == 15){
+				setRadioDirection(team, 'Right');
+				return fade(0, team, color, 15)
+			}
+			if (node == 0){
+				setRadioDirection(team, 'Right');
+				return fade(5, team, color, 0)
+			}
+			if (node == 5){
+				setRadioDirection(team, 'Down');
+				return fade(6, team, color, 5)
+			}
+
+			// red
+			if (node == 16){
+				setRadioDirection(team, 'Right');
+				return fade(2, team, color, 16)
+			}
+			if (node == 2){
+				setRadioDirection(team, 'Up');
+				return fade(1, team, color, 2)
+			}
+			if (node == 1){
+				setRadioDirection(team, 'Right');
+				return fade(7, team, color, 1)
+			}
+
+
+			// green
+			if (node == 17){
+				setRadioDirection(team, 'Right');
+				return fade(4, team, color, 17)
+			}
+			if (node == 4){
+				setRadioDirection(team, 'Up');
+				return fade(3, team, color, 4)
+			}
+			if (node == 3){
+				setRadioDirection(team, 'Right');
+				return fade(8, team, color, 3)
+			}
+
+			// blue
+			if (node == 18){
+				setRadioDirection(team, 'Left');
+				return fade(10, team, color, 18)
+			}
+			if (node == 10){
+				setRadioDirection(team, 'Down');
+				return fade(11, team, color, 10)
+			}
+			if (node == 11){
+				setRadioDirection(team, 'Left');
+				return fade(6, team, color, 11)
+			}
+
+			// purple
+			if (node == 19){
+				setRadioDirection(team, 'Left');
+				return fade(12, team, color, 19)
+			}
+			if (node == 12){
+				setRadioDirection(team, 'Down');
+				return fade(13, team, color, 12)
+			}
+			if (node == 13){
+				setRadioDirection(team, 'Left');
+				return fade(8, team, color, 13)
+			}
+
+			// black
+			if (node == 20){
+				setRadioDirection(team, 'Left');
+				return fade(14, team, color, 20)
+			} 
+			if (node == 14){
+				setRadioDirection(team, 'Left');
+				return fade(9, team, color, 14)
+			} 
+			if (node == 9){
+				setRadioDirection(team, 'Up');
+				return fade(8, team, color, 9)
+			} 
+
+			setRadioDirection(team, 'Omni');
+		}
+
+		function getNextNodeIdAndDirection(node, team, color){
+			// yellow
+			if (node == 15){
+				return [0, 'Right']
+			}
+			if (node == 0){
+				return [5, 'Right']
+			}
+			if (node == 5){
+				return [6, 'Down']
+			}
+
+			// red
+			if (node == 16){
+				return [2, 'Right']
+			}
+			if (node == 2){
+				return [1, 'Up']
+			}
+			if (node == 1){
+				return [7, 'Right']
+			}
+
+
+			// green
+			if (node == 17){
+				return [4, 'Right']
+			}
+			if (node == 4){
+				return [3, 'Up']
+			}
+			if (node == 3){
+				return [8, 'Right']
+			}
+
+			// blue
+			if (node == 18){
+				return [10, 'Left']
+			}
+			if (node == 10){
+				return [11, 'Down']
+			}
+			if (node == 11){
+				return [6, 'Left']
+			}
+
+			// purple
+			if (node == 19){
+				return [12, 'Left']
+			}
+			if (node == 12){
+				return [13, 'Down']
+			}
+			if (node == 13){
+				return [8, 'Left']
+			}
+
+			// black
+			if (node == 20){
+				return [14, 'Left']
+			} 
+			if (node == 14){
+				return [9, 'Left']
+			} 
+			if (node == 9){
+				return [8, 'Up']
+			} 
+
+			return null
+		}
+
+		function createNodes(){
+		/*
+			15 	0	5	10	18
+				1	6	11
+			16	2	7	12 	19
+			 	3 	8 	13
+			17	4	9	14	20 	
+		*/
+
+			var rects = []
+			c = 0;
+			for (let i=0; i<=2; i++){
+				for (let j=0; j<=4; j++){
+					var rect = {}
+					rect.x = (75 * i) + (i * 5) + 80;
+					rect.y = (75 * j) + (j * 5) + 5;
+					rect.width = 25;
+					rect.height = 25;
+					// rect.borderWidth = 5;
+					rect.alpha = 0;
+					rect.taken = 0;
+					rects.push(rect);
+					c+=1;
+				}
+			}
+			for (let i=0; i<=1; i++){
+				for (let j=0; j<=2; j++){
+					k = (i == 0) ? 5 : 235;
+					var rect = {}
+					rect.x = (75 * i) + (i * 5) + k;
+					rect.y = (180 * j) + (j * 5) + 5;
+					rect.width = 25;
+					rect.height = 25;
+					rect.alpha = 0;
+					rect.color = teamColor[c];
+					// rect.borderWidth = 5;
+					rect.taken = 0;
+					rects.push(rect);
+					c+=1;
+				}
+			}
+			return rects
+		}
+
+		function drawRectangles() {
+			for (let i in data.grid.rectangles){
+				data.grid.context.beginPath();
+				data.grid.context.rect(data.grid.rectangles[i].x, data.grid.rectangles[i].y, data.grid.rectangles[i].width, data.grid.rectangles[i].height);
+				data.grid.context.fillStyle = colors.grey;
+				data.grid.context.fill();
+				// data.grid.context.lineWidth = data.grid.rectangles[i].borderWidth;
+				// data.grid.context.strokeStyle = colors.grey;
+				// data.grid.context.stroke();
+			}
+		}
+
+		data.grid.canvas = document.getElementById('gridView');
+		data.grid.context = data.grid.canvas.getContext('2d');
+
+		data.grid.rectangles = createNodes();
+		data.grid.context.clearRect(0, 0, data.grid.canvas.width, data.grid.canvas.height);
+		drawRectangles();
+		
+		// for ( let i = 15; i <= 20; i++) {
+		// 	fade(i, i-14, data.grid.rectangles, context, teamColor[i], null);
+		// }
+
+		setup()
+	</script>
+	</body>
+</html>
