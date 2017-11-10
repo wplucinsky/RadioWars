@@ -1,0 +1,239 @@
+var grid = new Grid();
+
+function Grid(){
+	// standard
+	this.teams = null;
+	this.elem = null;
+
+	// specific
+	this.rects = []
+	this.delta = 0.05;
+	this.stopFlag = 0
+	this.nodes = new Nodes();
+	this.colors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	}
+	this.colors = {
+		red: 'rgb(255, 99, 132)',
+		orange: 'rgb(255, 159, 64)',
+		yellow: 'rgb(255, 205, 86)',
+		green: 'rgb(75, 192, 192)',
+		blue: 'rgb(54, 162, 235)',
+		purple: 'rgb(153, 102, 255)',
+		grey: 'rgb(201, 203, 207)'
+	}
+
+	this.setup = function(teams, id){
+		this.teams = teams;
+		this.setElem(id)
+
+		this.createNodes();
+		this.drawRectangles();
+	}
+
+	this.start = function(){
+		this.stopFlag = 0;
+		for ( var i = 1; i <= 6; i++) {
+			console.log(i)
+			this.fadeIn(i+14, i, this.teams[i].team.getTeamColorHex(), null);
+		}
+	}
+
+	this.stop = function(){
+		this.stopFlag = 1;
+	}
+
+	this.setElem = function(id){
+		var elem = document.getElementById(id);
+		this.elem = elem.getContext('2d');
+	}
+
+	this.createNodes = function(){
+		this.rects = []
+		c = 0;
+		for (let i=0; i<=2; i++){
+			for (let j=0; j<=4; j++){
+				var rect = {}
+				rect.x = (75 * i) + (i * 5) + 80;
+				rect.y = (75 * j) + (j * 5) + 5;
+				rect.width = 25;
+				rect.height = 25;
+				rect.alpha = 0;
+				rect.taken = 0;
+				this.rects.push(rect);
+				c+=1;
+			}
+		}
+		for (let i=0; i<=1; i++){
+			for (let j=0; j<=2; j++){
+				k = (i == 0) ? 5 : 235;
+				var rect = {}
+				rect.x = (75 * i) + (i * 5) + k;
+				rect.y = (180 * j) + (j * 5) + 5;
+				rect.width = 25;
+				rect.height = 25;
+				rect.alpha = 0;
+				rect.taken = 0;
+				this.rects.push(rect);
+				c+=1;
+			}
+		}
+	}
+
+	this.drawRectangles = function() {
+		for (let i in this.rects){
+			this.elem.beginPath();
+			this.elem.rect(this.rects[i].x, this.rects[i].y, this.rects[i].width, this.rects[i].height);
+			this.elem.fillStyle = this.colors.grey;
+			this.elem.fill();
+		}
+	}
+
+	this.on = function(node){
+		if ( this.stopFlag === 1) {
+			return;
+		}
+
+		// clear the spot
+		this.elem.clearRect(this.rects[node].x-3, this.rects[node].y-3, this.rects[node].width+8, this.rects[node].height+8);
+
+		// right over it
+		this.elem.beginPath();
+		this.elem.rect(this.rects[node].x, this.rects[node].y, this.rects[node].width, this.rects[node].height);
+		this.elem.fillStyle = colors.green;
+		this.elem.fill();
+		this.elem.lineWidth = this.rects[node].borderWidth;
+		this.elem.strokeStyle = colors.grey;
+		this.elem.stroke();
+	}
+
+	this.off = function(node){
+		if ( this.stopFlag === 1) {
+			return;
+		}
+
+		// clear the spot
+		this.elem.clearRect(this.rects[node].x-3, this.rects[node].y-3, this.rects[node].width+8, this.rects[node].height+8);
+
+		// right over it
+		this.elem.beginPath();
+		this.elem.rect(this.rects[node].x, this.rects[node].y, this.rects[node].width, this.rects[node].height);
+		this.elem.fillStyle = colors.grey;
+		this.elem.fill();
+		this.elem.lineWidth = this.rects[node].borderWidth;
+		this.elem.strokeStyle = colors.grey;
+		this.elem.stroke();
+	}
+	
+	this.draw = function(node, color){
+		// clear the spot
+		this.elem.clearRect(this.rects[node].x-3, this.rects[node].y-3, this.rects[node].width+8, this.rects[node].height+8);
+
+		// right over it
+		this.elem.globalAlpha = this.rects[node].alpha;
+		this.elem.beginPath();
+		this.elem.rect(this.rects[node].x, this.rects[node].y, this.rects[node].width, this.rects[node].height);
+		this.elem.fillStyle = color;
+		this.elem.fill();
+
+		this.elem.globalAlpha = 1;
+		this.elem.lineWidth = this.rects[node].borderWidth;
+		this.elem.strokeStyle = this.colors.grey;
+		this.elem.stroke();
+	}
+
+	this.fadeIn = function(node, team, color, last_node){
+		if ( this.stopFlag === 1) {
+			return;
+		}
+
+		console.log(this.rects, node)
+		if ( this.rects[node].taken == 0 ) {
+			this.rects[node].taken = color
+		} else if(this.rects[node].taken !== color ){
+			console.log('ALREADY TAKEN!', node, color, this.rects)
+			this.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
+			return
+		}
+
+		this.draw(node, color)				// draw rectangle w/ correct opacity
+		this.line(node, color, last_node)	// draw line from previous to current
+
+		if ( this.rects[node].alpha < 1.0) {
+			// fade from 0 to 1 opacity
+			this.rects[node].alpha = this.rects[node].alpha + this.delta
+			window.setTimeout(function(){
+				this.data.graphs.grid.fn.fadeIn(node, team, color, last_node)
+			}, (Math.random()*100));
+		} else {
+			// go to new random node
+			new_node = this.nodes.getUntakenNode(node);
+			if ( new_node == null && last_node != null) {
+				new_node = this.nodes.getUntakenNode(last_node);
+				if ( new_node != null ) {
+					this.nodes.takeNode(new_node)
+					this.teams[team].team.setRadio({radioDirection: {value: this.nodes.getNodeDirection(new_node, last_node), type: "imgSrc"}});
+					this.fadeIn(new_node, team, color, last_node);
+				} else {
+					this.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
+				}
+			} else {
+				this.nodes.takeNode(new_node);
+				this.teams[team].team.setRadio({radioDirection: {value: this.nodes.getNodeDirection(new_node, node), type: "imgSrc"}});
+				this.fadeIn(new_node, team, color, node);
+			}
+		}
+	}
+
+	this.fadeOut = function(node, team, color, last_node){
+		if ( this.stopFlag === 1) {
+			return;
+		}
+
+		if ( this.rects[node].taken == 0 ) {
+			this.rects[node].taken = color
+		} else if(this.rects[node].taken !== color ){
+			console.log('ALREADY TAKEN!', node, color, this.rects)
+			this.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
+			return
+		}
+
+		this.draw(node, color)				// draw rectangle w/ correct opacity
+		this.line(node, color, last_node)	// draw line from previous to current
+
+		if ( this.rects[node].alpha >= 0.05) {
+			this.rects[node].alpha = this.rects[node].alpha - this.delta
+			window.setTimeout(function(){
+				this.fadeOut(node, team, color, last_node)
+			}, (Math.random()*100));
+		} else if ( this.rects[node].alpha != 0.0 ) { // to deal with js fractions
+			this.rects[node].alpha = 0.0;
+			window.setTimeout(function(){
+				this.fadeOut(node, team, color, last_node)
+			}, (Math.random()*100));
+		} else {
+			/* Process 
+				- remove node from queue
+				- update queue & queue head
+				- remove lines pointing to/from that node
+				- draw line from previous node to next node
+			*/
+		}
+	}
+
+	this.line = function(node, color, last_node){
+		if ( last_node !== null ){
+			this.elem.beginPath();
+			this.elem.setLineDash([5, 15]);
+			this.elem.moveTo(this.rects[last_node].x, this.rects[last_node].y);
+			this.elem.lineTo(this.rects[node].x, this.rects[node].y);
+			this.elem.stroke();
+		}
+	}
+}
