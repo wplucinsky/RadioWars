@@ -326,7 +326,7 @@
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn = eval(graph_name);
 				data.graphs[graph_name].fn.setup(data.teams, graph_name)
-				data.graphs[graph_name].fn.start()
+				data.graphs[graph_name].fn.start('melee')
 			}
 		}
 		setup()

@@ -28,13 +28,16 @@ function Grid(){
 		this.drawRectangles();
 	}
 
-	this.start = function(){
+	this.start = function(mode){
 		this.stopFlag = 0;
 		for (let i in this.teams) {
 			this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
 		}
-		this.contention(5, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.3, 'capture')
-		this.contention(10, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.8, 'lose')
+
+		if ( mode == 'interference' ) {
+			this.contention(5, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.3, 'capture')
+			this.contention(10, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.8, 'lose')
+		}
 	}
 
 	this.stop = function(){
