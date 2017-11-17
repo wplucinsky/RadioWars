@@ -39,9 +39,8 @@ function Grid(){
 
 	this.start = function(){
 		this.stopFlag = 0;
-		for ( var i = 1; i <= 6; i++) {
-			console.log(i)
-			this.fadeIn(i+14, i, this.teams[i].team.getTeamColorHex(), null);
+		for (let i in this.teams) {
+			this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
 		}
 	}
 
@@ -146,6 +145,9 @@ function Grid(){
 		this.elem.lineWidth = this.rects[node].borderWidth;
 		this.elem.strokeStyle = this.colors.grey;
 		this.elem.stroke();
+
+		$('#node_'+node).css('background-color', color)
+		$('#node_'+node).css('width', 100*this.rects[node].alpha.toFixed(2))
 	}
 
 	this.fadeIn = function(node, team, color, last_node){
@@ -153,7 +155,6 @@ function Grid(){
 			return;
 		}
 
-		console.log(this.rects, node)
 		if ( this.rects[node].taken == 0 ) {
 			this.rects[node].taken = color
 		} else if(this.rects[node].taken !== color ){
@@ -170,7 +171,7 @@ function Grid(){
 			this.rects[node].alpha = this.rects[node].alpha + this.delta
 			window.setTimeout(function(){
 				this.data.graphs.grid.fn.fadeIn(node, team, color, last_node)
-			}, (Math.random()*100));
+			}, (Math.random()*500));
 		} else {
 			// go to new random node
 			new_node = this.nodes.getUntakenNode(node);

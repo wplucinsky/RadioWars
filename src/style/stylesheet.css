@@ -81,3 +81,9 @@
 #countdownTimerContainer .canvas{
 	width: 140px;
 }
+.node_data tr td:first-child{
+	width: 75px;
+}
+.node_data tr td div{
+	height: 18px;
+}
