@@ -84,6 +84,9 @@
 .node_data tr td:first-child{
 	width: 75px;
 }
+.node_data tr td:nth-child(2){
+	width: 100px;
+}
 .node_data tr td div{
 	height: 18px;
 }
