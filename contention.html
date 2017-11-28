@@ -80,6 +80,55 @@
 								</div>
 							</div>
 						</div>
+						<div class="col-md-6" id="team_6">
+							<h3 class="text-center">Team <span id="team_id">6</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-8">
+									<table class="team_data">
+										<tr>
+											<td>Rx Gain</td>
+											<td id="rxGain_6">0</td>
+										</tr>
+										<tr>
+											<td>Tx Gain</td>
+											<td id="txGain_6">0</td>
+										</tr>
+										<tr>
+											<td>Normal Frequency</td>
+											<td id="normalFrequency_6">0</td>
+										</tr>
+										<tr>
+											<td>Sample Rate</td>
+											<td id="sampleRate_6">0</td>
+										</tr>
+										<tr>
+											<td>Frame Size</td>
+											<td id="frameSize_6">0</td>
+										</tr>
+										<tr>
+											<td>Node Id</td>
+											<td id="nodeId_6">0</td>
+										</tr>
+										<tr>
+											<td>USRP Address</td>
+											<td id="usrpAddress_6">0</td>
+										</tr>
+										<tr>
+											<td>Node Address</td>
+											<td id="nodeAddress_6">0</td>
+										</tr>
+										<tr>
+											<td>Captured Nodes</td>
+											<td id="captured_6">0</td>
+										</tr>
+									</table>
+								</div>
+								<div class="col-md-4">
+									<img class="logo" id="radioDirection_1" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="row">
 						<div class="col-md-6">
@@ -196,7 +245,7 @@
 				</div>
 			</div>
 		</div>
-	<script src="src/js/interference.js"></script>
+	<script src="src/js/contention.js"></script>
 	<script src="src/js/Team.js"></script>
 	<script src="src/js/Nodes.js"></script>
 	<script src="src/js/Grid.js"></script>
@@ -213,7 +262,7 @@
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn = eval(graph_name);
 				data.graphs[graph_name].fn.setup(data.teams, graph_name)
-				data.graphs[graph_name].fn.start('interference')
+				data.graphs[graph_name].fn.start('contention')
 			}
 		}
 		setup()

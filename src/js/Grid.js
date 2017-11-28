@@ -30,11 +30,17 @@ function Grid(){
 
 	this.start = function(mode){
 		this.stopFlag = 0;
-		for (let i in this.teams) {
-			this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
+		if (mode == 'interference') {
+			for (let i in this.teams) {
+				this.startInterference(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
+			}
+		} else {
+			for (let i in this.teams) {
+				this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
+			}
 		}
 
-		if ( mode == 'interference' ) {
+		if ( mode == 'contention' ) {
 			this.contention(5, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.3, 'capture')
 			this.contention(10, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.8, 'lose')
 		}
@@ -227,6 +233,47 @@ function Grid(){
 		}
 	}
 
+	this.startInterference = function(node, team, color, last_node){
+		if ( this.stopFlag === 1) {
+			return;
+		}
+
+		if ( this.rects[node].taken == 0 ) {
+			this.rects[node].taken = color
+			this.nodes.takeNode(node)
+
+			data.teams[team].radio.captured.value++;				// update captured nodes for team
+			data.teams[team].team.setRadio(data.teams[team].radio); // update team radio info
+		} else if(this.rects[node].taken !== color || this.rects[node].alpha >= 1.0){
+			console.log('ALREADY TAKEN!', node, color, this.rects)
+			var new_nodes = this.nodes.getSurroundingNodes(node)
+			for ( i in new_nodes) {
+				if ( new_nodes[i] != -1 && $.inArray(new_nodes[i], this.nodes.getTakenNodes()) == -1 ){
+					this.startInterference(new_nodes[i], team, color, node);
+				}
+			}
+		}
+
+		this.draw(node, color)				// draw rectangle w/ correct opacity
+		this.line(node, color, last_node)	// draw line from previous to current
+
+		if ( this.rects[node].alpha < 1.0) {
+			// fade from 0 to 1 opacity
+			this.rects[node].alpha = this.rects[node].alpha + this.delta
+			window.setTimeout(function(){
+				this.data.graphs.grid.fn.startInterference(node, team, color, last_node)
+			}, (Math.random()*500));
+		} else {
+			// go to new random node
+			var new_nodes = this.nodes.getSurroundingNodes(node)
+			for ( i in new_nodes) {
+				if ( new_nodes[i] != -1 && $.inArray(new_nodes[i], this.nodes.getTakenNodes()) == -1 ){
+					this.startInterference(new_nodes[i], team, color, node);
+				}
+			}
+		}
+	}
+
 	this.contention = function(node, color1, color2, alpha, dir){
 	/*
 		This takes a node, two colors, an opacity and a direction to show node contention.
@@ -286,6 +333,7 @@ function Grid(){
 
 		return hex(r) + hex(g) + hex(b);
 	}
+
 
 	this.line = function(node, color, last_node){
 		if ( last_node !== null ){

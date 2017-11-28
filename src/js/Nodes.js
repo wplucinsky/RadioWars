@@ -17,6 +17,10 @@ function Nodes(){
 		delete this.takenNodes[this.takenNodes.indexOf(node_id)];
 	}
 
+	this.getTakenNodes = function(){
+		return this.takenNodes
+	}
+
 	this.getSurroundingNodes = function(node_id) {
 		// in form [ U, UL, L, DL, D, DR, R, UP]
 		if (node_id == 15) {	// yellow start
