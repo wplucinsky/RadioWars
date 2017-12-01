@@ -10,6 +10,7 @@ function Grid(){
 	this.delta = 0.05;
 	this.stopFlag = 0
 	this.nodes = new Nodes();
+	this.autoplay = true;
 	this.colors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
@@ -34,15 +35,54 @@ function Grid(){
 			for (let i in this.teams) {
 				this.startInterference(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
 			}
-		} else {
+		} else if (mode != 'demo') {
 			for (let i in this.teams) {
 				this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
 			}
 		}
 
-		if ( mode == 'contention' ) {
-			this.contention(5, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.3, 'capture')
-			this.contention(10, this.teams[1].team.getTeamColorHex(), this.teams[6].team.getTeamColorHex(), 0.8, 'lose')
+		if ( mode == 'demo' ) {
+			this.autoplay = false;
+			// demo 1
+			window.setTimeout(function(){
+				this.data.graphs.grid.fn.on(2, this.data.teams[1].team.getTeamColorHex(), 1.0)
+				this.data.graphs.grid.fn.on(12, this.data.teams[6].team.getTeamColorHex(), 1.0)
+				this.data.teams[1].radio.captured.value = 1;
+				this.data.teams[1].team.setRadio(data.teams[1].radio);
+				this.data.teams[6].radio.captured.value = 1;
+				this.data.teams[6].team.setRadio(data.teams[6].radio);
+				// demo 2
+				window.setTimeout(function(){
+					this.data.graphs.grid.fn.on(6, this.data.teams[1].team.getTeamColorHex(), 0.5)
+					this.data.graphs.grid.fn.on(8, this.data.teams[6].team.getTeamColorHex(), 0.5)
+					this.data.teams[1].radio.captured.value = 2;
+					this.data.teams[1].team.setRadio(data.teams[1].radio);
+					this.data.teams[6].radio.captured.value = 2;
+					this.data.teams[6].team.setRadio(data.teams[6].radio);
+					// demo 3
+					window.setTimeout(function(){
+						this.data.graphs.grid.fn.off(8)
+						this.data.graphs.grid.fn.on(6, this.data.teams[1].team.getTeamColorHex(), 1.0)
+						this.data.graphs.grid.fn.on(7, this.data.teams[1].team.getTeamColorHex(), 0.7)
+						this.data.graphs.grid.fn.contention(8, this.data.teams[1].team.getTeamColorHex(), this.data.teams[6].team.getTeamColorHex(), 0.3, 'lose')
+						this.data.teams[1].radio.captured.value = 4;
+						this.data.teams[1].team.setRadio(data.teams[1].radio);
+						this.data.teams[6].radio.captured.value = 2;
+						this.data.teams[6].team.setRadio(data.teams[6].radio);
+						// demo 4
+						window.setTimeout(function(){
+							this.data.graphs.grid.fn.contention(8, this.data.teams[1].team.getTeamColorHex(), this.data.teams[6].team.getTeamColorHex(), 0.0, 'lose')
+							this.data.graphs.grid.fn.on(6, this.data.teams[1].team.getTeamColorHex(), 1.0)
+							this.data.graphs.grid.fn.on(7, this.data.teams[1].team.getTeamColorHex(), 1.0)
+							this.data.graphs.grid.fn.on(8, this.data.teams[6].team.getTeamColorHex(), 1.0)
+							this.data.teams[1].radio.captured.value = 3;
+							this.data.teams[1].team.setRadio(data.teams[1].radio);
+							this.data.teams[6].radio.captured.value = 2;
+							this.data.teams[6].team.setRadio(data.teams[6].radio);
+						}, 2000);
+					}, 2000);
+				}, 2000);
+			}, 2000);
 		}
 	}
 
@@ -96,7 +136,7 @@ function Grid(){
 		}
 	}
 
-	this.on = function(node){
+	this.on = function(node, color, alpha){
 		if ( this.stopFlag === 1) {
 			return;
 		}
@@ -105,13 +145,15 @@ function Grid(){
 		this.elem.clearRect(this.rects[node].x-3, this.rects[node].y-3, this.rects[node].width+8, this.rects[node].height+8);
 
 		// right over it
+		this.elem.globalAlpha = alpha;
 		this.elem.beginPath();
 		this.elem.rect(this.rects[node].x, this.rects[node].y, this.rects[node].width, this.rects[node].height);
-		this.elem.fillStyle = colors.green;
+		this.elem.fillStyle = color;
 		this.elem.fill();
-		this.elem.lineWidth = this.rects[node].borderWidth;
-		this.elem.strokeStyle = colors.grey;
-		this.elem.stroke();
+		this.elem.globalAlpha = 1;
+
+		$('#node_'+node).css('background-color', color);
+		$('#node_'+node).css('width', 300*alpha.toFixed(2));
 	}
 
 	this.off = function(node){
@@ -125,11 +167,14 @@ function Grid(){
 		// right over it
 		this.elem.beginPath();
 		this.elem.rect(this.rects[node].x, this.rects[node].y, this.rects[node].width, this.rects[node].height);
-		this.elem.fillStyle = colors.grey;
+		this.elem.fillStyle = this.colors.grey;
 		this.elem.fill();
 		this.elem.lineWidth = this.rects[node].borderWidth;
-		this.elem.strokeStyle = colors.grey;
+		this.elem.strokeStyle = this.colors.grey;
 		this.elem.stroke();
+
+		$('#node_'+node).css('background-color', '#FFFFFF');
+		$('#node_'+node).css('width', 300);
 	}
 	
 	this.draw = function(node, color){
@@ -149,7 +194,7 @@ function Grid(){
 		this.elem.stroke();
 
 		$('#node_'+node).css('background-color', color);
-		$('#node_'+node).css('width', 100*this.rects[node].alpha.toFixed(2));
+		$('#node_'+node).css('width', 300*this.rects[node].alpha.toFixed(2));
 	}
 
 	this.fadeIn = function(node, team, color, last_node){
@@ -174,9 +219,11 @@ function Grid(){
 		if ( this.rects[node].alpha < 1.0) {
 			// fade from 0 to 1 opacity
 			this.rects[node].alpha = this.rects[node].alpha + this.delta
-			window.setTimeout(function(){
-				this.data.graphs.grid.fn.fadeIn(node, team, color, last_node)
-			}, (Math.random()*200));
+			if (this.autoplay){
+				window.setTimeout(function(){
+					this.data.graphs.grid.fn.fadeIn(node, team, color, last_node)
+				}, (Math.random()*200));
+			}
 		} else {
 			// go to new random node
 			new_node = this.nodes.getUntakenNode(node);
@@ -185,14 +232,18 @@ function Grid(){
 				if ( new_node != null ) {
 					this.nodes.takeNode(new_node)
 					this.teams[team].team.setRadio({radioDirection: {value: this.nodes.getNodeDirection(new_node, last_node), type: "imgSrc"}});
-					this.fadeIn(new_node, team, color, last_node);
+					if (this.autoplay){
+						this.fadeIn(new_node, team, color, last_node);
+					}
 				} else {
 					this.teams[team].team.setRadio({radioDirection: {value: "Omni", type: "imgSrc"}});
 				}
 			} else {
 				this.nodes.takeNode(new_node);
 				this.teams[team].team.setRadio({radioDirection: {value: this.nodes.getNodeDirection(new_node, node), type: "imgSrc"}});
-				this.fadeIn(new_node, team, color, node);
+				if (this.autoplay){
+					this.fadeIn(new_node, team, color, node);
+				}
 			}
 		}
 	}
@@ -215,14 +266,18 @@ function Grid(){
 
 		if ( this.rects[node].alpha >= 0.05) {
 			this.rects[node].alpha = this.rects[node].alpha - this.delta
-			window.setTimeout(function(){
-				this.fadeOut(node, team, color, last_node)
-			}, (Math.random()*100));
+			if (this.autoplay){
+				window.setTimeout(function(){
+					this.fadeOut(node, team, color, last_node)
+				}, (Math.random()*100));
+			}
 		} else if ( this.rects[node].alpha != 0.0 ) { // to deal with js fractions
 			this.rects[node].alpha = 0.0;
-			window.setTimeout(function(){
-				this.fadeOut(node, team, color, last_node)
-			}, (Math.random()*100));
+			if (this.autoplay){
+				window.setTimeout(function(){
+					this.fadeOut(node, team, color, last_node)
+				}, (Math.random()*100));
+			}
 		} else {
 			/* Process 
 				- remove node from queue
@@ -247,9 +302,11 @@ function Grid(){
 		} else if(this.rects[node].taken !== color || this.rects[node].alpha >= 1.0){
 			console.log('ALREADY TAKEN!', node, color, this.rects)
 			var new_nodes = this.nodes.getSurroundingNodes(node)
-			for ( i in new_nodes) {
-				if ( new_nodes[i] != -1 && $.inArray(new_nodes[i], this.nodes.getTakenNodes()) == -1 ){
-					this.startInterference(new_nodes[i], team, color, node);
+			if (this.autoplay){
+				for ( i in new_nodes) {
+					if ( new_nodes[i] != -1 && $.inArray(new_nodes[i], this.nodes.getTakenNodes()) == -1 ){
+						this.startInterference(new_nodes[i], team, color, node);
+					}
 				}
 			}
 		}
@@ -260,15 +317,19 @@ function Grid(){
 		if ( this.rects[node].alpha < 1.0) {
 			// fade from 0 to 1 opacity
 			this.rects[node].alpha = this.rects[node].alpha + this.delta
-			window.setTimeout(function(){
-				this.data.graphs.grid.fn.startInterference(node, team, color, last_node)
-			}, (Math.random()*500));
+			if (this.autoplay){
+				window.setTimeout(function(){
+					this.data.graphs.grid.fn.startInterference(node, team, color, last_node)
+				}, (Math.random()*500));
+			}
 		} else {
 			// go to new random node
-			var new_nodes = this.nodes.getSurroundingNodes(node)
-			for ( i in new_nodes) {
-				if ( new_nodes[i] != -1 && $.inArray(new_nodes[i], this.nodes.getTakenNodes()) == -1 ){
-					this.startInterference(new_nodes[i], team, color, node);
+			if (this.autoplay){
+				var new_nodes = this.nodes.getSurroundingNodes(node)
+				for ( i in new_nodes) {
+					if ( new_nodes[i] != -1 && $.inArray(new_nodes[i], this.nodes.getTakenNodes()) == -1 ){
+						this.startInterference(new_nodes[i], team, color, node);
+					}
 				}
 			}
 		}
@@ -305,8 +366,8 @@ function Grid(){
 		// node capture "bar graph"
 		$('#node_'+node).empty()
 		$('#node_'+node).append('<div id="contention1_'+node+'""></div><div id="contention2_'+node+'""></div>')
-		$('#contention1_'+node).css({'width': 100*alpha.toFixed(2), 'background-color': color1, 'float': 'left'});
-		$('#contention2_'+node).css({'width': 100*(1-alpha.toFixed(2)), 'background-color': color2, 'float': 'right'});
+		$('#contention1_'+node).css({'width': 300*alpha.toFixed(2), 'background-color': color1, 'float': 'left'});
+		$('#contention2_'+node).css({'width': 300*(1-alpha.toFixed(2)), 'background-color': color2, 'float': 'right'});
 
 		if ( alpha < 1.0 && alpha > 0.0) {
 			if (dir == 'capture') {
@@ -315,9 +376,11 @@ function Grid(){
 				alpha -= this.delta;
 			}
 
-			window.setTimeout(function(){
-				this.data.graphs.grid.fn.contention(node, color1, color2, alpha, dir)
-			}, (Math.random()*700));
+			if (this.autoplay){
+				window.setTimeout(function(){
+					this.data.graphs.grid.fn.contention(node, color1, color2, alpha, dir)
+				}, (Math.random()*700));
+			}
 		}
 	}
 
