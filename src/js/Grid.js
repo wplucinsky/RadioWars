@@ -3,6 +3,7 @@ var grid = new Grid();
 function Grid(){
 	// standard
 	this.teams = null;
+	this.canvas = null;
 	this.elem = null;
 
 	// specific
@@ -24,17 +25,16 @@ function Grid(){
 	this.setup = function(teams, id){
 		this.teams = teams;
 		this.setElem(id)
-
 		this.createNodes();
-		this.drawRectangles();
 	}
 
 	this.start = function(mode){
+		this.drawRectangles();
 		this.stopFlag = 0;
 		if (mode == 'interference') {
-			for (let i in this.teams) {
-				this.startInterference(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
-			}
+			// for (let i in this.teams) {
+			// 	this.startInterference(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
+			// }
 		} else if (mode != 'demo') {
 			for (let i in this.teams) {
 				this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
@@ -91,8 +91,8 @@ function Grid(){
 	}
 
 	this.setElem = function(id){
-		var elem = document.getElementById(id);
-		this.elem = elem.getContext('2d');
+		this.canvas = document.getElementById(id);
+		this.elem = this.canvas.getContext('2d');
 	}
 
 	this.createNodes = function(){
@@ -134,6 +134,10 @@ function Grid(){
 			this.elem.fillStyle = this.colors.grey;
 			this.elem.fill();
 		}
+	}
+
+	this.getRectangles = function(){
+		return this.rects;
 	}
 
 	this.on = function(node, color, alpha){
@@ -220,9 +224,19 @@ function Grid(){
 			// fade from 0 to 1 opacity
 			this.rects[node].alpha = this.rects[node].alpha + this.delta
 			if (this.autoplay){
-				window.setTimeout(function(){
+				// to control fall term demo sliders
+				if (team == 1) {
+					var val = parseInt($('#normalFrequency_'+team+'_range')[0].value);
+					val = (val <= 40) ? 850 : ((val <= 90) ? (Math.random()*800) : 100);
+					window.setTimeout(function(){
+						this.data.graphs.grid.fn.fadeIn(node, team, color, last_node)
+					}, val);
+				} else {
+					window.setTimeout(function(){
 					this.data.graphs.grid.fn.fadeIn(node, team, color, last_node)
-				}, (Math.random()*200));
+				}, (Math.random()*800));
+				}
+				
 			}
 		} else {
 			// go to new random node

@@ -241,11 +241,11 @@ var data = {
 					type: "text"
 				},
 				normalFrequency: {
-					value: "900e6",
+					value: "800e6",
 					type: "text"
 				},
 				sampleRate: {
-					value: "250e3",
+					value: "2e6",
 					type: "text"
 				},
 				frameSize: {

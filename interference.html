@@ -17,20 +17,24 @@
 			<div class="row top-pad">
 				<div class="col-md-4">
 					<h3 class="text-center">DWSL Grid</h3>
+					<div id="gridLine" class="line"></div>
 					<div id="gridViewContainer">
 						<div class="canvas chart">
 							<canvas id="grid" width="400" height="450" style="padding-top: 50px;"></canvas>
+							<canvas id="animations" width="400" height="450" style="padding-top: 50px;"></canvas>
 						</div>
 					</div>
 					<div id="countdownTimerContainer">
 						<h6 class="text-center">Time Left</h6>
+						<small id="countdownTimerValue">100</small>
 						<div class="canvas chart">
 							<canvas id="countdownTimer" width="50" height="50"></canvas>
 						</div>
+
 					</div>
 				</div>
 				<div class="col-md-8">
-					<div class="row top-pad">
+					<div class="row">
 						<div class="col-md-6" id="team_1">
 							<h3 class="text-center">Team <span id="team_id">1</span></h3>
 							<div class="line"></div>
@@ -178,19 +182,6 @@
 							<p id="serverOutput">
 								
 							</p>
-							<script type="text/javascript">
-								$.ajax({
-									type:"GET",
-									url:"https://api.meetup.com/2/cities",
-									success: function(data) {
-									  	$('#serverOutput').text(JSON.stringify(data));
-									},
-									error: function(error) {
-										console.log(error)
-									},
-									dataType: 'jsonp',
-									});
-							</script>
 						</div>
 					</div>
 				</div>
@@ -200,6 +191,7 @@
 	<script src="src/js/Team.js"></script>
 	<script src="src/js/Nodes.js"></script>
 	<script src="src/js/Grid.js"></script>
+	<script src="src/js/Animations.js"></script>
 	<script src="src/js/CountdownTimer.js"></script>
 	<script>
 		function setup() {
@@ -213,8 +205,12 @@
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn = eval(graph_name);
 				data.graphs[graph_name].fn.setup(data.teams, graph_name)
+			}
+			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn.start('interference')
 			}
+
+			
 		}
 		setup()
 

@@ -30,7 +30,7 @@
 					</div>
 				</div>
 				<div class="col-md-8">
-					<div class="row top-pad">
+					<div class="row">
 						<div class="col-md-6" id="team_1">
 							<h3 class="text-center">Team <span id="team_id">1</span></h3>
 							<div class="line"></div>
@@ -47,10 +47,12 @@
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
+											<td><input type="range" id="normalFrequency_1_range" min="1" max="100" value="90"></td>
 											<td id="normalFrequency_1">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
+											<td><input type="range" id="sampleRate_1_range" min="1" max="100" value="30"></td>
 											<td id="sampleRate_1">0</td>
 										</tr>
 										<tr>
@@ -72,7 +74,11 @@
 									</table>
 								</div>
 								<div class="col-md-4">
+									<span id="button_up"><button><</button></span>
+									<span id="button_left"><button><</button></span>
 									<img class="logo" id="radioDirection_1" src="src/img/PatternOmni.png">
+									<span id="button_right"><button>></button></span>
+									<span id="button_down"><button>></button></span>
 								</div>
 							</div>
 						</div>
@@ -92,10 +98,12 @@
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
+											<td><input type="range" min="1" max="100" value="90" disabled></td>
 											<td id="normalFrequency_4">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
+											<td><input type="range" min="1" max="100" value="30" disabled></td>
 											<td id="sampleRate_4">0</td>
 										</tr>
 										<tr>
@@ -117,7 +125,11 @@
 									</table>
 								</div>
 								<div class="col-md-4">
+									<span id="button_up"><button disabled><</button></span>
+									<span id="button_left"><button disabled><</button></span>
 									<img class="logo" id="radioDirection_4" src="src/img/PatternOmni.png">
+									<span id="button_right"><button disabled>></button></span>
+									<span id="button_down"><button disabled>></button></span>
 								</div>
 							</div>
 						</div>
@@ -139,10 +151,12 @@
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
+											<td><input type="range" min="1" max="100" value="90" disabled></td>
 											<td id="normalFrequency_2">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
+											<td><input type="range" min="1" max="100" value="30" disabled></td>
 											<td id="sampleRate_2">0</td>
 										</tr>
 										<tr>
@@ -164,7 +178,11 @@
 									</table>
 								</div>
 								<div class="col-md-4">
+									<span id="button_up"><button disabled><</button></span>
+									<span id="button_left"><button disabled><</button></span>
 									<img class="logo" id="radioDirection_2" src="src/img/PatternOmni.png">
+									<span id="button_right"><button disabled>></button></span>
+									<span id="button_down"><button disabled>></button></span>
 								</div>
 							</div>
 						</div>
@@ -184,10 +202,12 @@
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
+											<td><input type="range" min="1" max="100" value="90" disabled></td>
 											<td id="normalFrequency_5">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
+											<td><input type="range" min="1" max="100" value="30" disabled></td>
 											<td id="sampleRate_5">0</td>
 										</tr>
 										<tr>
@@ -209,7 +229,11 @@
 									</table>
 								</div>
 								<div class="col-md-4">
+									<span id="button_up"><button disabled><</button></span>
+									<span id="button_left"><button disabled><</button></span>
 									<img class="logo" id="radioDirection_5" src="src/img/PatternOmni.png">
+									<span id="button_right"><button disabled>></button></span>
+									<span id="button_down"><button disabled>></button></span>
 								</div>
 							</div>
 						</div>
@@ -231,10 +255,12 @@
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
+											<td><input type="range" min="1" max="100" value="90" disabled></td>
 											<td id="normalFrequency_3">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
+											<td><input type="range" min="1" max="100" value="30" disabled></td>
 											<td id="sampleRate_3">0</td>
 										</tr>
 										<tr>
@@ -256,7 +282,11 @@
 									</table>
 								</div>
 								<div class="col-md-4">
+									<span id="button_up"><button disabled><</button></span>
+									<span id="button_left"><button disabled><</button></span>
 									<img class="logo" id="radioDirection_3" src="src/img/PatternOmni.png">
+									<span id="button_right"><button disabled>></button></span>
+									<span id="button_down"><button disabled>></button></span>
 								</div>
 							</div>
 						</div>
@@ -276,10 +306,12 @@
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
+											<td><input type="range" min="1" max="100" value="70" disabled></td>
 											<td id="normalFrequency_6">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
+											<td><input type="range" min="1" max="100" value="50" disabled></td>
 											<td id="sampleRate_6">0</td>
 										</tr>
 										<tr>
@@ -301,7 +333,11 @@
 									</table>
 								</div>
 								<div class="col-md-4">
+									<span id="button_up"><button disabled><</button></span>
+									<span id="button_left"><button disabled><</button></span>
 									<img class="logo" id="radioDirection_6" src="src/img/PatternOmni.png">
+									<span id="button_right"><button disabled>></button></span>
+									<span id="button_down"><button disabled>></button></span>
 								</div>
 							</div>
 						</div>
@@ -315,6 +351,14 @@
 	<script src="src/js/Grid.js"></script>
 	<script src="src/js/CountdownTimer.js"></script>
 	<script>
+		$('#normalFrequency_1_range').on("change mousemove", function() {
+			if ( $(this).val() == '100') {
+				$('#normalFrequency_1').html($(this).val()+'e7');
+			} else {
+				$('#normalFrequency_1').html($(this).val()+'0e6');	
+			}
+		});
+
 		function setup() {
 			for (let team_id in data.teams) {
 				data.nodes = new Nodes();

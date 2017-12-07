@@ -61,6 +61,9 @@ var data = {
 		},
 		grid: {
 			fn: null
+		},
+		animations: {
+			fn: null
 		}
-	}
+	},
 }

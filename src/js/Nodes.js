@@ -7,7 +7,8 @@ function Nodes(){
 	17	4	9	14	20 	
 */
 	this.takenNodes = [];
-	this.direction = ['Up', 'UpLeft', 'Left', 'DownLeft', 'Down', 'DownRight', 'Right', 'Up'];
+	// this.direction = ['Up', 'UpLeft', 'Left', 'DownLeft', 'Down', 'DownRight', 'Right', 'Up'];
+	this.direction = ['Up', 'Left', 'Left', 'Left', 'Down', 'Right', 'Right', 'Up'];
 
 	this.takeNode = function(node_id) {
 		this.takenNodes.push(node_id);
