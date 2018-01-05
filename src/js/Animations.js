@@ -40,12 +40,15 @@ function Animations(){
 	this.apiCall = function(){
 		$.ajax({
 			type:"GET",
-			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
+			// url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
+			url:"http://dwslgrid.ece.drexel.edu:5000/",
 			success: function(data) {
 				$('#serverOutput').text(JSON.stringify(data));
-				for ( let i in data.packetsReceived) {
-					self.data.graphs.animations.fn.sendPacket(data.node_id.replace('node',''),i.replace('node',''));
+				// log previous and get difference , alter received text
+				for ( let i in data[0].packetsRecieved) {
+					self.data.graphs.animations.fn.sendPacket(data[0]._id.replace('node',''),i.replace('node',''));
 				}
+				// [{"packetsSent":{"node2":"4","node4":"2"},"_id":"node1","packetsRecieved":{"node2":"2"},"power":"1"},{"packetsSent":{"node2":"4","node4":"2"},"_id":"node6","packetsRecieved":{"node2":"2"},"power":"2.1"}]
 			},
 			error: function(error) {
 				console.log(error)
@@ -88,7 +91,7 @@ function Animations(){
 				}
 				requestAnimationFrame(animate);
 			} else {
-				this.data.graphs.animations.fn.apiCall();
+				// this.data.graphs.animations.fn.apiCall();
 			}
 		}
 	}
