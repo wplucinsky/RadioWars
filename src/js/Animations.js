@@ -40,14 +40,19 @@ function Animations(){
 	this.apiCall = function(){
 		$.ajax({
 			type:"GET",
-			// url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
-			url:"http://dwslgrid.ece.drexel.edu:5000/",
+			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
+			// url:"http://dwslgrid.ece.drexel.edu:5000/",
 			success: function(data) {
 				$('#serverOutput').text(JSON.stringify(data));
 				// log previous and get difference , alter received text
-				for ( let i in data[0].packetsRecieved) {
-					self.data.graphs.animations.fn.sendPacket(data[0]._id.replace('node',''),i.replace('node',''));
+				var animationData = [];
+				var j = 0;
+				for ( let i in data[0].packetsReceived) {
+					console.log(data[0]._id.replace('node',''), '->', i.replace('node',''))
+					animationData[j] = self.data.graphs.animations.fn.getAnimationData(data[0]._id.replace('node',''),i.replace('node',''));
+					j++;
 				}
+				self.data.graphs.animations.fn.sendPacket(animationData);
 				// [{"packetsSent":{"node2":"4","node4":"2"},"_id":"node1","packetsRecieved":{"node2":"2"},"power":"1"},{"packetsSent":{"node2":"4","node4":"2"},"_id":"node6","packetsRecieved":{"node2":"2"},"power":"2.1"}]
 			},
 			error: function(error) {
@@ -57,38 +62,57 @@ function Animations(){
 		});
 	}
 
-	this.sendPacket = function(from, to) {
+	this.getAnimationData = function(from, to) {
+		return {
+			xDif: this.rects[to].x - this.rects[from].x,
+			yDif: this.rects[to].y - this.rects[from].y,
+			x: 	  this.rects[from].x + 13,
+			y: 	  this.rects[from].y + 13,
+			step: this.getStepSize(from, to),
+			from: from,
+			to:   to,
+			stop: 0
+		}
+	}
+
+	this.sendPacket = function(data) {
 		var elem 	= this.elem;
 			rects 	= this.rects,
-			xDif 	= rects[to].x - rects[from].x,
-			yDif 	= rects[to].y - rects[from].y,
-			x 		= rects[from].x + 13,
-			y 		= rects[from].y + 13,
-			i 		= 0,
-			step 	= this.getStepSize(from, to),
+			j 		= 0,
 			w 		= this.canvas.width,
-			h 		= this.canvas.height
-			g 		= this.colors.green;
+			h 		= this.canvas.height,
+			g 		= this.colors.green,
+			stop 	= 0;
 
 		animate();
 		function animate(){
 			elem.clearRect(0, 0, w, h);
-			elem.beginPath();
-			elem.arc(x, y, 10, 0, 2 * Math.PI);
-			elem.fillStyle = 'green';
-			elem.fill();
-			// elem.stroke();
-			elem.closePath();
+			for (let i in data) {
+				elem.beginPath();
+				elem.arc(data[i].x, data[i].y, 10, 0, 2 * Math.PI);
+				elem.fillStyle = 'green';
+				elem.fill();
+				// elem.stroke();
+				elem.closePath();
 
-			x += xDif / step;
-			y += yDif / step;
-			i += 1;
-
-			if ( i < step){
-				if ( i == (step - 1)) {
-					x = rects[to].x + 13;
-					y = rects[to].y + 13;
+				if ( data[i].stop != 1 ) {
+					data[i].x += data[i].xDif / data[i].step;
+					data[i].y += data[i].yDif / data[i].step;
 				}
+
+				if ( j < data[i].step){
+					if ( j == (data[i].step - 1)) {
+						data[i].x = rects[data[i].to].x + 13;
+						data[i].y = rects[data[i].to].y + 13;
+					}
+				} else if ( data[i].stop == 0) {
+					data[i].stop = 1;
+					stop++;
+				}
+			}
+			j += 1;
+
+			if (stop != data.length) {
 				requestAnimationFrame(animate);
 			} else {
 				// this.data.graphs.animations.fn.apiCall();
@@ -101,8 +125,8 @@ function Animations(){
 		Controls the step size, or speed, of the packets sent circle.
 	*/
 		var s 	 = 0,
-			xDif = Math.abs(rects[to].x - rects[from].x),
-			yDif = Math.abs(rects[to].y - rects[from].y);
+			xDif = Math.abs(this.rects[to].x - this.rects[from].x),
+			yDif = Math.abs(this.rects[to].y - this.rects[from].y);
 
 		if ( xDif <= 75 ) {
 			s = 20;
