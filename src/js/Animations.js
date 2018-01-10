@@ -16,7 +16,8 @@ function Animations(){
 		green: 'rgb(75, 192, 192)',
 		blue: 'rgb(54, 162, 235)',
 		purple: 'rgb(153, 102, 255)',
-		grey: 'rgb(201, 203, 207)'
+		grey: 'rgb(201, 203, 207)',
+		black: 'rgb(52, 73, 94)'
 	}
 
 	this.setup = function(teams, id){
@@ -38,6 +39,10 @@ function Animations(){
 	}
 
 	this.apiCall = function(){
+	/*
+		Calls the Flask webserver to retrieve node information from MongoDB then
+		calls a variety of animation functions to display this data to the user.
+	*/
 		$.ajax({
 			type:"GET",
 			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
@@ -45,15 +50,23 @@ function Animations(){
 			success: function(data) {
 				$('#serverOutput').text(JSON.stringify(data));
 				// log previous and get difference , alter received text
-				var animationData = [];
-				var j = 0;
-				for ( let i in data[0].packetsReceived) {
-					console.log(data[0]._id.replace('node',''), '->', i.replace('node',''))
-					animationData[j] = self.data.graphs.animations.fn.getAnimationData(data[0]._id.replace('node',''),i.replace('node',''));
-					j++;
+				var animationData = [],
+					k = 0,
+					count = 0;
+
+				for ( let i in data ) {
+					animationData[i] = {}
+					for ( let j in data[i].packetsReceived) {
+						console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), data[i].packetsReceived[j])
+
+						animationData[i][k] = self.data.graphs.animations.fn.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j]);
+						animationData[i][k][0].wait = 0
+						count = count + data[i].packetsReceived[j];
+						k++;
+					}
+					k = 0;
 				}
-				self.data.graphs.animations.fn.sendPacket(animationData);
-				// [{"packetsSent":{"node2":"4","node4":"2"},"_id":"node1","packetsRecieved":{"node2":"2"},"power":"1"},{"packetsSent":{"node2":"4","node4":"2"},"_id":"node6","packetsRecieved":{"node2":"2"},"power":"2.1"}]
+				self.data.graphs.animations.fn.sendPacket(animationData, count);
 			},
 			error: function(error) {
 				console.log(error)
@@ -62,67 +75,107 @@ function Animations(){
 		});
 	}
 
-	this.getAnimationData = function(from, to) {
-		return {
-			xDif: this.rects[to].x - this.rects[from].x,
-			yDif: this.rects[to].y - this.rects[from].y,
-			x: 	  this.rects[from].x + 13,
-			y: 	  this.rects[from].y + 13,
-			step: this.getStepSize(from, to),
-			from: from,
-			to:   to,
-			stop: 0
+	this.getAnimationData = function(from, to, count) {
+	/*
+		Includes x number of copies of node[from] to node[to] where
+		x in the count of packets received. In the form
+		{
+			0:{},
+			1:{},
+			.:{},
+			.:{},
+			.:{},
+			x:{}
 		}
+		with each object containing the animation data necessary to make
+		sendPacket() work.
+	*/
+		var animData = {},
+			data = {
+				xDif: this.rects[to].x - this.rects[from].x,
+				yDif: this.rects[to].y - this.rects[from].y,
+				x: 	  this.rects[from].x + 13,
+				y: 	  this.rects[from].y + 13,
+				step: this.getStepSize(from, to),
+				cStep:0,
+				from: from,
+				to:   to,
+				stop: 0,
+				wait: 1,
+				color: this.getNodeColor(from)
+			};
+		for (let i = 0; i < count; i++) {
+			animData[i] = Object.assign({}, data);
+		}
+		return animData;
 	}
 
-	this.sendPacket = function(data) {
+	this.sendPacket = function(data, count) {
+	/*
+		Goes through the inputted data object to simultaneously display
+		packets being sent from node[from] to node[to]. The next packet is
+		sent when the preceding packet is a third of the way to it's destination.
+	*/
 		var elem 	= this.elem;
 			rects 	= this.rects,
-			j 		= 0,
 			w 		= this.canvas.width,
 			h 		= this.canvas.height,
-			g 		= this.colors.green,
 			stop 	= 0;
 
 		animate();
 		function animate(){
 			elem.clearRect(0, 0, w, h);
 			for (let i in data) {
-				elem.beginPath();
-				elem.arc(data[i].x, data[i].y, 10, 0, 2 * Math.PI);
-				elem.fillStyle = 'green';
-				elem.fill();
-				// elem.stroke();
-				elem.closePath();
+				for (let j in data[i]) {
+					for (let k in data[i][j]) {
+						if (data[i][j][k].wait == 0) {
+							elem.beginPath();
+							elem.arc(data[i][j][k].x, data[i][j][k].y, 10, 0, 2 * Math.PI);
+							elem.fillStyle = data[i][j][k].color;
+							elem.fill();
+							elem.closePath();
 
-				if ( data[i].stop != 1 ) {
-					data[i].x += data[i].xDif / data[i].step;
-					data[i].y += data[i].yDif / data[i].step;
-				}
+							if ( data[i][j][k].stop != 1 ) {
+								data[i][j][k].x += data[i][j][k].xDif / data[i][j][k].step;
+								data[i][j][k].y += data[i][j][k].yDif / data[i][j][k].step;
+							}
 
-				if ( j < data[i].step){
-					if ( j == (data[i].step - 1)) {
-						data[i].x = rects[data[i].to].x + 13;
-						data[i].y = rects[data[i].to].y + 13;
+							if ( data[i][j][k].cStep < data[i][j][k].step){
+								if ( data[i][j][k].cStep == (data[i][j][k].step - 1)) {
+									data[i][j][k].x = rects[data[i][j][k].to].x + 13;
+									data[i][j][k].y = rects[data[i][j][k].to].y + 13;
+								}
+
+								// start next node if it exists
+								if ( Math.round(data[i][j][k].step/3) == data[i][j][k].cStep ) {
+									if ( data[i][j][parseInt(k)+1] != undefined) {
+										data[i][j][parseInt(k)+1].wait = 0;
+									}
+								}
+							} else if ( data[i][j][k].stop == 0) {
+								data[i][j][k].stop = 1;
+								stop++;
+							}
+							data[i][j][k].cStep++;
+						}
 					}
-				} else if ( data[i].stop == 0) {
-					data[i].stop = 1;
-					stop++;
 				}
 			}
-			j += 1;
 
-			if (stop != data.length) {
+			if (stop < count) {
 				requestAnimationFrame(animate);
 			} else {
-				// this.data.graphs.animations.fn.apiCall();
+				// window.setTimeout(function(){
+				// 	self.data.graphs.animations.fn.apiCall();
+				// }, 2000)
 			}
 		}
 	}
 
 	this.getStepSize = function(from, to) {
 	/*
-		Controls the step size, or speed, of the packets sent circle.
+		Calculations the step size, or speed, of the packets sent across
+		the board so all packets travel at the same speed.
 	*/
 		var s 	 = 0,
 			xDif = Math.abs(this.rects[to].x - this.rects[from].x),
@@ -146,5 +199,28 @@ function Animations(){
 		} else {
 			return Math.max(s, 45);
 		}
+	}
+
+	this.getNodeColor = function(teamNode){
+		if(teamNode == 15) {
+			return this.colors.yellow
+		}
+		if(teamNode == 16) {
+			return this.colors.red
+		}
+		if(teamNode == 17) {
+			return this.colors.green
+		}
+		if(teamNode == 18) {
+			return this.colors.blue
+		}
+		if(teamNode == 19) {
+			return this.colors.purple
+		}
+		if(teamNode == 20) {
+			return this.colors.black
+		}
+
+		return this.colors.orange;
 	}
 }

@@ -22,11 +22,11 @@
 		$data['_id'] = "node".$p;
 		$data['power'] = rand(0,20);
 
-		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(0,10);
-		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(0,10);
+		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(1,10);
+		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(1,10);
 
-		$packetsReceived['node'.getRandomNode(0,20,$p)] = rand(0,10);
-		$packetsReceived['node'.getRandomNode(0,20,$p)] = rand(0,10);
+		$packetsReceived['node'.getRandomNode(0,20,$p)] = rand(1,10);
+		$packetsReceived['node'.getRandomNode(0,20,$p)] = rand(1,10);
 
 
 		$data['packetsSent'] = $packetsSent;
