@@ -89,6 +89,7 @@
 }
 .node_data tr td div{
 	height: 18px;
+	width: 300px;
 }
 #button_up {
 	position: relative;

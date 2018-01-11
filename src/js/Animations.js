@@ -43,6 +43,7 @@ function Animations(){
 		Calls the Flask webserver to retrieve node information from MongoDB then
 		calls a variety of animation functions to display this data to the user.
 	*/
+		this.grid.clearNodeGraph()
 		$.ajax({
 			type:"GET",
 			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
@@ -57,7 +58,7 @@ function Animations(){
 				for ( let i in data ) {
 					animationData[i] = {}
 					for ( let j in data[i].packetsReceived) {
-						console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), data[i].packetsReceived[j])
+						console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \t#'+data[i].packetsReceived[j])
 
 						animationData[i][k] = self.data.graphs.animations.fn.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j]);
 						animationData[i][k][0].wait = 0
@@ -92,17 +93,18 @@ function Animations(){
 	*/
 		var animData = {},
 			data = {
-				xDif: this.rects[to].x - this.rects[from].x,
-				yDif: this.rects[to].y - this.rects[from].y,
-				x: 	  this.rects[from].x + 13,
-				y: 	  this.rects[from].y + 13,
-				step: this.getStepSize(from, to),
-				cStep:0,
-				from: from,
-				to:   to,
-				stop: 0,
-				wait: 1,
-				color: this.getNodeColor(from)
+				xDif:  this.rects[to].x - this.rects[from].x,
+				yDif:  this.rects[to].y - this.rects[from].y,
+				x: 	   this.rects[from].x + 13,
+				y: 	   this.rects[from].y + 13,
+				step:  this.getStepSize(from, to),
+				cStep: 0,
+				from:  from,
+				to:    to,
+				stop:  0,
+				wait:  1,
+				color: this.getNodeColor(from),
+				count: count
 			};
 		for (let i = 0; i < count; i++) {
 			animData[i] = Object.assign({}, data);
@@ -144,7 +146,11 @@ function Animations(){
 								if ( data[i][j][k].cStep == (data[i][j][k].step - 1)) {
 									data[i][j][k].x = rects[data[i][j][k].to].x + 13;
 									data[i][j][k].y = rects[data[i][j][k].to].y + 13;
+
+									// change from 1 to some fraction for needed nodes to capture
+									this.data.graphs.grid.fn.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
 								}
+
 
 								// start next node if it exists
 								if ( Math.round(data[i][j][k].step/3) == data[i][j][k].cStep ) {
@@ -164,10 +170,13 @@ function Animations(){
 
 			if (stop < count) {
 				requestAnimationFrame(animate);
+			} else if (stop == count) {
+				stop++;
+				requestAnimationFrame(animate);
 			} else {
-				// window.setTimeout(function(){
-				// 	self.data.graphs.animations.fn.apiCall();
-				// }, 2000)
+				window.setTimeout(function(){
+					self.data.graphs.animations.fn.apiCall();
+				}, 3000)
 			}
 		}
 	}

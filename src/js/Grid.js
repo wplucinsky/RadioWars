@@ -156,8 +156,7 @@ function Grid(){
 		this.elem.fill();
 		this.elem.globalAlpha = 1;
 
-		$('#node_'+node).css('background-color', color);
-		$('#node_'+node).css('width', 300*alpha.toFixed(2));
+		this.nodeCapture(alpha.toFixed(2), color, '#FFFFFF', node, true);
 	}
 
 	this.off = function(node){
@@ -177,8 +176,7 @@ function Grid(){
 		this.elem.strokeStyle = this.colors.grey;
 		this.elem.stroke();
 
-		$('#node_'+node).css('background-color', '#FFFFFF');
-		$('#node_'+node).css('width', 300);
+		this.nodeCapture(1.0, '#FFFFFF', '#FFFFFF', node, true)
 	}
 	
 	this.draw = function(node, color){
@@ -197,8 +195,9 @@ function Grid(){
 		this.elem.strokeStyle = this.colors.grey;
 		this.elem.stroke();
 
-		$('#node_'+node).css('background-color', color);
-		$('#node_'+node).css('width', 300*this.rects[node].alpha.toFixed(2));
+		this.nodeCapture(this.rects[node].alpha.toFixed(2), color, '#FFFFFF', node, true)
+		// $('#node_'+node).css('background-color', color);
+		// $('#node_'+node).css('width', 300*this.rects[node].alpha.toFixed(2));
 	}
 
 	this.fadeIn = function(node, team, color, last_node){
@@ -378,10 +377,7 @@ function Grid(){
 		this.elem.fill();
 
 		// node capture "bar graph"
-		$('#node_'+node).empty()
-		$('#node_'+node).append('<div id="contention1_'+node+'""></div><div id="contention2_'+node+'""></div>')
-		$('#contention1_'+node).css({'width': 300*alpha.toFixed(2), 'background-color': color1, 'float': 'left'});
-		$('#contention2_'+node).css({'width': 300*(1-alpha.toFixed(2)), 'background-color': color2, 'float': 'right'});
+		this.nodeCapture(alpha, color1, color2, node, (dir == 'lose' ? true : false))
 
 		if ( alpha < 1.0 && alpha > 0.0) {
 			if (dir == 'capture') {
@@ -411,7 +407,6 @@ function Grid(){
 		return hex(r) + hex(g) + hex(b);
 	}
 
-
 	this.line = function(node, color, last_node){
 		if ( last_node !== null ){
 			this.elem.beginPath();
@@ -419,6 +414,28 @@ function Grid(){
 			this.elem.moveTo(this.rects[last_node].x, this.rects[last_node].y);
 			this.elem.lineTo(this.rects[node].x, this.rects[node].y);
 			this.elem.stroke();
+		}
+	}
+
+	this.nodeCapture = function(widthPercentage, color1, color2, node, left){
+		color1 = (color1 == null) ? '#FFFFFF' : color1;
+		color2 = (color2 == null) ? '#FFFFFF' : color2;
+
+		widthPercentage = parseFloat(widthPercentage);
+		$('#node_'+node).empty()
+		$('#node_'+node).append('<div id="contention1_'+node+'""></div><div id="contention2_'+node+'""></div>')
+		if ( left ) {
+			$('#contention1_'+node).css({'width': 300*widthPercentage.toFixed(2), 'background-color': color1, 'float': 'left'});
+			$('#contention2_'+node).css({'width': 300*(1-widthPercentage.toFixed(2)), 'background-color': color2, 'float': 'right'});
+		} else {
+			$('#contention1_'+node).css({'width': 300*(1-alpha.toFixed(2)), 'background-color': color2, 'float': 'left'});
+			$('#contention2_'+node).css({'width': 300*widthPercentage.toFixed(2), 'background-color': color1, 'float': 'right'});
+		}
+	}
+
+	this.clearNodeGraph = function(){
+		for (var i=0; i<= 20; i++){
+			$('#node_'+i).empty()
 		}
 	}
 }

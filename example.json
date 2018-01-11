@@ -1,0 +1,24 @@
+[
+	{
+		"packetsSent": {
+			"node2":"4",
+			"node4":"2"
+		},
+		"_id":"node1",
+		"packetsRecieved":{
+			"node2":"2"
+		},
+		"power":"1"
+	},
+	{
+		"packetsSent":{
+			"node2":"4",
+			"node4":"2"
+		},
+		"_id":"node6",
+		"packetsRecieved":{
+			"node2":"2"
+		},
+		"power":"2.1"
+	}
+]
