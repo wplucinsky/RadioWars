@@ -7,7 +7,8 @@ function Animations(){
 	this.teams = null;
 
 	// specific
-	this.rects = []
+	this.rects = [];
+	this.previousData = null;
 	this.grid = new Grid();
 	this.colors = {
 		red: 'rgb(255, 99, 132)',
@@ -44,13 +45,13 @@ function Animations(){
 		calls a variety of animation functions to display this data to the user.
 	*/
 		this.grid.clearNodeGraph()
+		console.clear()
 		$.ajax({
 			type:"GET",
-			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php",
+			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4",
 			// url:"http://dwslgrid.ece.drexel.edu:5000/",
 			success: function(data) {
 				$('#serverOutput').text(JSON.stringify(data));
-				// log previous and get difference , alter received text
 				var animationData = [],
 					k = 0,
 					count = 0;
@@ -58,15 +59,17 @@ function Animations(){
 				for ( let i in data ) {
 					animationData[i] = {}
 					for ( let j in data[i].packetsReceived) {
-						console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \t#'+data[i].packetsReceived[j])
-
 						animationData[i][k] = self.data.graphs.animations.fn.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j]);
-						animationData[i][k][0].wait = 0
-						count = count + data[i].packetsReceived[j];
+						if ( animationData[i][k][0] != undefined ){
+							animationData[i][k][0].wait = 0;
+							count = count + animationData[i][k][0].count;
+							console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \t#'+data[i].packetsReceived[j], ' \t'+animationData[i][k][0].count)
+						}
 						k++;
 					}
 					k = 0;
 				}
+				self.data.graphs.animations.fn.setPreviousData(data);
 				self.data.graphs.animations.fn.sendPacket(animationData, count);
 			},
 			error: function(error) {
@@ -79,7 +82,7 @@ function Animations(){
 	this.getAnimationData = function(from, to, count) {
 	/*
 		Includes x number of copies of node[from] to node[to] where
-		x in the count of packets received. In the form
+		x in the count of new packets received. In the form
 		{
 			0:{},
 			1:{},
@@ -91,6 +94,7 @@ function Animations(){
 		with each object containing the animation data necessary to make
 		sendPacket() work.
 	*/
+		count = this.getDataDifference(from, to, count)
 		var animData = {},
 			data = {
 				xDif:  this.rects[to].x - this.rects[from].x,
@@ -183,7 +187,7 @@ function Animations(){
 
 	this.getStepSize = function(from, to) {
 	/*
-		Calculations the step size, or speed, of the packets sent across
+		Calculations for the step size, or speed, of the packets sent across
 		the board so all packets travel at the same speed.
 	*/
 		var s 	 = 0,
@@ -231,5 +235,30 @@ function Animations(){
 		}
 
 		return this.colors.orange;
+	}
+
+	this.setPreviousData = function(data){
+		this.previousData = data;
+	}
+
+	this.getDataDifference = function(from, to, count){
+	/*
+		This gets the packet count difference from the previous server
+		data to the new server data.
+	*/
+		if ( this.previousData == null ){
+			return count;
+		} else {
+			for ( let i in this.previousData ) {
+				for ( let j in this.previousData[i].packetsReceived) {
+					if ( from == this.previousData[i]._id.replace('node','') ) {
+						if ( to == j.replace('node','') ){
+							return Math.max(count - this.previousData[i].packetsReceived[j], 0);
+						}
+					}
+				}
+			}
+			return count;
+		}
 	}
 }
