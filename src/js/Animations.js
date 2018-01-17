@@ -52,32 +52,40 @@ function Animations(){
 			// url:"http://dwslgrid.ece.drexel.edu:5000/",
 			success: function(data) {
 				$('#serverOutput').text(JSON.stringify(data));
-				var animationData = [],
-					k = 0,
-					count = 0;
+				if ( data.length != 0 && JSON.stringify(self.data.graphs.animations.fn.getPreviousData()) != JSON.stringify(data)){
+					var animationData = [],
+						k = 0,
+						count = 0;
 
-				for ( let i in data ) {
-					animationData[i] = {}
-					for ( let j in data[i].packetsReceived) {
-						animationData[i][k] = self.data.graphs.animations.fn.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j]);
-						if ( animationData[i][k][0] != undefined ){
-							animationData[i][k][0].wait = 0;
-							count = count + animationData[i][k][0].count;
-							console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \t#'+data[i].packetsReceived[j], ' \t'+animationData[i][k][0].count)
+					for ( let i in data ) {
+						animationData[i] = {}
+						for ( let j in data[i].packetsReceived) { 
+							animationData[i][k] = self.data.graphs.animations.fn.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j]);
+							if ( animationData[i][k][0] != undefined ){
+								animationData[i][k][0].wait = 0;
+								count = count + parseInt(animationData[i][k][0].count);
+								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \t#'+data[i].packetsReceived[j], ' \t'+animationData[i][k][0].count)
+							}
+							k++;
 						}
-						k++;
+						k = 0;
 					}
-					k = 0;
+
+					self.data.graphs.animations.fn.setPreviousData(data);
+					self.data.graphs.animations.fn.sendPacket(animationData, count);
+				} else {
+					window.setTimeout(function(){
+						self.data.graphs.animations.fn.apiCall();
+					}, 2000)
 				}
-				self.data.graphs.animations.fn.setPreviousData(data);
-				self.data.graphs.animations.fn.sendPacket(animationData, count);
-			},
-			error: function(error) {
-				console.log(error)
 			},
 			dataType: 'json',
 		});
 	}
+
+	$( document ).ajaxError(function( event, request, settings ) {
+		$('#serverOutput').text("Error requesting page " + settings.url);
+	});
 
 	this.getAnimationData = function(from, to, count) {
 	/*
@@ -178,9 +186,7 @@ function Animations(){
 				stop++;
 				requestAnimationFrame(animate);
 			} else {
-				window.setTimeout(function(){
-					self.data.graphs.animations.fn.apiCall();
-				}, 3000)
+				self.data.graphs.animations.fn.apiCall();
 			}
 		}
 	}
@@ -215,6 +221,15 @@ function Animations(){
 	}
 
 	this.getNodeColor = function(teamNode){
+		if(teamNode == 6) {
+			return this.colors.yellow
+		}
+		if(teamNode == 7) {
+			return this.colors.green
+		}
+		if(teamNode == 8) {
+			return this.colors.red
+		}
 		if(teamNode == 15) {
 			return this.colors.yellow
 		}
@@ -239,6 +254,10 @@ function Animations(){
 
 	this.setPreviousData = function(data){
 		this.previousData = data;
+	}
+
+	this.getPreviousData = function(){
+		return this.previousData;
 	}
 
 	this.getDataDifference = function(from, to, count){
