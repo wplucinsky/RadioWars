@@ -227,25 +227,12 @@
 							<p id="serverOutput">
 								
 							</p>
-							<script type="text/javascript">
-								$.ajax({
-									type:"GET",
-									url:"https://api.meetup.com/2/cities",
-									success: function(data) {
-									  	$('#serverOutput').text(JSON.stringify(data));
-									},
-									error: function(error) {
-										console.log(error)
-									},
-									dataType: 'jsonp',
-									});
-							</script>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	<script src="src/js/contention.js"></script>
+	<script src="src/js/modes/contention.js"></script>
 	<script src="src/js/Team.js"></script>
 	<script src="src/js/Nodes.js"></script>
 	<script src="src/js/Grid.js"></script>

@@ -64,6 +64,9 @@ var data = {
 		},
 		animations: {
 			fn: null
+		},
+		keyboard: {
+			fn: null
 		}
 	},
 }
