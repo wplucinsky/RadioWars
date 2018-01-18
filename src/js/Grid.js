@@ -31,11 +31,7 @@ function Grid(){
 	this.start = function(mode){
 		this.drawRectangles();
 		this.stopFlag = 0;
-		if (mode == 'interference') {
-			// for (let i in this.teams) {
-			// 	this.startInterference(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
-			// }
-		} else if (mode != 'demo') {
+		if (mode != 'demo' && mode != 'interference') {
 			for (let i in this.teams) {
 				this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
 			}
@@ -223,8 +219,8 @@ function Grid(){
 			// fade from 0 to 1 opacity
 			this.rects[node].alpha = this.rects[node].alpha + this.delta
 			if (this.autoplay){
-				// to control fall term demo sliders
-				if (team == 1) {
+				// to control fall term melee mode demo sliders
+				if (team == 1 && $('#normalFrequency_'+team+'_range').length != 0) {
 					var val = parseInt($('#normalFrequency_'+team+'_range')[0].value);
 					val = (val <= 40) ? 850 : ((val <= 90) ? (Math.random()*800) : 100);
 					window.setTimeout(function(){
