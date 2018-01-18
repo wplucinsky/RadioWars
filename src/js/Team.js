@@ -15,17 +15,17 @@ function Team(team_id){
 		for ( let i in data ){
 			this.radio[i] = {}
 			this.radio[i].value = data[i].value
-			if ( data[i].type != undefined ){
+			if ( data[i].type !== undefined ){
 				this.radio[i].type = data[i].type
 			} else {
 				this.radio[i].type = 'text';
 			}
 
-			if (data[i].type == 'text') {
-				$('#'+i+'_'+this.id).text(data[i].value)
+			if (this.radio[i].type == 'text') {
+				$('#'+i+'_'+this.id).text(this.radio[i].value)
 			}
-			if (data[i].type == 'imgSrc') {
-				$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+data[i].value+'.png')
+			if (this.radio[i].type == 'imgSrc') {
+				$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+this.radio[i].value+'.png')
 			}
 		}
 	}

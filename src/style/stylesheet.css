@@ -130,7 +130,7 @@ button:disabled {
 	cursor: not-allowed;
 	color: lightgray;
 }
-#grid, #animations{
+#grid, #animations, #keyboard{
 	position: absolute;
 	top: 20px;
 }

@@ -22,6 +22,7 @@
 						<div class="canvas chart">
 							<canvas id="grid" width="400" height="450" style="padding-top: 50px;"></canvas>
 							<canvas id="animations" width="400" height="450" style="padding-top: 50px;"></canvas>
+							<canvas id="keyboard" width="400" height="450" style="padding-top: 50px;"></canvas>
 						</div>
 					</div>
 					<div id="countdownTimerContainer">
@@ -76,6 +77,10 @@
 										<tr>
 											<td>Captured Nodes</td>
 											<td id="captured_1">0</td>
+										</tr>
+										<tr>
+											<td>Current Node</td>
+											<td id="current_1">0</td>
 										</tr>
 									</table>
 								</div>
@@ -205,13 +210,11 @@
 
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn = eval(graph_name);
-				data.graphs[graph_name].fn.setup(data.teams, graph_name)
+				data.graphs[graph_name].fn.setup(data.teams, graph_name) // add team number
 			}
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn.start('interference')
 			}
-
-			
 		}
 		setup()
 

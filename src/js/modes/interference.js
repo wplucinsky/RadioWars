@@ -46,6 +46,10 @@ var data = {
 				captured: {
 					value: 0,
 					type: "text"
+				},
+				current: {
+					value: -1,
+					type: "text"
 				}
 			}
 		}
@@ -62,10 +66,10 @@ var data = {
 		grid: {
 			fn: null
 		},
-		animations: {
+		keyboard: {
 			fn: null
 		},
-		keyboard: {
+		animations: {
 			fn: null
 		}
 	},

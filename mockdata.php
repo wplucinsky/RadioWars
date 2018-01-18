@@ -70,8 +70,8 @@
 		// building data
 		$c = (isset($_GET['c'])) ? $_GET['c'] : 2;
 		$m = (isset($_GET['m'])) ? $_GET['m'] : 1;
-		if ( $m > 25 ){
-			$m = 1;
+		if ( $m > 10 ){
+			$m = 0;
 		}
 
 		for ($i=0; $i < $c; $i++) { 
