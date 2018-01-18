@@ -35,7 +35,7 @@
 		return $data;
 	}
 
-	function getBuildingData($i){
+	function getBuildingData($i, $m){
 		$data = array();
 
 		$packetsSent = array();
@@ -56,8 +56,8 @@
 		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(1,10);
 		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(1,10);
 
-		$packetsReceived['node'.($p-13)] = rand(1,15);
-		$packetsReceived['node'.($p-7)]  = rand(1,15);
+		$packetsReceived['node'.($p-13)] = ($p-13)*$m;
+		$packetsReceived['node'.($p-7)]  = ($p-7)*$m;
 
 
 		$data['packetsSent'] = $packetsSent;
@@ -69,8 +69,13 @@
 	if ( isset($_GET['build']) && $_GET['build'] == 1) {
 		// building data
 		$c = (isset($_GET['c'])) ? $_GET['c'] : 2;
+		$m = (isset($_GET['m'])) ? $_GET['m'] : 1;
+		if ( $m > 25 ){
+			$m = 1;
+		}
+
 		for ($i=0; $i < $c; $i++) { 
-			$data[$i] = getBuildingData($i);
+			$data[$i] = getBuildingData($i, $m);
 		}
 	} else {
 		// random data
