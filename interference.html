@@ -4,8 +4,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>			
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>		
+		<script src="src/js/plugins/knob.min.js"></script>
 
 		<!-- layout -->
 		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
@@ -37,7 +37,7 @@
 				<div class="col-md-8">
 					<div class="row">
 						<div class="col-md-6" id="team_1">
-							<h3 class="text-center">Team <span id="team_id">1</span></h3>
+							<h3 class="text-center">Node <span id="_id_1">1</span></h3>
 							<div class="line"></div>
 							<div class="row">	
 								<div class="col-md-8">
@@ -53,6 +53,10 @@
 										<tr>
 											<td>Normal Frequency</td>
 											<td id="normalFrequency_1">0</td>
+										</tr>
+										<tr>
+											<td>Power</td>
+											<td id="power_1">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
@@ -78,14 +82,112 @@
 											<td>Captured Nodes</td>
 											<td id="captured_1">0</td>
 										</tr>
-										<tr>
-											<td>Current Node</td>
-											<td id="current_1">0</td>
-										</tr>
 									</table>
 								</div>
 								<div class="col-md-4">
 									<img class="logo" id="radioDirection_1" src="src/img/PatternOmni.png">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6" id="team_1">
+							<h3 class="text-center">Controls</span></h3>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-4 knob-holder">
+									<div class="knob-container">
+										<input 
+											class="knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											id="power_1_knob" 
+											value="0"
+											data-min="0"
+											data-max="1000"
+											data-step="50">
+									</div>
+									<div class="knob-text">Power</div>
+								</div>
+								<div class="col-md-4 knob-holder">
+									<div class="knob-container">
+										<input 
+											class="knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											id="rxGain_1_knob" 
+											value="0">
+									</div>
+									<div class="knob-text">Rx Gain</div>
+								</div>
+								<div class="col-md-4 knob-holder">
+									<div class="knob-container">
+										<input 
+											class="knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											id="txGain_1_knob" 
+											value="0">
+									</div>
+									<div class="knob-text">Tx Gain</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 knob-holder">
+									<div class="knob-container">
+										<input 
+											class="knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											id="normalFrequency_1_knob" 
+											value="0"
+											data-min="0"
+											data-max="1000"
+											data-step="10">
+									</div>
+									<div class="knob-text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
+								</div>
+								<div class="col-md-4 knob-holder">
+									<div class="knob-container">
+										<input 
+											class="knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											id="sampleRate_1_knob" 
+											value="0">
+									</div>
+									<div class="knob-text">Sample Rate</div>
+								</div>
+								<div class="col-md-4 knob-holder">
+									<div class="knob-container">
+										<input
+											class="knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											id="frameSize_1_knob" 
+											data-min="128"
+											data-max="2048"
+											data-step="64"
+											value="0"
+											stopper="true">
+									</div>
+									<div class="knob-text">Frame Size</div>
 								</div>
 							</div>
 						</div>
@@ -184,7 +286,11 @@
 						<div class="col-md-6">
 							<h3 class="text-center">Server Output</h3>
 							<div class="line"></div>
-							<p id="serverOutput">
+							<p id="serverOutputGet" class="json">
+								
+							</p>
+							<div class="line"></div>
+							<p id="serverOutputPost" class="json">
 								
 							</p>
 						</div>
@@ -192,7 +298,9 @@
 				</div>
 			</div>
 		</div>
+	
 	<script src="src/js/modes/interference.js"></script>
+	<script src="src/js/API.js"></script>
 	<script src="src/js/Team.js"></script>
 	<script src="src/js/Nodes.js"></script>
 	<script src="src/js/Grid.js"></script>
@@ -205,7 +313,7 @@
 				data.nodes = new Nodes();
 				data.teams[team_id].team = new Team(team_id);
 				data.teams[team_id].team.setInformation(data.teams[team_id].information)
-				data.teams[team_id].team.setRadio(data.teams[team_id].radio)
+				data.teams[team_id].team.setRadio(data.teams[team_id].radio, true)
 			}
 
 			for (let graph_name in data.graphs) {

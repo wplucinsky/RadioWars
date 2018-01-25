@@ -11,7 +11,10 @@ function Animations(){
 	this.animData = null;
 	this.animCount = 0;
 	this.previousData = null;
+	this.timer = null;
+	this.timerVal = null;
 	this.grid = new Grid();
+	this.api = new API();
 	this.colors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
@@ -35,7 +38,7 @@ function Animations(){
 	this.start = function(mode){
 		this.rects = this.grid.getRectangles();
 		if (mode == 'interference') {
-			this.apiCall(true);
+			this.apiCallGet(true);
 		}
 	}
 
@@ -44,63 +47,59 @@ function Animations(){
 		this.elem = this.canvas.getContext('2d');
 	}
 
-	this.apiCall = function(start){
+	this.apiCallGet = function(start){
 	/*
-		Calls the Flask webserver to retrieve node information from MongoDB then
-		calls a variety of animation functions to display this data to the user.
+		Calls the API get() to call the Flask webserver to retrieve node information 
+		from MongoDB then calls a variety of animation functions to display this data 
+		to the user.
 	*/
 		if ( start ){
 			this.grid.clearNodeGraph()
+			this.stopTimer();
+			this.startTimer();
 		}
+		this.timerVal = new Date();
 		console.clear()
-		$.ajax({
-			type:"GET",
-			url:"http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4&m="+this.m, // used for testing
-			// url:"http://dwslgrid.ece.drexel.edu:5000/",
-			success: function(data) {
-				$('#serverOutput').text(JSON.stringify(data));
+		console.log(this.m)
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4&m="+this.m; // used for testing
+		// var url = "http://dwslgrid.ece.drexel.edu:5000/";
+		this.api.get(url, (function(data) {
+				$('#serverOutputGet').text(JSON.stringify(data));
 				if ( data.length != 0 && JSON.stringify(self.data.graphs.animations.fn.getPreviousData()) != JSON.stringify(data)){
 					var animationData = [],
 						k = 0,
-						count = self.data.graphs.animations.fn.getCount();
+						a =  self.data.graphs.animations.fn,
+						count = a.getCount();
 					for ( let i in data ) {
 						animationData[i] = {}
 						for ( let j in data[i].packetsReceived) {
-							animationData[i][k] = self.data.graphs.animations.fn.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j], i, k);
-							offset = self.data.graphs.animations.fn.getOffset(i,k);
-							
+							animationData[i][k] = a.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), parseInt(data[i].packetsReceived[j]), i, k);
+							offset = a.getOffset(i,k); // how many packets have been sent so far
+						
+
 							if ( animationData[i][k][offset] != undefined ){
 								animationData[i][k][offset].wait = 0;
-								count = self.data.graphs.animations.fn.addToCount(Math.max((data[i].packetsReceived[j] - offset), 0))
+								diff = a.getDataDifference(data[i]._id.replace('node',''), j.replace('node',''), parseInt(data[i].packetsReceived[j]))
+								count = a.addToCount(diff)
 
-								// not positive about these console.log values
 								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j], ' \tprev '+ offset, ' \tcnt '+ count)
 							}
 							k++;
 						}
-						k = 0;
+						// update team info with radio info
 					}
 
-					self.data.graphs.animations.fn.setData(animationData);
-					self.data.graphs.animations.fn.setPreviousData(data);
+					a.setData(animationData);
+					a.setPreviousData(data);
 					if ( start ){
 						this.m = this.m + 1;
-						self.data.graphs.animations.fn.sendPacket();
+						a.sendPacket();
 					} 
-				} else {
-					window.setTimeout(function(){
-						self.data.graphs.animations.fn.apiCall();
-					}, 2000)
 				}
-			},
-			dataType: 'json',
-		});
-		this.m++; // just used for mock data testing
+			})
+		);
+		this.m++;
 	}
-
-	$( document ).ajaxError(function( event, request, settings ) {
-		$('#serverOutput').text("Error requesting page " + settings.url);
-	});
 
 	this.getAnimationData = function(from, to, count, i, k) {
 	/*
@@ -118,7 +117,7 @@ function Animations(){
 		sendPacket() work. It appends it to the global getData() and returns.
 	*/
 		animData = this.getData();
-		if ( animData === null ) {
+		if ( animData === null || animData[i] === null  || animData[i][k] === null ) { 
 			offset = 0;
 			animData = {};
 		} else {
@@ -139,21 +138,35 @@ function Animations(){
 				wait:  1,
 				color: this.getNodeColor(from),
 				count: count
+			},
+			skipdata = {
+				xDif:  this.rects[to].x - this.rects[from].x,
+				yDif:  this.rects[to].y - this.rects[from].y,
+				x: 	   this.rects[from].x + 13,
+				y: 	   this.rects[from].y + 13,
+				step:  this.getStepSize(from, to),
+				cStep: 0,
+				from:  from,
+				to:    to,
+				stop:  1,
+				wait:  1,
+				color: this.getNodeColor(from),
+				count: count
 			};
+
 		for (let j = offset; j < (count + offset); j++) {
 			animData[j] = Object.assign({}, data);
 		}
-
 		return animData;
 	}
 
 	this.sendPacket = function() {
-	/*
-		Called once at the beginning and continues to run on global data while 
-		the packets sent count is less than the total packets sent count. The 
-		next packet is sent when the preceding packet is a third of the way to 
-		it's destination.
-	*/
+		/*
+			Called once at the beginning and continues to run on global data while 
+			the packets sent count is less than the total packets sent count. The 
+			next packet is sent when the preceding packet is a fourth of the way to 
+			it's destination.
+		*/
 		var elem 	= this.elem;
 			rects 	= this.rects,
 			w 		= this.canvas.width,
@@ -191,12 +204,12 @@ function Animations(){
 
 
 								// start next node if it exists
-								if ( Math.round(data[i][j][k].step/3) == data[i][j][k].cStep ) {
+								if ( Math.round(data[i][j][k].step/4) == data[i][j][k].cStep ) {
 									if ( data[i][j][parseInt(k)+1] != undefined) {
 										data[i][j][parseInt(k)+1].wait = 0;
 									} else {
 										// no more packets left to send for this from -> to combo
-										self.data.graphs.animations.fn.apiCall();
+										self.data.graphs.animations.fn.apiCallGet();
 									}
 								}
 							} else if ( data[i][j][k].stop == 0) {
@@ -218,7 +231,7 @@ function Animations(){
 				requestAnimationFrame(animate);
 			} else {
 				// every packets has finished sending
-				// self.data.graphs.animations.fn.apiCall(true);
+				// self.data.graphs.animations.fn.apiCallGet(true);
 			}
 		}
 	}
@@ -284,35 +297,6 @@ function Animations(){
 		return this.colors.orange;
 	}
 
-	this.getData = function(){
-		return this.animData;
-	}
-
-	this.setData = function(data){
-		this.animData = data;
-	}
-
-	this.getCount = function(){
-		return this.animCount;
-	}
-
-	this.setCount = function(data){
-		this.animCount = data;
-	}
-
-	this.addToCount = function(amt){
-		this.animCount = this.animCount + amt;
-		return this.animCount;
-	}
-
-	this.setPreviousData = function(data){
-		this.previousData = data;
-	}
-
-	this.getPreviousData = function(){
-		return this.previousData;
-	}
-
 	this.getDataDifference = function(from, to, count){
 	/*
 		This gets the packet count difference from the previous server
@@ -342,7 +326,7 @@ function Animations(){
 		data object, can be though of as a difference function.
 	*/
 		animData = this.getData();
-		if ( animData === null ){
+		if ( animData === null || animData[i] === null || animData[i][k] == null ){
 			return 0;
 		} else {
 			animData = animData[i][k]
@@ -353,5 +337,52 @@ function Animations(){
 			}
 		}
 		return Object.keys(animData).length
+	}
+
+	this.startTimer = function(){
+	/*
+		Calls the API get() if no call has happened in the last 1000ms.
+	*/
+		this.timer = window.setInterval(function(){
+			if ((new Date() - self.data.graphs.animations.fn.timerVal) > 1000) {
+				self.data.graphs.animations.fn.apiCallGet();
+			}
+		}, 1000);
+	}
+
+	this.stopTimer = function(){
+	/*
+		Stops the API get() timer.
+	*/
+		window.clearInterval(this.timer)
+	}
+
+	this.getData = function(){
+		return this.animData;
+	}
+
+	this.setData = function(data){
+		this.animData = data;
+	}
+
+	this.getCount = function(){
+		return this.animCount;
+	}
+
+	this.setCount = function(data){
+		this.animCount = data;
+	}
+
+	this.addToCount = function(amt){
+		this.animCount = this.animCount + amt;
+		return this.animCount;
+	}
+
+	this.setPreviousData = function(data){
+		this.previousData = data;
+	}
+
+	this.getPreviousData = function(){
+		return this.previousData;
 	}
 }

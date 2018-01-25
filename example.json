@@ -1,50 +1,38 @@
 [  
    {  
-      "_id":"node15",
-      "power":16,
-      "packetsSent":{  
-         "node12":6,
-         "node10":9
-      },
+      "direction":"1",
       "packetsReceived":{  
-         "node2":8,
-         "node8":32
-      }
+         "node15":"3007",
+         "node7":"11"
+      },
+      "bandwidth":"2000000.000000",
+      "txGain":"25.000000",
+      "frequency":"1360000000.000000",
+      "rxGain":"20.000000",
+      "_id":"node8"
    },
    {  
-      "_id":"node20",
-      "power":16,
-      "packetsSent":{  
-         "node14":9,
-         "node16":6
-      },
+      "direction":"1",
       "packetsReceived":{  
-         "node7":28,
-         "node13":52
-      }
+         "node8":"3007",
+         "node7":"2714"
+      },
+      "bandwidth":"2000000.000000",
+      "txGain":"25.000000",
+      "frequency":"1360000000.000000",
+      "rxGain":"20.000000",
+      "_id":"node15"
    },
    {  
-      "_id":"node17",
-      "power":14,
-      "packetsSent":{  
-         "node0":4,
-         "node8":8
-      },
+      "direction":"1",
       "packetsReceived":{  
-         "node4":16,
-         "node10":40
-      }
-   },
-   {  
-      "_id":"node18",
-      "power":4,
-      "packetsSent":{  
-         "node12":5,
-         "node8":1
+         "node8":"11",
+         "node15":"2692"
       },
-      "packetsReceived":{  
-         "node5":20,
-         "node11":44
-      }
+      "bandwidth":"2000000.000000",
+      "txGain":"25.000000",
+      "frequency":"1360000000.000000",
+      "rxGain":"20.000000",
+      "_id":"node7"
    }
 ]

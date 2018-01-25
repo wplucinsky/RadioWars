@@ -1,17 +1,41 @@
 function Team(team_id){
 	this.id = team_id;
+	this.api = new API();
 	this.radio = {};
 	this.information = {};
 	// this.tree = new Tree(); // wait to implement
 
 	this.setInformation = function(data){
+	/*
+		Sets the team's color information.
+	*/
 		for ( let i in data ){
 			this.information[i] = data[i]
 		}
 		$('#team_'+this.id+' .line').css('background-color', this.getTeamColorHex());
 	}
 
+	this.updateRadio = function(data){
+	/*	
+		Send radio information updates to the Flask Server through the API post(), then 
+		call transformData() and setRadio() to display the radio information to the user.
+	*/
+		Object.assign(data, this.getControlData()); // add in controls data
+
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";
+		// var url = "http://dwslgrid.ece.drexel.edu:5000/radio";
+		var s = this;
+		this.api.post(url, data, function(data){
+			$('#serverOutputPost').text(JSON.stringify(data));
+			data = s.transformData(data)
+			s.setRadio(data)
+		});
+	}
+
 	this.setRadio = function(data){
+	/*
+		Displays radio information to the user
+	*/
 		for ( let i in data ){
 			this.radio[i] = {}
 			this.radio[i].value = data[i].value
@@ -23,11 +47,43 @@ function Team(team_id){
 
 			if (this.radio[i].type == 'text') {
 				$('#'+i+'_'+this.id).text(this.radio[i].value)
+				$('#'+i+'_'+this.id+'_knob').val(this.radio[i].value).trigger('change');
 			}
 			if (this.radio[i].type == 'imgSrc') {
 				$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+this.radio[i].value+'.png')
 			}
 		}
+	}
+
+	this.getControlData = function(){
+		var d = {};
+		for ( let i in this.radio ){
+			if ( this.radio[i].type == 'text') {
+				if ($('#'+i+'_'+this.id+'_knob').val() !== undefined) {
+					d[i] = {}
+					d[i].value = $('#'+i+'_'+this.id+'_knob').val();
+				}
+			}
+		}
+		return d
+	}
+
+	this.transformData = function(data){
+	/*
+		Transforms the incoming Flask server data to {gamemode}.js format.
+	*/
+		var d = {};
+		for ( let i in data ){
+			if ( i == 'radioDirection' ){
+				t = 'imgSrc'
+			} else {
+				t = 'text'
+			}
+			d[i] = {}
+			d[i].value = data[i]
+			d[i].type = t
+		}
+		return d;
 	}
 
 	this.getTeamColor = function(){

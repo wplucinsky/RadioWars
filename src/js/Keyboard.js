@@ -25,6 +25,7 @@ function Keyboard(){
 		if (mode == 'interference') {
 			this.startEventListeners();
 		}
+		this.draw(this.currNode, 'black')
 	}
 
 	this.stop = function(){
@@ -41,27 +42,36 @@ function Keyboard(){
 			var g = self.data.graphs.grid.fn,
 				n = self.data.nodes,
 				k = self.data.graphs.keyboard.fn,
+				m = 0, // move
+				s = 0, // select
 				nearby = n.getSurroundingNodes(k.currNode),
-				i = k.currNode;
+				i = -1;
 
 			// [ U, UL, L, DL, D, DR, R, UP]
 			if (event.key == 'ArrowUp' || event.key == 'w') {
-				i=0;
+				i=0; m=1;
 			}
 			if (event.key == 'ArrowLeft' || event.key == 'a') {
-				i=2;
+				i=2; m=1;
 			}
 			if (event.key == 'ArrowDown' || event.key == 's') {
-				i=4;
+				i=4; m=1;
 			}
 			if (event.key == 'ArrowRight' || event.key == 'd') {
-				i=6;
+				i=6; m=1;
+			}
+			if (event.key == 'Enter') {
+				s=1;
 			}
 
-			if ( nearby[i] != -1 ) {
-				return k.draw(nearby[i], 'black')
-			} else {
-				return k.draw(k.currNode, 'red')
+			if ( m == 1 ) {
+				if ( i != -1 && nearby[i] != -1 ) {
+					return k.draw(nearby[i], 'black')
+				} else {
+					return k.draw(k.currNode, 'red')
+				}
+			} else if ( s == 1) {
+				return k.draw(k.currNode, 'green', s)
 			}
 
 		})
@@ -71,7 +81,7 @@ function Keyboard(){
 		this.eventListeners = null;
 	}
 
-	this.draw = function(node, color){		
+	this.draw = function(node, color, s){		
 		this.elem.clearRect(this.rects[this.currNode].x-5, this.rects[this.currNode].y-5, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
 		
 		this.elem.beginPath();
@@ -81,14 +91,22 @@ function Keyboard(){
 
 		this.currNode = node;
 
-		this.updateTeam()
+		if (s) {
+			this.updateTeam()
+		}
 	}
 
 	this.updateTeam = function(){
-		this.teams[this.team].team.setRadio({
-			current: {
+		this.teams[this.team].team.updateRadio({
+			_id: {
 				value: this.currNode
 			}
 		});
 	}
+
+	$(".knob").knob({
+	    release : function (value) {
+	        console.log(this.$.attr('id'),':',value);
+	    }
+	});
 }

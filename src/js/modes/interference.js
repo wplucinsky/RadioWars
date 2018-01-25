@@ -19,6 +19,10 @@ var data = {
 					value: "900e6",
 					type: "text"
 				},
+				power: {
+					value: "900",
+					type: "text"
+				},
 				sampleRate: {
 					value: "250e3",
 					type: "text"
@@ -47,8 +51,8 @@ var data = {
 					value: 0,
 					type: "text"
 				},
-				current: {
-					value: -1,
+				_id: {
+					value: 15,
 					type: "text"
 				}
 			}

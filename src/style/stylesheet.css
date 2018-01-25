@@ -72,7 +72,7 @@
 	width: 100%; height: 3px; margin-bottom: 15px;
 }
 .team_data{
-	width: 285px;
+	width: 100%;
 }
 #countdownTimerContainer{
 	width: 50%;
@@ -154,4 +154,48 @@ button:disabled {
 }
 .digits_1{
 	left: 112px !important;
+}
+.knob-holder {
+	height: 135px;
+}
+.knob-container {
+	width: 75px;
+	height: 85px;
+	margin: auto;
+}
+.knob-container input {
+	width: 79px; 
+	height: 50px; 
+	position: absolute; 
+	vertical-align: middle; 
+	margin-top: 50px; 
+	margin-left: -114px; 
+	border: 0px; 
+	background: none; 
+	font-style: normal; 
+	font-variant: normal; 
+	font-weight: bold; 
+	font-stretch: normal; 
+	font-size: 30px; 
+	line-height: normal; 
+	font-family: Arial; 
+	text-align: center; 
+	color: rgb(34, 34, 34); 
+	padding: 0px; 
+	-webkit-appearance: none;
+}
+.knob-text{
+	width: 100%;
+	text-align: center;
+}
+#tenToSix{
+	width: 25px;
+	position: relative;
+	bottom: 4px;
+	left: 4px;
+}
+.json{
+	width: 100%;
+	overflow-wrap: normal;
+	overflow-wrap: break-word;
 }
