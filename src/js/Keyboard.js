@@ -106,6 +106,7 @@ function Keyboard(){
 
 	$(".knob").knob({
 	    release : function (value) {
+	    	$('#confirmChanges').css('display', 'block')
 	        console.log(this.$.attr('id'),':',value);
 	    }
 	});

@@ -194,6 +194,14 @@ button:disabled {
 	bottom: 4px;
 	left: 4px;
 }
+#confirmChanges{
+	position: absolute;
+	top: 43px;
+	font-size: 9px;
+	right: 17px;
+	color: red;
+	display: none;
+}
 .json{
 	width: 100%;
 	overflow-wrap: normal;

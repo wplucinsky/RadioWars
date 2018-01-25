@@ -22,7 +22,7 @@ function Team(team_id){
 	*/
 		Object.assign(data, this.getControlData()); // add in controls data
 
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
 		// var url = "http://dwslgrid.ece.drexel.edu:5000/radio";
 		var s = this;
 		this.api.post(url, data, function(data){
@@ -53,6 +53,7 @@ function Team(team_id){
 				$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+this.radio[i].value+'.png')
 			}
 		}
+		$('#confirmChanges').css('display', 'none')
 	}
 
 	this.getControlData = function(){
