@@ -114,7 +114,24 @@
 			$data[$i] = getBuildingData($i, $m);
 		}
 	} elseif ( isset($_GET['post'])) {
-		$data = postData($_POST);
+		if (isset($_GET['i'])) {
+			$data = $_POST;
+		} else {
+			$data = postData($_POST);
+		}
+	} elseif ( isset($_GET['login'])) {
+		if ($_POST['username'] == 'dwsl'){
+			$data = array(
+				'success' => true,
+				'location' => 'interference',
+				'cookie' => 'proud_emu',
+				'team_id' => 1
+			);
+		} else {
+			$data = array(
+				'success' => false
+			);
+		}
 	} else {
 		// random data
 		$data[0] = getRandomData();

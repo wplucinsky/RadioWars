@@ -301,8 +301,6 @@ function Animations(){
 	/*
 		This gets the packet count difference from the previous server
 		data to the new server data. 
-
-		NOTE: not really used anymore now that global data is being used
 	*/
 		if ( this.previousData == null ){
 			return count;

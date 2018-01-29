@@ -23,7 +23,7 @@ function Team(team_id){
 		Object.assign(data, this.getControlData()); // add in controls data
 
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/radio";
+		// var url = "http://dwslgrid.ece.drexel.edu:5000/radio/"+data['_id'].value;
 		var s = this;
 		this.api.post(url, data, function(data){
 			$('#serverOutputPost').text(JSON.stringify(data));
@@ -34,7 +34,7 @@ function Team(team_id){
 
 	this.setRadio = function(data){
 	/*
-		Displays radio information to the user
+		Displays radio information to the player
 	*/
 		for ( let i in data ){
 			this.radio[i] = {}
@@ -56,7 +56,14 @@ function Team(team_id){
 		$('#confirmChanges').css('display', 'none')
 	}
 
+	this.getRadio = function(){
+		return this.radio;
+	}
+
 	this.getControlData = function(){
+	/*
+		Gets the updated knob data that will be sent to the Flask server.
+	*/
 		var d = {};
 		for ( let i in this.radio ){
 			if ( this.radio[i].type == 'text') {

@@ -75,7 +75,7 @@
 	width: 100%;
 }
 #countdownTimerContainer{
-	width: 50%;
+	width: 40%;
 	float: right;
 }
 #countdownTimerContainer .canvas{
@@ -130,30 +130,43 @@ button:disabled {
 	cursor: not-allowed;
 	color: lightgray;
 }
-#grid, #animations, #keyboard{
+#grid, #animations, #keyboard, #interference{
 	position: absolute;
 	top: 20px;
 }
-#countdownTimerContainer {
+#interference {
+	margin-left: -48px;
+	top: -20px;
+}
+#countdownTimerContainer, #interferenceContainer {
 	position: absolute;
 	top: 500px;
 }
+#interferenceContainer h6 {
+	position: absolute; left: 250px; top: 0px; width: 175px;
+}
+#interferenceContainer .knob-holder {
+	position: absolute; left: 250px; top: 45px;
+}
+#interferenceContainer .knob-holder:nth-child(3){
+	left: 350px;
+}
 #countdownTimerValue {
 	position: relative;
-	left: 103px;
+	left: 61px;
 	top: 77px;
 }
 #gridLine {
 	background-color: grey;
 }
 .digits_3{
-	left: 103px !important;
+	left: 67px !important;
 }
 .digits_2{
-	left: 108px !important;
+	left: 64px !important;
 }
 .digits_1{
-	left: 112px !important;
+	left: 68px !important;
 }
 .knob-holder {
 	height: 135px;
@@ -206,4 +219,39 @@ button:disabled {
 	width: 100%;
 	overflow-wrap: normal;
 	overflow-wrap: break-word;
+}
+#globalControlLine {
+	position: absolute;
+	top: 530px;
+	left: 30px;
+	width: 90%;
+	background-color: grey;
+}
+.notifications{
+	width: 100%;
+	height: 35px;
+	position: absolute;
+	background-color: #e74c3c;
+	display: inline-block;
+	line-height: 35px;
+	display: none;
+}
+#scroll{
+	position: absolute;
+	color: white;
+	-webkit-animation: mymove 5s infinite;
+	-webkit-animation-direction: normal;
+	animation-direction: normal;
+	animation: mymove 15s infinite;
+	animation-timing-function: linear;
+}
+
+@-webkit-keyframes mymove {
+    from {left:50px;}
+  	to {left:90%;}
+}
+
+@keyframes mymove {
+    from {left:150px;}
+  	to {left:80%}
 }

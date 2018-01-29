@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Radio Wars - Login</title>
+		<link rel="icon" type="image/png" href="src/img/logo.png">
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="src/style/login.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<script src="src/js/API.js"></script>
+		<script type="text/javascript">
+			function set(c_name,c_value,exdays) {
+				var exdate = new Date();
+				exdate.setDate(exdate.getDate() + exdays);
+				document.cookie=encodeURIComponent(c_name) 
+					+ "=" + encodeURIComponent(c_value)
+					+ (!exdays ? "" : "; expires="+exdate.toUTCString());
+				;
+			}
+
+			function login(){
+				var api = new API(),
+					url = 'http://www.craigslistadsaver.com/cgi-bin/mockdata.php?login=1';
+				if ( $('#username').val() == '' || $('#password').val() == '') {
+					$('#errorMsg').text('Username and Password Required').css('display', 'block');
+					return;
+				}
+				$('#errorMsg').css('display', 'none');
+				api.post(url, {
+					username: $('#username').val(),
+					password: $('#password').val()
+				}, (function(data){
+					console.log(data)
+					if (!data.success) {
+						$('#errorMsg').text('Login Invalid').css('display', 'block');
+					} else {
+						set('_id', data.cookie, 7)
+						set('team_id', data.team_id, 7)
+						window.location.href = data.location+'.html';
+					}
+				}));
+			}
+		</script>
+	</head>
+			
+	<body style="">
+		<div class="container">
+			<div id="login-form">
+				<h3>Login</h3>
+				<fieldset id="container">
+					<form action="javascript:login();">
+						<input id="username" name="username" type="username" placeholder="Username" autofocus="">
+						<input id="password" name="password" type="password" placeholder="Password">
+						<input name="submit" type="submit" value="Login">
+						<p id="errorMsg"></p>
+						<footer class="clearfix">
+							<p>
+								<span class="info">?</span>
+								<a href="https://dwslgrid.ece.drexel.edu/">Wrong Place?</a>
+							</p>
+						</footer>
+					</form>
+				</fieldset>
+			</div>
+		</div>    
+	</body>
+</html>

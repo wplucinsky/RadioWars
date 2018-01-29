@@ -80,8 +80,10 @@ function countdownTimer() {
 			this.data.graphs.countdownTimer.fn.data.data.datasets[0].data[1] = 100;
 		}
 
-		$('#countdownTimerValue').addClass('digits_'+((this.data.graphs.countdownTimer.fn.data.data.datasets[0].data[1].toString).length+1))
+		$('#countdownTimerValue').removeClass();
+		$('#countdownTimerValue').addClass('digits_'+(((this.data.graphs.countdownTimer.fn.data.data.datasets[0].data[1]).toString()).length))
 		$('#countdownTimerValue').html(this.data.graphs.countdownTimer.fn.data.data.datasets[0].data[1])
+
 		this.data.graphs.countdownTimer.fn.elem.update();
 	}
 };

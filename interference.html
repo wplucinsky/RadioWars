@@ -13,6 +13,9 @@
 		<link rel="icon" type="image/png" href="src/img/logo.png">
 	</head>
 	<body>
+		<div class="notifications">
+			<span id="scroll">Test</span>
+		</div>
 		<div class="container" style="width: 95%;">
 			<div class="row top-pad">
 				<div class="col-md-4">
@@ -23,15 +26,53 @@
 							<canvas id="grid" width="400" height="450" style="padding-top: 50px;"></canvas>
 							<canvas id="animations" width="400" height="450" style="padding-top: 50px;"></canvas>
 							<canvas id="keyboard" width="400" height="450" style="padding-top: 50px;"></canvas>
+							<canvas id="interference" width="450" height="450" style="padding-top: 50px;"></canvas>
 						</div>
 					</div>
+					<div id="globalControlLine" class="line"></div>
 					<div id="countdownTimerContainer">
 						<h6 class="text-center">Time Left</h6>
-						<small id="countdownTimerValue">100</small>
 						<div class="canvas chart">
+							<small id="countdownTimerValue">100</small>
 							<canvas id="countdownTimer" width="50" height="50"></canvas>
 						</div>
-
+					</div>
+					<div id="interferenceContainer">
+						<h6 class="text-center">Interference Controls</h6>
+						<div class="knob-holder" style="">
+							<div class="knob-container">
+								<input 
+									class="knob" 
+									data-width="75" 
+									data-height="85" 
+									data-cursor="true" 
+									data-fgcolor="#222222" 
+									data-thickness=".3" 
+									id="power_interference_knob" 
+									value="25"
+									data-min="1"
+									data-max="100"
+									data-step="1">
+							</div>
+							<div class="knob-text">Power</div>
+						</div>
+						<div class="knob-holder" style="">
+							<div class="knob-container">
+								<input 
+									class="knob" 
+									data-width="75" 
+									data-height="85" 
+									data-cursor="true" 
+									data-fgcolor="#222222" 
+									data-thickness=".3" 
+									id="frequency_interference_knob" 
+									value="1360"
+									data-min="1360"
+									data-max="1460"
+									data-step="10">
+							</div>
+							<div class="knob-text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-8">
@@ -307,6 +348,7 @@
 	<script src="src/js/Grid.js"></script>
 	<script src="src/js/Animations.js"></script>
 	<script src="src/js/CountdownTimer.js"></script>
+	<script src="src/js/Interference.js"></script>
 	<script src="src/js/Keyboard.js"></script>
 	<script>
 		function setup() {

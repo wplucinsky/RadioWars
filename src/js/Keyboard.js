@@ -12,6 +12,7 @@ function Keyboard(){
 	this.eventListeners = null;
 	this.grid = new Grid();
 	this.nodes = new Nodes();
+	this.interference = new Interference();
 	this.team = 1;
 
 	this.setup = function(teams, id){
@@ -38,40 +39,49 @@ function Keyboard(){
 	}
 
 	this.startEventListeners = function(){
+	/*
+		Starts the JS listeners for a variety of keyboard commands. 
+	*/
 		this.eventListeners = document.addEventListener('keydown', function(event){
 			var g = self.data.graphs.grid.fn,
 				n = self.data.nodes,
 				k = self.data.graphs.keyboard.fn,
 				m = 0, // move
 				s = 0, // select
+				i = 0, // interference
 				nearby = n.getSurroundingNodes(k.currNode),
-				i = -1;
+				j = -1;
 
 			// [ U, UL, L, DL, D, DR, R, UP]
 			if (event.key == 'ArrowUp' || event.key == 'w') {
-				i=0; m=1;
+				j=0; m=1;
 			}
 			if (event.key == 'ArrowLeft' || event.key == 'a') {
-				i=2; m=1;
+				j=2; m=1;
 			}
 			if (event.key == 'ArrowDown' || event.key == 's') {
-				i=4; m=1;
+				j=4; m=1;
 			}
 			if (event.key == 'ArrowRight' || event.key == 'd') {
-				i=6; m=1;
+				j=6; m=1;
+			}
+			if (event.key == 'i') {
+				i=1;
 			}
 			if (event.key == 'Enter') {
 				s=1;
 			}
 
 			if ( m == 1 ) {
-				if ( i != -1 && nearby[i] != -1 ) {
-					return k.draw(nearby[i], 'black')
+				if ( j != -1 && nearby[j] != -1 ) {
+					return k.draw(nearby[j], 'black')
 				} else {
 					return k.draw(k.currNode, 'red')
 				}
 			} else if ( s == 1) {
 				return k.draw(k.currNode, 'green', s)
+			} else if ( i == 1) {
+				return k.draw(k.currNode, 'orange', s, i)
 			}
 
 		})
@@ -81,7 +91,7 @@ function Keyboard(){
 		this.eventListeners = null;
 	}
 
-	this.draw = function(node, color, s){		
+	this.draw = function(node, color, s, i){		
 		this.elem.clearRect(this.rects[this.currNode].x-5, this.rects[this.currNode].y-5, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
 		
 		this.elem.beginPath();
@@ -93,6 +103,8 @@ function Keyboard(){
 
 		if (s) {
 			this.updateTeam()
+		} else if (i) {
+			this.interference.startInterference(this.currNode)
 		}
 	}
 
