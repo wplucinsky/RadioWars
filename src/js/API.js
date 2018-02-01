@@ -19,13 +19,33 @@ function API(){
 	}
 
 	this.authenticate = function(){
+		var a = this;
 		$.ajax({
 			type:"POST",
 			url:'http://dwslgrid.ece.drexel.edu:5000/auth',
-			success: function(data){ console.log(data) },
+			success: function(data){ 
+				console.log(data, a)
+				if (!data.success){
+					a.set('_id', null, 7)
+					a.set('team_id', null, 7)
+					window.location.href = 'login.html';
+				} else {
+					a.set('_id', data.cookie, 7)
+					a.set('team_id', data.team_id, 7)
+				}
+			},
 			data: { hash: document.cookie._id },
 			dataType: 'json',
 		});
+	}
+
+	this.set = function(c_name,c_value,exdays) {
+		var exdate = new Date();
+		exdate.setDate(exdate.getDate() + exdays);
+		document.cookie=encodeURIComponent(c_name) 
+			+ "=" + encodeURIComponent(c_value)
+			+ (!exdays ? "" : "; expires="+exdate.toUTCString());
+		;
 	}
 
 	$( document ).ajaxError(function( event, request, settings ) {

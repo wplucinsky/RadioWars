@@ -8,15 +8,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<script src="src/js/API.js"></script>
 		<script type="text/javascript">
-			function set(c_name,c_value,exdays) {
-				var exdate = new Date();
-				exdate.setDate(exdate.getDate() + exdays);
-				document.cookie=encodeURIComponent(c_name) 
-					+ "=" + encodeURIComponent(c_value)
-					+ (!exdays ? "" : "; expires="+exdate.toUTCString());
-				;
-			}
-
 			function login(){
 				var api = new API(),
 					url = 'http://www.craigslistadsaver.com/cgi-bin/mockdata.php?login=1';
@@ -33,8 +24,8 @@
 					if (!data.success) {
 						$('#errorMsg').text('Login Invalid').css('display', 'block');
 					} else {
-						set('_id', data.cookie, 7)
-						set('team_id', data.team_id, 7)
+						api.set('_id', data.cookie, 7)
+						api.set('team_id', data.team_id, 7)
 						window.location.href = data.location+'.html';
 					}
 				}));
@@ -55,7 +46,7 @@
 						<footer class="clearfix">
 							<p>
 								<span class="info">?</span>
-								<a href="https://dwslgrid.ece.drexel.edu/">Wrong Place?</a>
+								<a href="https://dwslgrid.ece.drexel.edu/">Need Help?</a>
 							</p>
 						</footer>
 					</form>
