@@ -15,6 +15,7 @@ function Animations(){
 	this.timerVal = null;
 	this.grid = new Grid();
 	this.api = new API();
+	this.nodes = new Nodes();
 	this.colors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
@@ -61,25 +62,25 @@ function Animations(){
 		this.timerVal = new Date();
 		console.clear()
 		console.log(this.m)
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4&m="+this.m; // used for testing
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4&transform=1&m="+this.m; // used for testing
 		// var url = "http://dwslgrid.ece.drexel.edu:5000/";
+		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
 				if ( data.length != 0 && JSON.stringify(self.data.graphs.animations.fn.getPreviousData()) != JSON.stringify(data)){
 					var animationData = [],
 						k = 0,
-						a =  self.data.graphs.animations.fn,
 						count = a.getCount();
 					for ( let i in data ) {
 						animationData[i] = {}
 						for ( let j in data[i].packetsReceived) {
-							animationData[i][k] = a.getAnimationData(data[i]._id.replace('node',''), j.replace('node',''), parseInt(data[i].packetsReceived[j]), i, k);
+							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), parseInt(data[i].packetsReceived[j]), i, k);
 							offset = a.getOffset(i,k); // how many packets have been sent so far
 						
 
 							if ( animationData[i][k][offset] != undefined ){
 								animationData[i][k][offset].wait = 0;
-								diff = a.getDataDifference(data[i]._id.replace('node',''), j.replace('node',''), parseInt(data[i].packetsReceived[j]))
+								diff = a.getDataDifference(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), parseInt(data[i].packetsReceived[j]))
 								count = a.addToCount(diff)
 
 								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j], ' \tprev '+ offset, ' \tcnt '+ count)
@@ -117,7 +118,7 @@ function Animations(){
 		sendPacket() work. It appends it to the global getData() and returns.
 	*/
 		animData = this.getData();
-		if ( animData === null || animData[i] === null  || animData[i][k] === null ) { 
+		if ( animData === null || animData[i] === null  || animData[i][k] === null || animData[i][k] === undefined ) { 
 			offset = 0;
 			animData = {};
 		} else {
@@ -275,22 +276,22 @@ function Animations(){
 		if(teamNode == 8) {
 			return this.colors.red
 		}
-		if(teamNode == 15) {
+		if(teamNode == 9) {
 			return this.colors.yellow
 		}
-		if(teamNode == 16) {
+		if(teamNode == 10) {
 			return this.colors.red
 		}
-		if(teamNode == 17) {
+		if(teamNode == 11) {
 			return this.colors.green
 		}
-		if(teamNode == 18) {
+		if(teamNode == 12) {
 			return this.colors.blue
 		}
-		if(teamNode == 19) {
+		if(teamNode == 13) {
 			return this.colors.purple
 		}
-		if(teamNode == 20) {
+		if(teamNode == 14) {
 			return this.colors.black
 		}
 

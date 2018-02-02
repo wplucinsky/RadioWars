@@ -140,7 +140,7 @@ input[type="submit"] {
 }
 
 #login-form input[type="submit"]:hover {
-  background: #003563;
+  background: #0f5bac;
 }
 
 #login-form footer {
@@ -420,16 +420,13 @@ li{
   display: table !important;
 }
 #login-form h3{
-  background-color: #00437C;
+  background-color: #07294E;
 }
 
 #login-form input[type="submit"] {
-   background: #00437C;
+   background: #07294E;
 }
 
-#login-form input[type="submit"]:hover {
-  background: #003563;
-}
 input[type="username"] {
   border-top: 1px solid #dcdcdc !important;
 }
@@ -439,4 +436,10 @@ form{
 
 p{
   margin: 0;
+}
+#logo{
+  width: 50px;
+  position: absolute;
+  top: 6px;
+  left: 6px;
 }

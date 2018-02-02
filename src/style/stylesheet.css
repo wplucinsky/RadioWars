@@ -37,6 +37,9 @@
 @media screen and (max-width:992px){
 	
 }
+.grid-holder{
+	height: 400px;
+}
 #gridView{
 	margin-left: 25px;
 }

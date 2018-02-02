@@ -95,16 +95,30 @@ function Grid(){
 		this.rects = []
 		c = 0;
 		for (let i=0; i<=2; i++){
-			for (let j=0; j<=4; j++){
-				var rect = {}
-				rect.x = (75 * i) + (i * 5) + 80;
-				rect.y = (75 * j) + (j * 5) + 5;
-				rect.width = 25;
-				rect.height = 25;
-				rect.alpha = 0;
-				rect.taken = 0;
-				this.rects.push(rect);
-				c+=1;
+			for (let j=0; j<=3; j++){
+				if ( i == 1) {
+					if ( j == 3 ){
+						var rect = {}
+						rect.x = (75 * i) + (i * 5) + 80;
+						rect.y = (65 * j) + (j * 5);
+						rect.width = 25;
+						rect.height = 25;
+						rect.alpha = 0;
+						rect.taken = 0;
+						this.rects.push(rect);
+						c+=1;
+					}
+				} else {
+					var rect = {}
+					rect.x = (75 * i) + (i * 5) + 80;
+					rect.y = (75 * j) + (j * 5) + 5;
+					rect.width = 25;
+					rect.height = 25;
+					rect.alpha = 0;
+					rect.taken = 0;
+					this.rects.push(rect);
+					c+=1;
+				}
 			}
 		}
 		for (let i=0; i<=1; i++){
@@ -112,7 +126,7 @@ function Grid(){
 				k = (i == 0) ? 5 : 235;
 				var rect = {}
 				rect.x = (75 * i) + (i * 5) + k;
-				rect.y = (180 * j) + (j * 5) + 5;
+				rect.y = (140 * j) + (j * 5) + 5;
 				rect.width = 25;
 				rect.height = 25;
 				rect.alpha = 0;

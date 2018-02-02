@@ -73,6 +73,61 @@
 		return $data;
 	}
 
+	function getRandomParent(){
+		$available = array(10, 14, 5, 16, 17, 15);
+		$p = rand(0,5);
+		return $available[$p];
+	}
+	function getRandomChild(){
+		$available = array(18, 13, 9, 11, 50, 12, 8, 6, 7);
+		$p = rand(0,8);
+		return $available[$p];
+	}
+
+	function getTransformedBuildingData($i, $m){
+		/*
+			Actual Formation
+			10 	18		12	16
+				13		8
+			14	9		6 	17
+			 	11 	50 	7
+			5				15
+		*/
+		$data = array();
+
+		$packetsSent = array();
+		$packetsReceived = array();
+
+		if ( $i == 0 ){
+			$data['_id'] = "node10";
+			$p = 10;
+		} elseif ( $i == 1 ) {
+			$data['_id'] = "node15";
+			$p = 15;
+		} else {
+			$p = getRandomParent();
+			$data['_id'] = "node".($p);
+		}
+		$data['power'] = rand(0,20);
+
+		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(1,10);
+		$packetsSent['node'.getRandomNode(0,20,$p)] = rand(1,10);
+
+		if ( $m == 1 ){
+			$packetsReceived['node'.getRandomChild()] = ($p-13)*20;
+		} else {
+			$packetsReceived['node'.getRandomChild()] = ($p-13)*$m;
+		}
+		
+		$packetsReceived['node'.getRandomChild()]  = ($p-7)*$m;
+
+
+		$data['packetsSent'] = $packetsSent;
+		$data['packetsReceived'] = $packetsReceived;
+
+		return $data;
+	}
+
 	function postData($data){
 		$radio = array(
 			'rxGain' => rand(5,20).'.0',
@@ -111,7 +166,11 @@
 		}
 
 		for ($i=0; $i < $c; $i++) { 
-			$data[$i] = getBuildingData($i, $m);
+			if (isset($_GET['transform']) && $_GET['transform'] == 1) {
+				$data[$i] = getTransformedBuildingData($i, $m);
+			} else {
+				$data[$i] = getBuildingData($i, $m);
+			}
 		}
 	} elseif ( isset($_GET['post'])) {
 		if (isset($_GET['i'])) {

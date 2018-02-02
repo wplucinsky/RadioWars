@@ -1,4 +1,4 @@
-var keyboard = new Keyboard()
+var keyboard = new Keyboard();
 
 function Keyboard(){
 	// standard
@@ -8,10 +8,11 @@ function Keyboard(){
 	this.rects = null;
 
 	// specific
-	this.currNode = 15;
 	this.eventListeners = null;
 	this.grid = new Grid();
 	this.nodes = new Nodes();
+	this.currNode = 9;
+	this.currNodeReal = this.nodes.getNodeLocationReal(this.currNode);
 	this.interference = new Interference();
 	this.team = 1;
 
@@ -48,7 +49,8 @@ function Keyboard(){
 				k = self.data.graphs.keyboard.fn,
 				m = 0, // move
 				s = 0, // select
-				i = 0, // interference
+				i = 0, // interference,
+				c = 0, // controls
 				nearby = n.getSurroundingNodes(k.currNode),
 				j = -1;
 
@@ -68,6 +70,25 @@ function Keyboard(){
 			if (event.key == 'i') {
 				i=1;
 			}
+			// select one of the controls
+			// if (event.key == 'u') {
+			// 	c=1;
+			// }
+			// if (event.key == 'i') {
+			// 	c=1;
+			// }
+			// if (event.key == 'o') {
+			// 	c=1;
+			// }
+			// if (event.key == 'j') {
+			// 	c=1;
+			// }
+			// if (event.key == 'k') {
+			// 	c=1;
+			// }
+			// if (event.key == 'l') {
+			// 	c=1;
+			// }
 			if (event.key == 'Enter') {
 				s=1;
 			}
@@ -82,6 +103,8 @@ function Keyboard(){
 				return k.draw(k.currNode, 'green', s)
 			} else if ( i == 1) {
 				return k.draw(k.currNode, 'orange', s, i)
+			} else if ( c == 1) {
+
 			}
 
 		})
@@ -99,19 +122,22 @@ function Keyboard(){
 		this.elem.strokeStyle = color;
 		this.elem.stroke();
 
-		this.currNode = node;
+
+		this.currNode = node; // javascript layout node
+		this.currNodeReal = this.nodes.getNodeLocationReal(node); // grid layout node
 
 		if (s) {
 			this.updateTeam()
-		} else if (i) {
-			this.interference.startInterference(this.currNode)
+		} 
+		if (i) {
+			this.interference.startInterference(this.currNodeReal)
 		}
 	}
 
 	this.updateTeam = function(){
 		this.teams[this.team].team.updateRadio({
 			_id: {
-				value: this.currNode
+				value: this.currNodeReal
 			}
 		});
 	}

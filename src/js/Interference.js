@@ -9,6 +9,7 @@ function Interference(){
 	// specific
 	this.grid = new Grid();
 	this.api = new API();
+	this.nodes = new Nodes();
 	this.timer = null;
 	this.rect = null;
 	this.pos = 1;
@@ -50,7 +51,7 @@ function Interference(){
 			// add check for valid data
 			$('#serverOutputPost').text(JSON.stringify(data));
 			i.scroll(node, time)
-			i.startTimer(node, time)
+			i.startTimer(i.nodes.getNodeLocation(node), time)
 		}))
 	}	
 
