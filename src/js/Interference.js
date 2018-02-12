@@ -39,20 +39,26 @@ function Interference(){
 	*/
 		var i = this, time = 10;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/interference";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
 		for (var t in this.teams) break;
 		this.api.post(url, {
-			'type': 	'Interference',
-			'_id': 		node,
-			'power': 	$('#power_interference_knob').val(),
-			'freq': 	$('#frequency_interference_knob').val(),
-			'time': 	time
+			'_id': 		 'node'+node,
+			'type': 	 'jammer',
+			'completed': String(false),
+			'date': 	 new Date().toISOString(),
+			'time': 	 String(time),
+			'direction': String(1),
+			'rxGain': 	 $('#rxGain_1_knob').val(),
+			'txGain': 	 $('#txGain_1_knob').val(),
+			'power': 	 $('#power_interference_knob').val(),
+			'freq': 	 $('#frequency_interference_knob').val(),
+			'nodeToCapture': 'node15'
 		}, (function(data){
 			// add check for valid data
 			$('#serverOutputPost').text(JSON.stringify(data));
 			i.scroll(node, time)
 			i.startTimer(i.nodes.getNodeLocation(node), time)
-		}))
+		}));
 	}	
 
 	this.animate = function(node, time) {

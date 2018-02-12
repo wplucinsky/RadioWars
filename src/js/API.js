@@ -4,7 +4,7 @@ function API(){
 			type:"GET",
 			url:url,
 			success: callbackFunc,
-			dataType: 'json',
+			dataType: "json",
 		});
 	}
 
@@ -13,8 +13,18 @@ function API(){
 			type:"POST",
 			url:url,
 			success: callbackFunc,
+			data: JSON.stringify(data),
+			contentType: "application/json"
+		});
+	}
+
+	this.postOrig = function(url, data, callbackFunc) {
+		$.ajax({
+			type:"POST",
+			url:url,
+			success: callbackFunc,
 			data: data,
-			dataType: 'json',
+			dataType: "json"
 		});
 	}
 

@@ -80,4 +80,12 @@ var data = {
 			fn: null
 		}
 	},
+	controls: {
+		1: 'power',
+		2: 'rxGain',
+		3: 'txGain',
+		4: 'normalFrequency',
+		5: 'sampleRate',
+		6: 'frameSize'
+	}
 }

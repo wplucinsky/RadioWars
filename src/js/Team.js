@@ -25,7 +25,7 @@ function Team(team_id){
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
 		// var url = "http://dwslgrid.ece.drexel.edu:5000/radio/"+data['_id'].value;
 		var s = this;
-		this.api.post(url, data, function(data){
+		this.api.postOrig(url, data, function(data){
 			$('#serverOutputPost').text(JSON.stringify(data));
 			data = s.transformData(data)
 			s.setRadio(data)
