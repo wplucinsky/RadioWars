@@ -36,7 +36,7 @@ function Control(){
 		return true;
 		var i = this, time = 10;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
 		for (var t in this.teams) break;
 		this.api.post(url, {
 			'_id': 		 'node'+node1,
