@@ -78,6 +78,9 @@ var data = {
 		},
 		interference: {
 			fn: null
+		},
+		control: {
+			fn: null
 		}
 	},
 	controls: {

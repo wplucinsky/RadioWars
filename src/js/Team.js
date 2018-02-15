@@ -53,7 +53,7 @@ function Team(team_id){
 				$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+this.radio[i].value+'.png')
 			}
 		}
-		$('#confirmChanges').css('display', 'none')
+		$('#controlsConfirmChanges').css('display', 'none')
 	}
 
 	this.getRadio = function(){

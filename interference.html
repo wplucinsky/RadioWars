@@ -20,6 +20,7 @@
 			<div class="row top-pad">
 				<div class="col-md-4 grid-holder">
 					<h3 class="text-center">DWSL Grid</h3>
+					<span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
 					<div id="gridLine" class="line"></div>
 					<div id="gridViewContainer">
 						<div class="canvas chart">
@@ -132,7 +133,7 @@
 						</div>
 						<div class="col-md-6" id="team_1">
 							<h3 class="text-center">Controls</span></h3>
-							<span id="confirmChanges">Press ENTER to Confirm Changes</span>
+							<span id="controlsConfirmChanges">press ENTER to confirm changes</span>
 							<div class="line"></div>
 							<div class="row">	
 								<div class="col-md-4 knob-holder">
@@ -243,88 +244,68 @@
 							<div class="line"></div>
 							<table class="node_data">
 								<tr>
-									<td>Node 0</td>
+									<td class="text"></td>
 									<td><div id="node_0"></div></td>
 								</tr>
 								<tr>
-									<td>Node 1</td>
+									<td class="text"></td>
 									<td><div id="node_1"></div></td>
 								</tr>
 								<tr>
-									<td>Node 2</td>
+									<td class="text"></td>
 									<td><div id="node_2"></div></td>
 								</tr>
 								<tr>
-									<td>Node 3</td>
+									<td class="text"></td>
 									<td><div id="node_3"></div></td>
 								</tr>
 								<tr>
-									<td>Node 4</td>
+									<td class="text"></td>
 									<td><div id="node_4"></div></td>
 								</tr>
 								<tr>
-									<td>Node 5</td>
+									<td class="text"></td>
 									<td><div id="node_5"></div></td>
 								</tr>
 								<tr>
-									<td>Node 6</td>
+									<td class="text"></td>
 									<td><div id="node_6"></div></td>
 								</tr>
 								<tr>
-									<td>Node 7</td>
+									<td class="text"></td>
 									<td><div id="node_7"></div></td>
 								</tr>
 								<tr>
-									<td>Node 8</td>
+									<td class="text"></td>
 									<td><div id="node_8"></div></td>
 								</tr>
 								<tr>
-									<td>Node 9</td>
+									<td class="text"></td>
 									<td><div id="node_9"></div></td>
 								</tr>
 								<tr>
-									<td>Node 10</td>
+									<td class="text"></td>
 									<td><div id="node_10"></div></td>
 								</tr>
 								<tr>
-									<td>Node 11</td>
+									<td class="text"></td>
 									<td><div id="node_11"></div></td>
 								</tr>
 								<tr>
-									<td>Node 12</td>
+									<td class="text"></td>
 									<td><div id="node_12"></div></td>
 								</tr>
 								<tr>
-									<td>Node 13</td>
+									<td class="text"></td>
 									<td><div id="node_13"></div></td>
 								</tr>
 								<tr>
-									<td>Node 14</td>
+									<td class="text"></td>
 									<td><div id="node_14"></div></td>
 								</tr>
 								<tr>
-									<td>Node 15</td>
+									<td class="text"></td>
 									<td><div id="node_15"></div></td>
-								</tr>
-								<tr>
-									<td>Node 16</td>
-									<td><div id="node_16"></div></td>
-								</tr>
-								<tr>
-									<td>Node 17</td>
-									<td><div id="node_17"></div></td>
-								</tr>
-								<tr>
-									<td>Node 18</td>
-									<td><div id="node_18"></div></td>
-								</tr>
-								<tr>
-									<td>Node 19</td>
-									<td><div id="node_19"></div></td>
-								</tr>
-								<tr>
-									<td>Node 20</td>
-									<td><div id="node_20"></div></td>
 								</tr>
 							</table>
 						</div>
@@ -352,6 +333,7 @@
 	<script src="src/js/Animations.js"></script>
 	<script src="src/js/CountdownTimer.js"></script>
 	<script src="src/js/Interference.js"></script>
+	<script src="src/js/Control.js"></script>
 	<script src="src/js/Keyboard.js"></script>
 	<script>
 		function setup() {

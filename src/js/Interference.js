@@ -17,7 +17,7 @@ function Interference(){
 	this.setup = function(teams, id){
 		this.teams = teams;
 		this.setElem(id)
-		this.grid.setup(teams,id);
+		this.grid.setup(teams, id, true);
 	}
 	
 	this.start = function(mode){

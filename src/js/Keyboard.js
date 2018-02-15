@@ -14,13 +14,18 @@ function Keyboard(){
 	this.currNode = 9;
 	this.currNodeReal = this.nodes.getNodeLocationReal(this.currNode);
 	this.interference = new Interference();
+	this.control = new Control();
 	this.team = 1;
-	this.control = self.data.controls[1];
+	this.capture = {
+		id: 0,
+		node: this.currNode
+	};
+	this.controls = self.data.controls[1];
 
 	this.setup = function(teams, id){
 		this.teams = teams
 		this.setElem(id)
-		this.grid.setup(teams, 'grid');
+		this.grid.setup(teams, id, true);
 	}
 
 	this.start = function(mode){
@@ -53,7 +58,7 @@ function Keyboard(){
 				s = 0, // select
 				i = 0, // interference
 				c = 0, // controls
-				d = 0, // control direction
+				d = 0, // control direction,
 				nearby = n.getSurroundingNodes(k.currNode),
 				j = -1;
 
@@ -76,38 +81,44 @@ function Keyboard(){
 			}
 			// select one of the radio controls
 			if (event.key == '1') {
-				k.control = self.data.controls[1];
+				k.controls = self.data.controls[1];
 				c=1;
 			}
 			if (event.key == '2') {
-				k.control = self.data.controls[2];
+				k.controls = self.data.controls[2];
 				c=1;
 			}
 			if (event.key == '3') {
-				k.control = self.data.controls[3];
+				k.controls = self.data.controls[3];
 				c=1;
 			}
 			if (event.key == '4') {
-				k.control = self.data.controls[4];
+				k.controls = self.data.controls[4];
 				c=1;
 			}
 			if (event.key == '5') {
-				k.control = self.data.controls[5];
+				k.controls = self.data.controls[5];
 				c=1;
 			}
 			if (event.key == '6') {
-				k.control = self.data.controls[6];
+				k.controls = self.data.controls[6];
 				c=1;
 			}
 			if (event.key == 'ArrowLeft') {
 				let index = Object.keys(self.data.controls).filter(function(key) {return self.data.controls[key] === k.control})[0]
-				k.control = index == 1 ? self.data.controls[6] : self.data.controls[parseInt(index) - 1];
+				k.controls = index == 1 ? self.data.controls[6] : self.data.controls[parseInt(index) - 1];
 				c=1;
 			}
 			if (event.key == 'ArrowRight') {
 				let index = Object.keys(self.data.controls).filter(function(key) {return self.data.controls[key] === k.control})[0]
-				k.control = index == 6 ? self.data.controls[1] : self.data.controls[parseInt(index) + 1];
+				k.controls = index == 6 ? self.data.controls[1] : self.data.controls[parseInt(index) + 1];
 				c=1;
+			}
+			// start node capture
+			if (k.capture.id == 0){
+				if (event.key == 'c') {
+					k.capture.id = 1;
+				}
 			}
 			// controls the radio controls
 			if (event.key == 'ArrowUp') {
@@ -121,16 +132,33 @@ function Keyboard(){
 				s=1;
 			}
 
-			if ( m == 1 ) {
+			if ( k.capture.id == 1) {
+				k.capture.id = 2;
+				k.capture.node = k.currNode;
+				$('#gridConfirmChanges').css('display', 'block');
+				return k.draw(k.currNode, 'green', {dash: 1})
+			} else if ( k.capture.id == 3 && s == 1) {
+				k.capture.id = 0;
+				k.draw(k.capture.node, 'green', {control: 1, node1: k.capture.node, node2: k.currNode})
+				return k.draw(k.capture.node, 'black');
+			} else if ( k.capture.id >= 2) {
+				if ( j != -1 && nearby[j] != -1 && nearby[j] != k.capture.node) {
+					k.capture.id = 3;
+					return k.draw(nearby[j], 'black', {redraw: k.capture.node, dash: 1})
+				} else {
+					k.capture.id = 2;
+					return k.draw(k.currNode, 'red', {redraw: k.capture.node, dash: 1})
+				}
+			}  else if ( m == 1 ) {
 				if ( j != -1 && nearby[j] != -1 ) {
 					return k.draw(nearby[j], 'black')
 				} else {
 					return k.draw(k.currNode, 'red')
 				}
 			} else if ( s == 1) {
-				return k.draw(k.currNode, 'green', s)
+				return k.draw(k.currNode, 'green', {select: 1})
 			} else if ( i == 1) {
-				return k.draw(k.currNode, 'orange', s, i)
+				return k.draw(k.currNode, 'orange', {interference: 1})
 			} else if ( c == 1) {
 				k.outline()
 				if ( d != 0 ){
@@ -145,23 +173,47 @@ function Keyboard(){
 		this.eventListeners = null;
 	}
 
-	this.draw = function(node, color, s, i){		
-		this.elem.clearRect(this.rects[this.currNode].x-5, this.rects[this.currNode].y-5, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
-		
+	this.draw = function(node, color, o){
+	/*
+		Draws an outline around a node box.
+		Options:
+			select: control radio
+			interference: start interference
+			dash: make outline dashed
+			redraw: keep old node
+			clear: to clear grid or not
+			control: start radio control
+	*/	
+		o = this.processOptions(o);
+		if (o.clear == 1) {
+			this.elem.clearRect(this.rects[this.currNode].x-5, this.rects[this.currNode].y-5, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
+			this.currNode = node; // javascript layout node
+			this.currNodeReal = this.nodes.getNodeLocationReal(node); // grid layout node
+		}
+
 		this.elem.beginPath();
 		this.elem.rect(this.rects[node].x-3, this.rects[node].y-3, this.rects[node].width+6, this.rects[node].height+6);
 		this.elem.strokeStyle = color;
+		if (o.dash == 1){
+			this.elem.setLineDash([5]);
+		} else {
+			this.elem.setLineDash([]);
+		}
 		this.elem.stroke();
 
-
-		this.currNode = node; // javascript layout node
-		this.currNodeReal = this.nodes.getNodeLocationReal(node); // grid layout node
-
-		if (s) {
+		if (o.select == 1) {
 			this.updateTeam()
 		} 
-		if (i) {
+		if (o.interference == 1) {
 			this.interference.startInterference(this.currNodeReal)
+		}
+		if (o.control == 1) {
+			this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			$('#gridConfirmChanges').css('display', 'none');
+			this.control.startNodeControl(o.node1, o.node2);
+		}
+		if (o.redraw != -1) {
+			return this.draw(o.redraw, 'green', {dash: 1, clear: 0})
 		}
 	}
 
@@ -193,9 +245,22 @@ function Keyboard(){
 		});
 	}
 
+	this.processOptions = function(o){
+		var base = {select: 0, interference: 0, dash: 0, redraw: -1, clear: 1, control: 0};
+		if ( o == undefined ){
+			return base;
+		}
+		for (let k in base){
+			if (! o.hasOwnProperty(k)) {
+				o[k] = base[k]
+			}
+		}
+		return o;
+	}
+
 	$(".knob").knob({
 	    release : function (value) {
-	    	$('#confirmChanges').css('display', 'block')
+	    	$('#controlsConfirmChanges').css('display', 'block')
 	        // console.log(this.$.attr('id'),':',value);
 	    }
 	});
