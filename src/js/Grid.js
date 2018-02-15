@@ -22,64 +22,19 @@ function Grid(){
 		grey: 'rgb(201, 203, 207)'
 	}
 
-	this.setup = function(teams, id){
+	this.setup = function(teams, id, subclass){
 		this.teams = teams;
-		this.setElem(id)
+		if (subclass == undefined){
+			this.setElem(id);
+			this.setHomepageNodeGraph();
+		}
 		this.createNodes();
 	}
 
 	this.start = function(mode){
+		this.createNodes();
+		this.setHomepageNodeGraph();
 		this.drawRectangles();
-		this.stopFlag = 0;
-		if (mode != 'demo' && mode != 'interference') {
-			for (let i in this.teams) {
-				this.fadeIn(parseInt(i)+14, parseInt(i), this.teams[i].team.getTeamColorHex(), null);
-			}
-		}
-
-		if ( mode == 'demo' ) {
-			this.autoplay = false;
-			// demo 1
-			window.setTimeout(function(){
-				this.data.graphs.grid.fn.on(2, this.data.teams[1].team.getTeamColorHex(), 1.0)
-				this.data.graphs.grid.fn.on(12, this.data.teams[6].team.getTeamColorHex(), 1.0)
-				this.data.teams[1].radio.captured.value = 1;
-				this.data.teams[1].team.setRadio(data.teams[1].radio);
-				this.data.teams[6].radio.captured.value = 1;
-				this.data.teams[6].team.setRadio(data.teams[6].radio);
-				// demo 2
-				window.setTimeout(function(){
-					this.data.graphs.grid.fn.on(6, this.data.teams[1].team.getTeamColorHex(), 0.5)
-					this.data.graphs.grid.fn.on(8, this.data.teams[6].team.getTeamColorHex(), 0.5)
-					this.data.teams[1].radio.captured.value = 2;
-					this.data.teams[1].team.setRadio(data.teams[1].radio);
-					this.data.teams[6].radio.captured.value = 2;
-					this.data.teams[6].team.setRadio(data.teams[6].radio);
-					// demo 3
-					window.setTimeout(function(){
-						this.data.graphs.grid.fn.off(8)
-						this.data.graphs.grid.fn.on(6, this.data.teams[1].team.getTeamColorHex(), 1.0)
-						this.data.graphs.grid.fn.on(7, this.data.teams[1].team.getTeamColorHex(), 0.7)
-						this.data.graphs.grid.fn.contention(8, this.data.teams[1].team.getTeamColorHex(), this.data.teams[6].team.getTeamColorHex(), 0.3, 'lose')
-						this.data.teams[1].radio.captured.value = 4;
-						this.data.teams[1].team.setRadio(data.teams[1].radio);
-						this.data.teams[6].radio.captured.value = 2;
-						this.data.teams[6].team.setRadio(data.teams[6].radio);
-						// demo 4
-						window.setTimeout(function(){
-							this.data.graphs.grid.fn.contention(8, this.data.teams[1].team.getTeamColorHex(), this.data.teams[6].team.getTeamColorHex(), 0.0, 'lose')
-							this.data.graphs.grid.fn.on(6, this.data.teams[1].team.getTeamColorHex(), 1.0)
-							this.data.graphs.grid.fn.on(7, this.data.teams[1].team.getTeamColorHex(), 1.0)
-							this.data.graphs.grid.fn.on(8, this.data.teams[6].team.getTeamColorHex(), 1.0)
-							this.data.teams[1].radio.captured.value = 3;
-							this.data.teams[1].team.setRadio(data.teams[1].radio);
-							this.data.teams[6].radio.captured.value = 2;
-							this.data.teams[6].team.setRadio(data.teams[6].radio);
-						}, 2000);
-					}, 2000);
-				}, 2000);
-			}, 2000);
-		}
 	}
 
 	this.stop = function(){
@@ -141,6 +96,8 @@ function Grid(){
 		for (let i in this.rects){
 			this.elem.beginPath();
 			this.elem.rect(this.rects[i].x, this.rects[i].y, this.rects[i].width, this.rects[i].height);
+			this.elem.font = "10px Arial";
+			this.elem.fillText(this.nodes.getNodeLocationReal(i),this.rects[i].x,this.rects[i].y+37);
 			this.elem.fillStyle = this.colors.grey;
 			this.elem.fill();
 		}
@@ -446,6 +403,12 @@ function Grid(){
 	this.clearNodeGraph = function(){
 		for (var i=0; i<= 20; i++){
 			$('#node_'+i).empty()
+		}
+	}
+
+	this.setHomepageNodeGraph = function(){
+		for (let i=0; i<15; i++){
+			$('#node_'+i).closest('tr').find('.text').text('Node '+this.nodes.getNodeLocationReal(i));
 		}
 	}
 }
