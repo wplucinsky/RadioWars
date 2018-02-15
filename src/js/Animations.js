@@ -13,6 +13,7 @@ function Animations(){
 	this.previousData = null;
 	this.timer = null;
 	this.timerVal = null;
+	this.sending = false;
 	this.grid = new Grid();
 	this.api = new API();
 	this.nodes = new Nodes();
@@ -63,7 +64,7 @@ function Animations(){
 		console.clear()
 		console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4&transform=1&m="+this.m; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/";
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
@@ -92,7 +93,7 @@ function Animations(){
 
 					a.setData(animationData);
 					a.setPreviousData(data);
-					if ( start ){
+					if ( start || !self.data.graphs.animations.fn.sending ){
 						this.m = this.m + 1;
 						a.sendPacket();
 					} 
@@ -129,8 +130,8 @@ function Animations(){
 		var data = {
 				xDif:  this.rects[to].x - this.rects[from].x,
 				yDif:  this.rects[to].y - this.rects[from].y,
-				x: 	   this.rects[from].x + 13,
-				y: 	   this.rects[from].y + 13,
+				x: 	   this.rects[from].x + 18,
+				y: 	   this.rects[from].y + 18,
 				step:  this.getStepSize(from, to),
 				cStep: 0,
 				from:  from,
@@ -143,8 +144,8 @@ function Animations(){
 			skipdata = {
 				xDif:  this.rects[to].x - this.rects[from].x,
 				yDif:  this.rects[to].y - this.rects[from].y,
-				x: 	   this.rects[from].x + 13,
-				y: 	   this.rects[from].y + 13,
+				x: 	   this.rects[from].x + 18,
+				y: 	   this.rects[from].y + 18,
 				step:  this.getStepSize(from, to),
 				cStep: 0,
 				from:  from,
@@ -175,9 +176,11 @@ function Animations(){
 			stop 	= 0;
 
 		animate();
+		self.data.graphs.animations.fn.sending = false;
 		function animate(){
 			var data = self.data.graphs.animations.fn.getData(),
 				count = self.data.graphs.animations.fn.getCount();
+			self.data.graphs.animations.fn.sending = true;
 			elem.clearRect(0, 0, w, h);
 			for (let i in data) {
 				for (let j in data[i]) {
@@ -196,8 +199,8 @@ function Animations(){
 
 							if ( data[i][j][k].cStep < data[i][j][k].step){
 								if ( data[i][j][k].cStep == (data[i][j][k].step - 1)) {
-									data[i][j][k].x = rects[data[i][j][k].to].x + 13;
-									data[i][j][k].y = rects[data[i][j][k].to].y + 13;
+									data[i][j][k].x = rects[data[i][j][k].to].x + 18;
+									data[i][j][k].y = rects[data[i][j][k].to].y + 18;
 
 									// change from 1 to some fraction for needed nodes to capture
 									this.data.graphs.grid.fn.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
@@ -232,7 +235,7 @@ function Animations(){
 				requestAnimationFrame(animate);
 			} else {
 				// every packets has finished sending
-				// self.data.graphs.animations.fn.apiCallGet(true);
+				self.data.graphs.animations.fn.sending = false;
 			}
 		}
 	}

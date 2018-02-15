@@ -56,8 +56,8 @@ function Grid(){
 						var rect = {}
 						rect.x = (75 * i) + (i * 5) + 80;
 						rect.y = (65 * j) + (j * 5);
-						rect.width = 25;
-						rect.height = 25;
+						rect.width = 35;
+						rect.height = 35;
 						rect.alpha = 0;
 						rect.taken = 0;
 						this.rects.push(rect);
@@ -67,8 +67,8 @@ function Grid(){
 					var rect = {}
 					rect.x = (75 * i) + (i * 5) + 80;
 					rect.y = (75 * j) + (j * 5) + 5;
-					rect.width = 25;
-					rect.height = 25;
+					rect.width = 35;
+					rect.height = 35;
 					rect.alpha = 0;
 					rect.taken = 0;
 					this.rects.push(rect);
@@ -82,8 +82,8 @@ function Grid(){
 				var rect = {}
 				rect.x = (75 * i) + (i * 5) + k;
 				rect.y = (140 * j) + (j * 5) + 5;
-				rect.width = 25;
-				rect.height = 25;
+				rect.width = 35;
+				rect.height = 35;
 				rect.alpha = 0;
 				rect.taken = 0;
 				this.rects.push(rect);
@@ -96,10 +96,11 @@ function Grid(){
 		for (let i in this.rects){
 			this.elem.beginPath();
 			this.elem.rect(this.rects[i].x, this.rects[i].y, this.rects[i].width, this.rects[i].height);
-			this.elem.font = "10px Arial";
-			this.elem.fillText(this.nodes.getNodeLocationReal(i),this.rects[i].x,this.rects[i].y+37);
 			this.elem.fillStyle = this.colors.grey;
 			this.elem.fill();
+			this.elem.font = "10px Arial";
+			this.elem.fillStyle = "#2c3e50";
+			this.elem.fillText(this.nodes.getNodeLocationReal(i),this.rects[i].x,this.rects[i].y+10);
 		}
 	}
 

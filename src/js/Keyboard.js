@@ -59,6 +59,7 @@ function Keyboard(){
 				i = 0, // interference
 				c = 0, // controls
 				d = 0, // control direction,
+				esc = 0,
 				nearby = n.getSurroundingNodes(k.currNode),
 				j = -1;
 
@@ -131,8 +132,19 @@ function Keyboard(){
 			if (event.key == 'Enter') {
 				s=1;
 			}
+			if (event.key == 'Escape') {
+				esc=1;
+			}
 
-			if ( k.capture.id == 1) {
+			if ( esc == 1) {				
+				if ( k.capture.id > 0 ){
+					k.capture.id = 0;
+					$('#gridConfirmChanges').css('display', 'none');
+					return k.draw(k.capture.node, 'black');
+				} else {
+					return k.draw(k.currNode, 'black');
+				}
+			} else if ( k.capture.id == 1) {
 				k.capture.id = 2;
 				k.capture.node = k.currNode;
 				$('#gridConfirmChanges').css('display', 'block');
@@ -186,7 +198,7 @@ function Keyboard(){
 	*/	
 		o = this.processOptions(o);
 		if (o.clear == 1) {
-			this.elem.clearRect(this.rects[this.currNode].x-5, this.rects[this.currNode].y-5, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
+			this.elem.clearRect(this.rects[this.currNode].x-6, this.rects[this.currNode].y-6, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
 			this.currNode = node; // javascript layout node
 			this.currNodeReal = this.nodes.getNodeLocationReal(node); // grid layout node
 		}
@@ -199,6 +211,7 @@ function Keyboard(){
 		} else {
 			this.elem.setLineDash([]);
 		}
+		this.elem.lineWidth=5;
 		this.elem.stroke();
 
 		if (o.select == 1) {
@@ -210,7 +223,7 @@ function Keyboard(){
 		if (o.control == 1) {
 			this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			$('#gridConfirmChanges').css('display', 'none');
-			this.control.startNodeControl(o.node1, o.node2);
+			this.control.startNodeControl(this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
 		}
 		if (o.redraw != -1) {
 			return this.draw(o.redraw, 'green', {dash: 1, clear: 0})

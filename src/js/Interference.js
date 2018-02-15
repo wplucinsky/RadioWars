@@ -34,13 +34,10 @@ function Interference(){
 		Sends a request to the Flask server to start interference on the specified node,
 		if the response is successful then an interference animation is drawn for the 
 		time specified.
-
-		TO DO: Update team id.
 	*/
 		var i = this, time = 10;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
-		for (var t in this.teams) break;
 		this.api.post(url, {
 			'_id': 		 'node'+node,
 			'type': 	 'jammer',
@@ -52,7 +49,7 @@ function Interference(){
 			'txGain': 	 $('#txGain_1_knob').val(),
 			'power': 	 $('#power_interference_knob').val(),
 			'freq': 	 $('#frequency_interference_knob').val(),
-			'nodeToCapture': 'node15'
+			'nodeToCapture': String(node)
 		}, (function(data){
 			// add check for valid data
 			$('#serverOutputPost').text(JSON.stringify(data));
@@ -65,11 +62,11 @@ function Interference(){
 	/*
 		Animate the pulsating interference ring, called by startTimer().
 	*/
-		var i = self.data.graphs.interference.fn;
-		i.elem.clearRect(i.rect.x-42, i.rect.y-42, i.rect.width+45, i.rect.height+45);
+		var i = self.data.graphs.interference.fn, dist = 150;
+		i.elem.clearRect(0, 0, i.canvas.width, i.canvas.height);
 
 		// choose growing or shrinking
-		if ( i.rect.width > 50 && i.pos == 1 ) {
+		if ( i.rect.width > dist && i.pos == 1 ) {
 			i.pos = 0;
 		} else if (i.rect.width < 8 && i.pos == 0) {
 			i.pos = 1;
@@ -80,6 +77,7 @@ function Interference(){
 		i.elem.beginPath();
 		i.elem.arc(i.rect.x, i.rect.y, i.rect.width/2, 0, 2 * Math.PI);
 		i.elem.strokeStyle = 'orange';
+		i.elem.lineWidth=2;
 		i.elem.stroke();
 		i.elem.closePath();
 	}
@@ -95,7 +93,7 @@ function Interference(){
 		var i = this;
 		self.data.graphs.interference.fn.timer = window.setInterval(function(){
 			i.animate(node, time)
-		}, 25);
+		}, 10);
 	}
 
 	this.stopTimer = function(){
@@ -103,7 +101,7 @@ function Interference(){
 		Stops the timer to mark the end of the interference animation.
 	*/
 		i = self.data.graphs.interference.fn
-		i.elem.clearRect(i.rect.x-42, i.rect.y-42, i.rect.width+45, i.rect.height+45);
+		i.elem.clearRect(0, 0, i.canvas.width, i.canvas.height);
 		window.clearInterval(i.timer);
 	}
 
@@ -126,7 +124,7 @@ function Interference(){
 	*/
 		var i = self.data.graphs.interference.fn;
 		i.rect = Object.assign({}, i.rects[node]);
-		i.rect.x += (12.5) + 48;
-		i.rect.y += (12.5) + 40;
+		i.rect.x += (12.5) + 53;
+		i.rect.y += (12.5) + 44;
 	}
 }

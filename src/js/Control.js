@@ -30,17 +30,13 @@ function Control(){
 	/*
 		Sends a request to the Flask server to start the node capture
 		process. Node1 is capturing Node2. 
-
-		TO DO: Update team id.
 	*/
-		return true;
 		var i = this, time = 10;
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&c=1"; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
-		for (var t in this.teams) break;
 		this.api.post(url, {
 			'_id': 		 'node'+node1,
-			'type': 	 'control',
+			'type': 	 'capture',
 			'completed': String(false),
 			'date': 	 new Date().toISOString(),
 			'time': 	 String(time),
@@ -49,12 +45,18 @@ function Control(){
 			'txGain': 	 $('#txGain_1_knob').val(),
 			'power': 	 $('#power_interference_knob').val(),
 			'freq': 	 $('#frequency_interference_knob').val(),
-			'nodeToCapture': 'node'+node2
+			'nodeToCapture': String(node2)
 		}, (function(data){
+			console.log(data)
+			
+			$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
+			$('#gridConfirmation').css('display', 'block');
+			setTimeout((function(){$('#gridConfirmation').css('display', 'none');}), 2000);
+			return true;
 			// add check for valid data
-			$('#serverOutputPost').text(JSON.stringify(data));
-			i.scroll(node, time)
-			i.startTimer(i.nodes.getNodeLocation(node), time)
+			// $('#serverOutputPost').text(JSON.stringify(data));
+			// i.scroll(node, time)
+			// i.startTimer(i.nodes.getNodeLocation(node), time)
 		}));
 	}
 }

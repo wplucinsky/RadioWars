@@ -210,6 +210,14 @@ button:disabled {
 	bottom: 4px;
 	left: 4px;
 }
+#gridConfirmation {
+	position: absolute;
+	top: 43px;
+	font-size: 9px;
+	left: 15px;
+	color: green;
+	display: none;
+}
 #gridConfirmChanges, #controlsConfirmChanges{
 	position: absolute;
 	top: 43px;
