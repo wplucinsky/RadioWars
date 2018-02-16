@@ -1,6 +1,6 @@
-var control = new Control();
+var capture = new Capture();
 
-function Control(){
+function Capture(){
 	// standard
 	this.teams = null;
 	this.elem = null;

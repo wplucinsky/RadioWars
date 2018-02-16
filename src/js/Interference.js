@@ -35,7 +35,7 @@ function Interference(){
 		if the response is successful then an interference animation is drawn for the 
 		time specified.
 	*/
-		var i = this, time = 10;
+		var i = this, time = 15;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
 		this.api.post(url, {

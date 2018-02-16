@@ -14,11 +14,11 @@ function Keyboard(){
 	this.currNode = 9;
 	this.currNodeReal = this.nodes.getNodeLocationReal(this.currNode);
 	this.interference = new Interference();
-	this.control = new Control();
 	this.team = 1;
 	this.capture = {
 		id: 0,
-		node: this.currNode
+		node: this.currNode,
+		fn: new Capture()
 	};
 	this.controls = self.data.controls[1];
 
@@ -151,7 +151,7 @@ function Keyboard(){
 				return k.draw(k.currNode, 'green', {dash: 1})
 			} else if ( k.capture.id == 3 && s == 1) {
 				k.capture.id = 0;
-				k.draw(k.capture.node, 'green', {control: 1, node1: k.capture.node, node2: k.currNode})
+				k.draw(k.capture.node, 'green', {capture: 1, node1: k.capture.node, node2: k.currNode})
 				return k.draw(k.capture.node, 'black');
 			} else if ( k.capture.id >= 2) {
 				if ( j != -1 && nearby[j] != -1 && nearby[j] != k.capture.node) {
@@ -220,10 +220,10 @@ function Keyboard(){
 		if (o.interference == 1) {
 			this.interference.startInterference(this.currNodeReal)
 		}
-		if (o.control == 1) {
+		if (o.capture == 1) {
 			this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			$('#gridConfirmChanges').css('display', 'none');
-			this.control.startNodeControl(this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
+			this.capture.fn.startNodeControl(this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
 		}
 		if (o.redraw != -1) {
 			return this.draw(o.redraw, 'green', {dash: 1, clear: 0})
@@ -259,7 +259,7 @@ function Keyboard(){
 	}
 
 	this.processOptions = function(o){
-		var base = {select: 0, interference: 0, dash: 0, redraw: -1, clear: 1, control: 0};
+		var base = {select: 0, interference: 0, dash: 0, redraw: -1, clear: 1, capture: 0};
 		if ( o == undefined ){
 			return base;
 		}

@@ -79,7 +79,7 @@ var data = {
 		interference: {
 			fn: null
 		},
-		control: {
+		capture: {
 			fn: null
 		}
 	},
