@@ -20,7 +20,7 @@ function Keyboard(){
 		node: this.currNode,
 		fn: new Capture()
 	};
-	this.controls = self.data.controls[1];
+	this.control = self.data.controls[1];
 
 	this.setup = function(teams, id){
 		this.teams = teams
@@ -82,37 +82,37 @@ function Keyboard(){
 			}
 			// select one of the radio controls
 			if (event.key == '1') {
-				k.controls = self.data.controls[1];
+				k.control = self.data.controls[1];
 				c=1;
 			}
 			if (event.key == '2') {
-				k.controls = self.data.controls[2];
+				k.control = self.data.controls[2];
 				c=1;
 			}
 			if (event.key == '3') {
-				k.controls = self.data.controls[3];
+				k.control = self.data.controls[3];
 				c=1;
 			}
 			if (event.key == '4') {
-				k.controls = self.data.controls[4];
+				k.control = self.data.controls[4];
 				c=1;
 			}
 			if (event.key == '5') {
-				k.controls = self.data.controls[5];
+				k.control = self.data.controls[5];
 				c=1;
 			}
 			if (event.key == '6') {
-				k.controls = self.data.controls[6];
+				k.control = self.data.controls[6];
 				c=1;
 			}
 			if (event.key == 'ArrowLeft') {
 				let index = Object.keys(self.data.controls).filter(function(key) {return self.data.controls[key] === k.control})[0]
-				k.controls = index == 1 ? self.data.controls[6] : self.data.controls[parseInt(index) - 1];
+				k.control = index == 1 ? self.data.controls[6] : self.data.controls[parseInt(index) - 1];
 				c=1;
 			}
 			if (event.key == 'ArrowRight') {
 				let index = Object.keys(self.data.controls).filter(function(key) {return self.data.controls[key] === k.control})[0]
-				k.controls = index == 6 ? self.data.controls[1] : self.data.controls[parseInt(index) + 1];
+				k.control = index == 6 ? self.data.controls[1] : self.data.controls[parseInt(index) + 1];
 				c=1;
 			}
 			// start node capture

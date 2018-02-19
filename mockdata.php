@@ -84,6 +84,58 @@
 		return $available[$p];
 	}
 
+	function setData($m){
+		$ret = array();
+		for ($i=0; $i < 4; $i++) { 
+			$data = array();
+
+			$packetsSent = array();
+			$packetsReceived = array();
+
+			if ( $i == 0 ){
+				$data['_id'] = "node10";
+				$n = 12;
+				$n2 = 13;
+				$n3 = 6;
+			} elseif ( $i == 1 ) {
+				$data['_id'] = "node15";
+				$n = 50;
+				$n2 = 7;
+				$n3 = 11;
+			} elseif ( $i == 2 ) {
+				$data['_id'] = "node5";
+				$n = 50;
+				$n2 = 14;
+				$n3 = 12;
+			} else {
+				$data['_id'] = "node16";
+				$n = 8;
+				$n2 = 12;
+				$n3 = 9;
+			}
+			$data['power'] = rand(0,20);
+
+			$packetsSent['node'.$n] = rand(5,10);
+			$packetsSent['node'.$n] = rand(1,10);
+
+			if ( $m <= 15) {
+				$packetsReceived['node'.$n] = 10 * ($m + 4);
+				$packetsReceived['node'.$n2] = 10 * ($m + 4);
+				$packetsReceived['node'.$n3] = 10 * ($m + 4);
+			} else {
+				$packetsReceived['node'.$n] = 10 * (31 + 4);
+				$packetsReceived['node'.$n2] = 10 * (31 + 4);
+				$packetsReceived['node'.$n3] = 10 * (31 + 4);
+			}
+
+			$data['packetsSent'] = $packetsSent;
+			$data['packetsReceived'] = $packetsReceived;
+
+			$ret[$i] = $data;
+		}
+		return $ret;
+	}
+
 	function getTransformedBuildingData($i, $m){
 		/*
 			Actual Formation
@@ -157,7 +209,10 @@
 		return $radio;
 	}
 
-	if ( isset($_GET['build']) && $_GET['build'] == 1) {
+	if ( isset($_GET['set']) ) {
+		$m = (isset($_GET['m'])) ? $_GET['m'] : 1;
+		$data = setData($m);
+	} elseif ( isset($_GET['build']) && $_GET['build'] == 1) {
 		// building data
 		$c = (isset($_GET['c'])) ? $_GET['c'] : 2;
 		$m = (isset($_GET['m'])) ? $_GET['m'] : 1;

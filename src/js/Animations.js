@@ -63,7 +63,7 @@ function Animations(){
 		this.timerVal = new Date();
 		console.clear()
 		console.log(this.m)
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?build=1&c=4&transform=1&m="+this.m; // used for testing
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?set=1&m="+this.m; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/";
 		var a = this;
 		this.api.get(url, (function(data) {
@@ -75,16 +75,24 @@ function Animations(){
 					for ( let i in data ) {
 						animationData[i] = {}
 						for ( let j in data[i].packetsReceived) {
-							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), parseInt(data[i].packetsReceived[j]), i, k);
+							var alteredCnt = a.getNodeCount(data[i].packetsReceived[j], a.getStepSize(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node',''))));
+							if ( a.previousData == null ){
+								data[i].packetsReceived[j+'_altered'] = alteredCnt
+							} else {
+								data[i].packetsReceived[j+'_altered'] = a.previousData[i].packetsReceived[j+'_altered']
+								data[i].packetsReceived[j+'_altered'] += (data[i].packetsReceived[j] != a.previousData[i].packetsReceived[j]) ? alteredCnt : 0;
+							}
+
+							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), parseInt(data[i].packetsReceived[j+'_altered']), i, k);
 							offset = a.getOffset(i,k); // how many packets have been sent so far
 						
 
 							if ( animationData[i][k][offset] != undefined ){
 								animationData[i][k][offset].wait = 0;
-								diff = a.getDataDifference(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), parseInt(data[i].packetsReceived[j]))
+								diff = a.getDataDifference(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j+'_altered'])
 								count = a.addToCount(diff)
 
-								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j], ' \tprev '+ offset, ' \tcnt '+ count)
+								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
 							}
 							k++;
 						}
@@ -137,20 +145,6 @@ function Animations(){
 				from:  from,
 				to:    to,
 				stop:  0,
-				wait:  1,
-				color: this.getNodeColor(from),
-				count: count
-			},
-			skipdata = {
-				xDif:  this.rects[to].x - this.rects[from].x,
-				yDif:  this.rects[to].y - this.rects[from].y,
-				x: 	   this.rects[from].x + 18,
-				y: 	   this.rects[from].y + 18,
-				step:  this.getStepSize(from, to),
-				cStep: 0,
-				from:  from,
-				to:    to,
-				stop:  1,
 				wait:  1,
 				color: this.getNodeColor(from),
 				count: count
@@ -269,6 +263,37 @@ function Animations(){
 		}
 	}
 
+	this.getNodeCount = function(dif, step) {
+		if ( step <= 25 ){
+			c = -Math.floor(step/5 - 4);
+		} else {
+			c = Math.floor(step / 25) + Math.floor(((step % 25)/5)/2);
+		}
+
+		if ( dif <= 10 ){
+			return Math.max(0, dif - c);
+		}
+		if ( dif <= 50 ){
+			return Math.max(8 - c);
+		}
+		if ( dif <= 75 ){
+			return Math.max(10 - c);
+		}
+		if ( dif <= 100 ){
+			return Math.max(12 - c);
+		} 
+		if ( dif <= 250 ){
+			return Math.max(12 - c);
+		} 
+		if ( dif <= 500 ){
+			return Math.max(12 - c);
+		}
+		if ( dif <= 750 ){
+			return Math.max(13 - c);
+		} 
+		return 25;
+	}
+
 	this.getNodeColor = function(teamNode){
 		if(teamNode == 6) {
 			return this.colors.yellow
@@ -313,7 +338,7 @@ function Animations(){
 				for ( let j in this.previousData[i].packetsReceived) {
 					if ( from == this.previousData[i]._id.replace('node','') ) {
 						if ( to == j.replace('node','') ){
-							return Math.max(count - this.previousData[i].packetsReceived[j], 0);
+							return Math.max(count - this.previousData[i].packetsReceived[j+'_altered'], 0);
 						}
 					}
 				}
