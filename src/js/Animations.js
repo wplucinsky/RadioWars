@@ -61,9 +61,9 @@ function Animations(){
 			this.startTimer();
 		}
 		this.timerVal = new Date();
-		console.clear()
+		// console.clear()
 		console.log(this.m)
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?set=1&m="+this.m; // used for testing
+		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/";
 		var a = this;
 		this.api.get(url, (function(data) {
@@ -75,21 +75,22 @@ function Animations(){
 					for ( let i in data ) {
 						animationData[i] = {}
 						for ( let j in data[i].packetsReceived) {
-							var alteredCnt = a.getNodeCount(data[i].packetsReceived[j], a.getStepSize(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node',''))));
 							if ( a.previousData == null ){
-								data[i].packetsReceived[j+'_altered'] = alteredCnt
+								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
+								diff = a.getNodeCount(data[i].packetsReceived[j]);
 							} else {
-								data[i].packetsReceived[j+'_altered'] = a.previousData[i].packetsReceived[j+'_altered']
-								data[i].packetsReceived[j+'_altered'] += (data[i].packetsReceived[j] != a.previousData[i].packetsReceived[j]) ? alteredCnt : 0;
+								// total received
+								data[i].packetsReceived[j+'_altered'] = a.previousData[i].packetsReceived[j+'_altered'];
+								data[i].packetsReceived[j+'_altered'] = data[i].packetsReceived[j+'_altered'] + a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
+								// difference
+								diff = a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
 							}
+							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), diff, i, k);
 
-							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), parseInt(data[i].packetsReceived[j+'_altered']), i, k);
 							offset = a.getOffset(i,k); // how many packets have been sent so far
-						
 
 							if ( animationData[i][k][offset] != undefined ){
 								animationData[i][k][offset].wait = 0;
-								diff = a.getDataDifference(data[i]._id.replace('node',''), j.replace('node',''), data[i].packetsReceived[j+'_altered'])
 								count = a.addToCount(diff)
 
 								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
@@ -98,12 +99,11 @@ function Animations(){
 						}
 						// update team info with radio info
 					}
-
-					a.setData(animationData);
-					a.setPreviousData(data);
-					if ( start || !self.data.graphs.animations.fn.sending ){
-						this.m = this.m + 1;
-						a.sendPacket();
+					if ( a.resetAnimData(animationData) ) {
+						a.setPreviousData(data);
+						if ( start || !self.data.graphs.animations.fn.sending ){
+							a.sendPacket();
+						}
 					} 
 				}
 			})
@@ -132,15 +132,17 @@ function Animations(){
 			animData = {};
 		} else {
 			animData = animData[i][k];
-			count = Math.max(count - Object.keys(animData).length, 0);
-			offset = Object.keys(animData).length;
+			offset = parseInt(Object.keys(animData)[Object.keys(animData).length-1]);
+			if ( isNaN(offset) ){
+				offset = 0;
+			}
 		}
 		var data = {
 				xDif:  this.rects[to].x - this.rects[from].x,
 				yDif:  this.rects[to].y - this.rects[from].y,
 				x: 	   this.rects[from].x + 18,
 				y: 	   this.rects[from].y + 18,
-				step:  this.getStepSize(from, to),
+				step:  30,
 				cStep: 0,
 				from:  from,
 				to:    to,
@@ -176,9 +178,15 @@ function Animations(){
 				count = self.data.graphs.animations.fn.getCount();
 			self.data.graphs.animations.fn.sending = true;
 			elem.clearRect(0, 0, w, h);
-			for (let i in data) {
-				for (let j in data[i]) {
-					for (let k in data[i][j]) {
+			k1 = Object.keys(data);
+			for (let i_k = 0; i_k < k1.length; i_k++) {
+				i = k1[i_k]
+				k2 = Object.keys(data[i]);
+				for (let j_k = 0; j_k < k2.length; j_k++) {
+					j = k2[j_k]
+					k3 = Object.keys(data[i][j]);
+					for (let k_k = 0; k_k < k3.length; k_k++) {
+						k = k3[k_k];
 						if (data[i][j][k].wait == 0) {
 							elem.beginPath();
 							elem.arc(data[i][j][k].x, data[i][j][k].y, 10, 0, 2 * Math.PI);
@@ -207,7 +215,6 @@ function Animations(){
 										data[i][j][parseInt(k)+1].wait = 0;
 									} else {
 										// no more packets left to send for this from -> to combo
-										self.data.graphs.animations.fn.apiCallGet();
 									}
 								}
 							} else if ( data[i][j][k].stop == 0) {
@@ -232,66 +239,6 @@ function Animations(){
 				self.data.graphs.animations.fn.sending = false;
 			}
 		}
-	}
-
-	this.getStepSize = function(from, to) {
-	/*
-		Calculations for the step size, or speed, of the packets sent across
-		the board so all packets travel at the same speed.
-	*/
-		var s 	 = 0,
-			xDif = Math.abs(this.rects[to].x - this.rects[from].x),
-			yDif = Math.abs(this.rects[to].y - this.rects[from].y);
-
-		if ( xDif <= 75 ) {
-			s = 20;
-		} else if ( xDif <= 100 ) {
-			s = 25;
-		} else if ( xDif <= 200 ){
-			s = 35;
-		} else {
-			s = 45;
-		}
-		if ( yDif <= 75 ) {
-			return Math.max(s, 20);
-		} else if ( yDif <= 100 ) {
-			return Math.max(s, 25);
-		} else if ( yDif <= 200 ){
-			return Math.max(s, 35);
-		} else {
-			return Math.max(s, 45);
-		}
-	}
-
-	this.getNodeCount = function(dif, step) {
-		if ( step <= 25 ){
-			c = -Math.floor(step/5 - 4);
-		} else {
-			c = Math.floor(step / 25) + Math.floor(((step % 25)/5)/2);
-		}
-
-		if ( dif <= 10 ){
-			return Math.max(0, dif - c);
-		}
-		if ( dif <= 50 ){
-			return Math.max(8 - c);
-		}
-		if ( dif <= 75 ){
-			return Math.max(10 - c);
-		}
-		if ( dif <= 100 ){
-			return Math.max(12 - c);
-		} 
-		if ( dif <= 250 ){
-			return Math.max(12 - c);
-		} 
-		if ( dif <= 500 ){
-			return Math.max(12 - c);
-		}
-		if ( dif <= 750 ){
-			return Math.max(13 - c);
-		} 
-		return 25;
 	}
 
 	this.getNodeColor = function(teamNode){
@@ -326,6 +273,10 @@ function Animations(){
 		return this.colors.orange;
 	}
 
+	this.getNodeCount = function(dif){
+		return Math.min(dif, 5)
+	}
+
 	this.getDataDifference = function(from, to, count){
 	/*
 		This gets the packet count difference from the previous server
@@ -356,10 +307,11 @@ function Animations(){
 		if ( animData === null || animData[i] === null || animData[i][k] == null ){
 			return 0;
 		} else {
-			animData = animData[i][k]
-			for (let j = 0; j < (Object.keys(animData).length - 1); j++) {
-				if (animData[j].stop == 0){
-					return j
+			animData = animData[i][k];
+			k = Object.keys(animData);
+			for (let j = 0; j < k.length; j++) {
+				if (animData[k[j]].stop == 0){
+					return k[j]
 				}
 			}
 		}
@@ -371,9 +323,7 @@ function Animations(){
 		Calls the API get() if no call has happened in the last 1000ms.
 	*/
 		this.timer = window.setInterval(function(){
-			if ((new Date() - self.data.graphs.animations.fn.timerVal) > 1000) {
-				self.data.graphs.animations.fn.apiCallGet();
-			}
+			self.data.graphs.animations.fn.apiCallGet();
 		}, 1000);
 	}
 
@@ -382,6 +332,24 @@ function Animations(){
 		Stops the API get() timer.
 	*/
 		window.clearInterval(this.timer)
+	}
+
+	this.resetAnimData = function(animData){
+		k1 = Object.keys(animData);
+		for (let i = 0; i < k1.length; i++) {
+			k2 = Object.keys(animData[k1[i]]);
+			for (let j = 0; j < k2.length; j++) {
+				k3 = Object.keys(animData[k1[i]][k2[j]]);
+				for (let k = 0; k < k3.length; k++) {
+					if (animData[k1[i]][k2[j]][k3[k]].stop == 1) {
+						delete animData[k1[i]][k2[j]][k3[k]];
+						this.removeFromCount(1);
+					}
+				}
+			}
+		}
+		this.setData(animData);
+		return true;
 	}
 
 	this.getData = function(){
@@ -403,6 +371,9 @@ function Animations(){
 	this.addToCount = function(amt){
 		this.animCount = this.animCount + amt;
 		return this.animCount;
+	}
+	this.removeFromCount = function(amt){
+		this.animCount = this.animCount - amt;
 	}
 
 	this.setPreviousData = function(data){

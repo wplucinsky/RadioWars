@@ -136,6 +136,42 @@
 		return $ret;
 	}
 
+	function setTestData($m){
+		$ret = array();
+		for ($i=0; $i < 1; $i++) { 
+			$data = array();
+
+			$packetsSent = array();
+			$packetsReceived = array();
+
+			if ( $i == 0 ){
+				$data['_id'] = "node10";
+				$n = 12;
+				$n2 = 13;
+				$n3 = 6;
+			}
+			$data['power'] = rand(0,20);
+
+			$packetsSent['node'.$n] = rand(5,10);
+			$packetsSent['node'.$n] = rand(1,10);
+
+			foreach (array(18, 13, 9, 11, 50, 12, 8, 6, 7) as $key => $child) {
+				$packetsReceived['node'.$child] = $m;
+			}
+			foreach (array(10, 14, 5, 16, 17, 15) as $key => $child) {
+				if ( $child != str_replace('node', '', $data['_id']) ){ 
+					$packetsReceived['node'.$child] = $m*$m;
+				}
+			}
+
+			$data['packetsSent'] = $packetsSent;
+			$data['packetsReceived'] = $packetsReceived;
+
+			$ret[$i] = $data;
+		}
+		return $ret;
+	}
+
 	function getTransformedBuildingData($i, $m){
 		/*
 			Actual Formation
@@ -212,6 +248,9 @@
 	if ( isset($_GET['set']) ) {
 		$m = (isset($_GET['m'])) ? $_GET['m'] : 1;
 		$data = setData($m);
+	} elseif ( isset($_GET['test']) ) {
+		$m = (isset($_GET['m'])) ? $_GET['m'] : 1;
+		$data = setTestData($m);
 	} elseif ( isset($_GET['build']) && $_GET['build'] == 1) {
 		// building data
 		$c = (isset($_GET['c'])) ? $_GET['c'] : 2;
