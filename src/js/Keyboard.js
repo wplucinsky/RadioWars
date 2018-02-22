@@ -143,7 +143,7 @@ function Keyboard(){
 			}
 
 			if ( h == 1) {
-				$('#keyboardModal').modal();
+				$('#helpModal').modal();
 			}
 
 			if ( esc == 1) {				

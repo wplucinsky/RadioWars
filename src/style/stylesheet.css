@@ -269,3 +269,7 @@ button:disabled {
 #keyboardControls td:first-child{
 	width: 345px;
 }
+.helpimg {
+	width: 33px;
+	padding: 2px;
+}
