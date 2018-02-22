@@ -48,7 +48,8 @@ function Keyboard(){
 
 	this.startEventListeners = function(){
 	/*
-		Starts the JS listeners for a variety of keyboard commands. 
+		Starts the JS listeners for a variety of keyboard commands.
+		#keyboardModal should be updated when additional commands are added.
 	*/
 		this.eventListeners = document.addEventListener('keydown', function(event){
 			var g = self.data.graphs.grid.fn,
@@ -58,11 +59,16 @@ function Keyboard(){
 				s = 0, // select
 				i = 0, // interference
 				c = 0, // controls
-				d = 0, // control direction,
+				d = 0, // control direction
+				h = 0, // help
 				esc = 0,
 				nearby = n.getSurroundingNodes(k.currNode),
 				j = -1;
 
+			// help modal
+			if (event.key == 'h') {
+				h=1;
+			}
 			// move around game board
 			if (event.key == 'w') {
 				j=0; m=1;
@@ -134,6 +140,10 @@ function Keyboard(){
 			}
 			if (event.key == 'Escape') {
 				esc=1;
+			}
+
+			if ( h == 1) {
+				$('#keyboardModal').modal();
 			}
 
 			if ( esc == 1) {				

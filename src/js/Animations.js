@@ -61,7 +61,7 @@ function Animations(){
 			this.startTimer();
 		}
 		this.timerVal = new Date();
-		// console.clear()
+		console.clear()
 		console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/";
@@ -237,6 +237,7 @@ function Animations(){
 			} else {
 				// every packets has finished sending
 				self.data.graphs.animations.fn.sending = false;
+				self.data.graphs.animations.fn.resetCount();
 			}
 		}
 	}
@@ -274,7 +275,7 @@ function Animations(){
 	}
 
 	this.getNodeCount = function(dif){
-		return Math.min(dif, 5)
+		return Math.min(dif, 8)
 	}
 
 	this.getDataDifference = function(from, to, count){
@@ -324,7 +325,7 @@ function Animations(){
 	*/
 		this.timer = window.setInterval(function(){
 			self.data.graphs.animations.fn.apiCallGet();
-		}, 1000);
+		}, 1500);
 	}
 
 	this.stopTimer = function(){
@@ -343,7 +344,6 @@ function Animations(){
 				for (let k = 0; k < k3.length; k++) {
 					if (animData[k1[i]][k2[j]][k3[k]].stop == 1) {
 						delete animData[k1[i]][k2[j]][k3[k]];
-						this.removeFromCount(1);
 					}
 				}
 			}
@@ -364,6 +364,10 @@ function Animations(){
 		return this.animCount;
 	}
 
+	this.resetCount = function(){
+		this.animCount = 0;
+	}
+
 	this.setCount = function(data){
 		this.animCount = data;
 	}
@@ -371,9 +375,6 @@ function Animations(){
 	this.addToCount = function(amt){
 		this.animCount = this.animCount + amt;
 		return this.animCount;
-	}
-	this.removeFromCount = function(amt){
-		this.animCount = this.animCount - amt;
 	}
 
 	this.setPreviousData = function(data){

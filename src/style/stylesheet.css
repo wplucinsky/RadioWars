@@ -266,3 +266,6 @@ button:disabled {
     from {left:150px;}
   	to {left:80%}
 }
+#keyboardControls td:first-child{
+	width: 345px;
+}

@@ -9,6 +9,7 @@
 
 		<!-- layout -->
 		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
+		<link rel="stylesheet" type="text/css" href="src/style/keyboard.css">
 		<title>Radio Wars</title>
 		<link rel="icon" type="image/png" href="src/img/logo.png">
 	</head>
@@ -325,7 +326,156 @@
 				</div>
 			</div>
 		</div>
-	
+
+		<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#keyboardModal">
+			Controls
+		</button> -->
+		<div class="modal fade" id="keyboardModal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalTitle" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h5 class="modal-title">Keyboard Controls</h5>
+					</div>
+					<div class="modal-body">
+						<table id="keyboardControls">
+							<tbody>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">W</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">A</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">S</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">D</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">Enter</span>
+										</button>
+									</td>
+									<td>Move around grid and select Node</td>
+								</tr>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">C</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">W</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">A</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">S</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">D</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">Enter</span>
+										</button>
+									</td>
+									<td>Capture a Node</td>
+								</tr>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">I</span>
+										</button>
+									</td>
+									<td>Start Interference</td>
+								</tr>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">1</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">2</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">3</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">4</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">5</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">6</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">&uarr;</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">&darr;</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">Enter</span>
+										</button>
+									</td>
+									<td>Set Radio Parameters</td>
+								</tr>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">&larr;</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default" style="margin-right: -4px;">
+											<span class="ui-keyboard-text">&rarr;</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">&uarr;</span>
+										</button>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">&darr;</span>
+										</button>
+										+
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">Enter</span>
+										</button>
+									</td>
+									<td>Set Radio Parameters</td>
+								</tr>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">H</span>
+										</button>
+									</td>
+									<td>Show Help Modal</td>
+								</tr>
+								<tr>
+									<td>
+										<button role="button" type="button" class="ui-keyboard-button ui-keyboard-3 btn btn-default">
+											<span class="ui-keyboard-text">Esc</span>
+										</button>
+									</td>
+									<td>Quit Current Action</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	<script src="src/js/modes/interference.js"></script>
 	<script src="src/js/API.js"></script>
 	<script src="src/js/Team.js"></script>
