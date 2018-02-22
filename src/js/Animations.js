@@ -11,6 +11,7 @@ function Animations(){
 	this.animData = null;
 	this.animCount = 0;
 	this.previousData = null;
+	this.previousUntouchedData = null;
 	this.timer = null;
 	this.timerVal = null;
 	this.sending = false;
@@ -68,14 +69,15 @@ function Animations(){
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
-				if ( data.length != 0 && JSON.stringify(self.data.graphs.animations.fn.getPreviousData()) != JSON.stringify(data)){
+				if ( data.length != 0 && self.data.graphs.animations.fn.getPreviousUntouchedData() != JSON.stringify(data)){
+					a.setPreviousUntouchedData(JSON.stringify(data));
 					var animationData = [],
 						k = 0,
 						count = a.getCount();
 					for ( let i in data ) {
 						animationData[i] = {}
 						for ( let j in data[i].packetsReceived) {
-							if ( a.previousData == null ){
+							if ( a.previousData == null || data[i].packetsReceived[j+'_altered'] == undefined ){
 								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
 								diff = a.getNodeCount(data[i].packetsReceived[j]);
 							} else {
@@ -383,5 +385,13 @@ function Animations(){
 
 	this.getPreviousData = function(){
 		return this.previousData;
+	}
+
+	this.setPreviousUntouchedData = function(data){
+		this.previousUntouchedData = data;
+	}
+
+	this.getPreviousUntouchedData = function(){
+		return this.previousUntouchedData;
 	}
 }
