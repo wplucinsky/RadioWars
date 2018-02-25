@@ -77,7 +77,7 @@ function Animations(){
 					for ( let i in data ) {
 						animationData[i] = {}
 						for ( let j in data[i].packetsReceived) {
-							if ( a.previousData == null || data[i].packetsReceived[j+'_altered'] == undefined ){
+							if ( a.previousData == null || a.previousData[i].packetsReceived[j+'_altered'] == undefined ){
 								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
 								diff = a.getNodeCount(data[i].packetsReceived[j]);
 							} else {
