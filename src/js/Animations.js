@@ -81,30 +81,31 @@ function Animations(){
 						count = a.getCount();
 					for ( let i in data ) {
 						animationData[i] = {}
-						if ((data[i].lastPacketRecieved - Math.round(new Date()/1000)) < 2000 || data[i].lastPacketRecieved == undefined ) {
-							for ( let j in data[i].packetsReceived) {
-								if ( a.previousData == null || a.previousData[i].packetsReceived[j+'_altered'] == undefined ){
-									data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
-									diff = a.getNodeCount(data[i].packetsReceived[j]);
-								} else {
-									// total received
-									data[i].packetsReceived[j+'_altered'] = a.previousData[i].packetsReceived[j+'_altered'];
-									data[i].packetsReceived[j+'_altered'] = data[i].packetsReceived[j+'_altered'] + a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
-									// difference
-									diff = a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
-								}
-								animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), diff, i, k);
-
-								offset = a.getOffset(i,k); // how many packets have been sent so far
-
-								if ( animationData[i][k][offset] != undefined ){
-									animationData[i][k][offset].wait = 0;
-									count = a.addToCount(diff)
-
-									console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
-								}
-								k++;
+						if ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) {
+							continue;
+						}
+						for ( let j in data[i].packetsReceived) {
+							if ( a.previousData == null || a.previousData[i].packetsReceived[j+'_altered'] == undefined ){
+								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
+								diff = a.getNodeCount(data[i].packetsReceived[j]);
+							} else {
+								// total received
+								data[i].packetsReceived[j+'_altered'] = a.previousData[i].packetsReceived[j+'_altered'];
+								data[i].packetsReceived[j+'_altered'] = data[i].packetsReceived[j+'_altered'] + a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
+								// difference
+								diff = a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
 							}
+							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), diff, i, k);
+
+							offset = a.getOffset(i,k); // how many packets have been sent so far
+
+							if ( animationData[i][k][offset] != undefined ){
+								animationData[i][k][offset].wait = 0;
+								count = a.addToCount(diff)
+
+								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
+							}
+							k++;
 						}
 						// update team info with radio info
 					}
