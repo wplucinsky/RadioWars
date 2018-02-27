@@ -166,6 +166,7 @@
 
 			$data['packetsSent'] = $packetsSent;
 			$data['packetsReceived'] = $packetsReceived;
+			$data['lastPacketRecieved'] = time();
 
 			$ret[$i] = $data;
 		}

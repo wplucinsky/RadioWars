@@ -49,7 +49,7 @@ function Keyboard(){
 	this.startEventListeners = function(){
 	/*
 		Starts the JS listeners for a variety of keyboard commands.
-		#keyboardModal should be updated when additional commands are added.
+		#helpModal should be updated when additional commands are added.
 	*/
 		this.eventListeners = document.addEventListener('keydown', function(event){
 			var g = self.data.graphs.grid.fn,
