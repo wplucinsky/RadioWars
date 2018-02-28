@@ -145,13 +145,14 @@ function Grid(){
 		this.elem.clearRect(this.rects[node].x-3, this.rects[node].y-3, this.rects[node].width+8, this.rects[node].height+8);
 
 		// right over it
+		this.elem.globalAlpha = 1;
 		this.elem.beginPath();
 		this.elem.rect(this.rects[node].x, this.rects[node].y, this.rects[node].width, this.rects[node].height);
 		this.elem.fillStyle = this.colors.grey;
 		this.elem.fill();
-		this.elem.lineWidth = this.rects[node].borderWidth;
-		this.elem.strokeStyle = this.colors.grey;
-		this.elem.stroke();
+		this.elem.font = "10px Arial";
+		this.elem.fillStyle = "#2c3e50";
+		this.elem.fillText(this.nodes.getNodeLocationReal(node),this.rects[node].x,this.rects[node].y+10);
 
 		this.nodeCapture(1.0, '#FFFFFF', '#FFFFFF', node, true)
 	}

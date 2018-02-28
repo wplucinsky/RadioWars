@@ -15,6 +15,7 @@ function Animations(){
 	this.timer = null;
 	this.timerVal = null;
 	this.sending = false;
+	this.gridDirty = false;
 	this.grid = new Grid();
 	this.api = new API();
 	this.nodes = new Nodes();
@@ -67,7 +68,7 @@ function Animations(){
 			this.startTimer();
 		}
 		this.timerVal = new Date();
-		console.clear()
+		// console.clear()
 		console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/";
@@ -107,10 +108,9 @@ function Animations(){
 							}
 							k++;
 						}
-						if ( data[i].owner) {
-							a.grid.on(a.nodes.getNodeLocation(data[i]._id.replace('node','')), data[i].owner.toLowerCase(), 1)
-						}
 						// update team info with radio info
+						
+						a.setNodeColor(data)
 					}
 					if ( a.resetAnimData(animationData) ) {
 						a.setPreviousData(data);
@@ -330,6 +330,26 @@ function Animations(){
 			}
 		}
 		return Object.keys(animData).length
+	}
+
+	this.setNodeColor = function(data){
+	/*
+		Sets the grid node color based on the owner property.
+	*/
+		var nodes = data.filter(function(val){ return val.owner != undefined; });
+		if ( this.previousData != null ) {
+			var prev = this.previousData.filter(function(val){ return val.owner != undefined; })
+		}
+		if ( JSON.stringify(nodes) == JSON.stringify(prev) ){
+			return;
+		}
+
+		if ( nodes.length > 0 ){
+			this.grid.drawRectangles();
+		}
+		for (let i = 0; i < nodes.length; i++) {
+			this.grid.on(this.nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1)
+		}
 	}
 
 	this.startTimer = function(){
