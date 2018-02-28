@@ -25,6 +25,12 @@
 .chart{
 	width: 400px; margin: auto;
 }
+.viewer{
+	width: 600px;
+}
+.viewerContainer{
+	width: 550px;
+}
 .logo{
 	width: 100px; display: block; margin: auto;
 }

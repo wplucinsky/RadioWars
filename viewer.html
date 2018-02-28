@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<!-- 3rd party files -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>		
+		<script src="src/js/plugins/knob.min.js"></script>
+
+		<!-- layout -->
+		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
+		<link rel="stylesheet" type="text/css" href="src/style/keyboard.css">
+		<title>Radio Wars</title>
+		<link rel="icon" type="image/png" href="src/img/logo.png">
+	</head>
+	<body>
+		<div class="notifications">
+			<span id="scroll">Test</span>
+		</div>
+		<div class="container" style="width: 95%;">
+			<div class="row top-pad">
+				<div class="col-md-12 grid-holder">
+					<h3 class="text-center">DWSL Grid</h3>
+					<span id="gridConfirmation"></span>
+					<div id="gridLine" class="line"></div>
+					<div id="gridViewContainer">
+						<div class="canvas chart viewerContainer">
+							<canvas id="grid" class="viewer" width="400" height="450" style="padding-top: 50px;"></canvas>
+							<canvas id="animations" class="viewer" width="400" height="450" style="padding-top: 50px;"></canvas>
+							<canvas id="keyboard" class="viewer" width="400" height="450" style="padding-top: 50px;"></canvas>
+							<canvas id="interference" class="viewer" width="450" height="450" style="padding-top: 50px;"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<script src="src/js/modes/viewer.js"></script>
+	<script src="src/js/API.js"></script>
+	<script src="src/js/Team.js"></script>
+	<script src="src/js/Nodes.js"></script>
+	<script src="src/js/Grid.js"></script>
+	<script src="src/js/Animations.js"></script>
+	<script src="src/js/Interference.js"></script>
+	<script>
+		function setup() {
+			for (let team_id in data.teams) {
+				data.nodes = new Nodes();
+				data.teams[team_id].team = new Team(team_id);
+				data.teams[team_id].team.setInformation(data.teams[team_id].information)
+				data.teams[team_id].team.setRadio(data.teams[team_id].radio, true)
+			}
+
+			for (let graph_name in data.graphs) {
+				data.graphs[graph_name].fn = eval(graph_name);
+				data.graphs[graph_name].fn.setup(data.teams, graph_name) // add team number
+			}
+			for (let graph_name in data.graphs) {
+				data.graphs[graph_name].fn.start('interference')
+			}
+		}
+		setup()
+
+		function stop(){
+			this.data.graphs.grid.fn.stop()
+			this.data.graphs.countdownTimer.fn.stop()
+		}
+	</script>
+	</body>
+</html>

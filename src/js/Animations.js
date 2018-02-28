@@ -61,6 +61,7 @@ function Animations(){
 			- check if packets were received in the last 2 seconds
 			- get count that can be animated in 1 second
 			- start animation
+			- update grid and radio information
 	*/
 		if ( start ){
 			this.grid.clearNodeGraph()
@@ -109,7 +110,6 @@ function Animations(){
 							k++;
 						}
 						// update team info with radio info
-						
 						a.setNodeColor(data)
 					}
 					if ( a.resetAnimData(animationData) ) {
@@ -334,7 +334,10 @@ function Animations(){
 
 	this.setNodeColor = function(data){
 	/*
-		Sets the grid node color based on the owner property.
+		Filters the incoming data and the previous data to determine 
+		whether a node needs to be colored. The grid on() method is called
+		if coloring is needed after the grid nodes are redrawn with
+		drawRectangles().
 	*/
 		var nodes = data.filter(function(val){ return val.owner != undefined; });
 		if ( this.previousData != null ) {
@@ -348,6 +351,7 @@ function Animations(){
 			this.grid.drawRectangles();
 		}
 		for (let i = 0; i < nodes.length; i++) {
+			nodes[i].owner = (nodes[i].owner.toLowerCase() == 'neutral') ? 'grey' : nodes[i].owner.toLowerCase();
 			this.grid.on(this.nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1)
 		}
 	}
