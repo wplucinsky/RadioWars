@@ -35,7 +35,7 @@ function Animations(){
 	this.setup = function(teams, id){
 		this.teams = teams
 		this.setElem(id)
-		this.grid.setup(teams,id);
+		this.grid.setup(teams,'grid');
 	}
 
 	this.start = function(mode){
@@ -106,6 +106,9 @@ function Animations(){
 								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
 							}
 							k++;
+						}
+						if ( data[i].owner) {
+							a.grid.on(a.nodes.getNodeLocation(data[i]._id.replace('node','')), data[i].owner.toLowerCase(), 1)
 						}
 						// update team info with radio info
 					}

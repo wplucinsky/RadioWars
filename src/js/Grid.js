@@ -129,6 +129,9 @@ function Grid(){
 		this.elem.fillStyle = color;
 		this.elem.fill();
 		this.elem.globalAlpha = 1;
+		this.elem.font = "10px Arial";
+		this.elem.fillStyle = "#2c3e50";
+		this.elem.fillText(this.nodes.getNodeLocationReal(node),this.rects[node].x,this.rects[node].y+10);
 
 		this.nodeCapture(alpha.toFixed(2), color, '#FFFFFF', node, true);
 	}
