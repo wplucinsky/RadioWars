@@ -72,8 +72,9 @@ function Animations(){
 		this.timerVal = new Date();
 		// console.clear()
 		console.log(this.m)
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/";
+		var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
+		// var url = "http://dwslgrid.ece.drexel.edu:5000/";
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
@@ -87,7 +88,10 @@ function Animations(){
 						old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
 						
 						for ( let j in data[i].packetsReceived) {
-							if ( a.previousData == null || a.previousData[i].packetsReceived[j+'_altered'] == undefined ){
+							var from = data[i]._id.replace('node',''),
+								to = j.replace('node','');
+								console.log(from, to);
+							if (a.checkPreviousData()) {
 								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
 								diff = a.getNodeCount(data[i].packetsReceived[j]);
 							} else {
@@ -97,10 +101,10 @@ function Animations(){
 								// difference
 								diff = a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
 							}
-							if (old){
+							if (old || to == 0){
 								continue;
 							}
-							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), diff, i, k, data[i].owner);
+							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(from), a.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
 							offset = a.getOffset(i,k); // how many packets have been sent so far
 
@@ -108,7 +112,7 @@ function Animations(){
 								animationData[i][k][offset].wait = 0;
 								count = a.addToCount(diff)
 
-								// console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
+								// console.log(from, '->', to, ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
 							}
 							k++;
 						}
@@ -394,6 +398,17 @@ function Animations(){
 		}
 		this.setData(animData);
 		return true;
+	}
+
+	this.checkPreviousData = function(){
+	/*
+		TRUE: previous data is not set
+		FALSE: previous data was set
+	*/
+		return this.previousData == null 
+				|| this.previousData[i] == undefined 
+				|| this.previousData[i].packetsReceived == undefined 
+				|| this.previousData[i].packetsReceived[j+'_altered'] == undefined;
 	}
 
 	this.getData = function(){
