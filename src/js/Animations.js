@@ -59,6 +59,7 @@ function Animations(){
 		Process
 			- check if data changed
 			- check if packets were received in the last 2 seconds
+				+ if yes, update altered data but don't get animation data
 			- get count that can be animated in 1 second
 			- start animation
 			- update grid and radio information
@@ -83,9 +84,8 @@ function Animations(){
 						count = a.getCount();
 					for ( let i in data ) {
 						animationData[i] = {}
-						if ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) {
-							continue;
-						}
+						old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
+						
 						for ( let j in data[i].packetsReceived) {
 							if ( a.previousData == null || a.previousData[i].packetsReceived[j+'_altered'] == undefined ){
 								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
@@ -97,7 +97,10 @@ function Animations(){
 								// difference
 								diff = a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
 							}
-							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), diff, i, k);
+							if (old){
+								continue;
+							}
+							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(data[i]._id.replace('node','')), a.nodes.getNodeLocation(j.replace('node','')), diff, i, k, data[i].owner);
 
 							offset = a.getOffset(i,k); // how many packets have been sent so far
 
@@ -105,7 +108,7 @@ function Animations(){
 								animationData[i][k][offset].wait = 0;
 								count = a.addToCount(diff)
 
-								console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
+								// console.log(data[i]._id.replace('node',''), '->', j.replace('node',''), ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
 							}
 							k++;
 						}
@@ -124,7 +127,7 @@ function Animations(){
 		this.m++;
 	}
 
-	this.getAnimationData = function(from, to, count, i, k) {
+	this.getAnimationData = function(from, to, count, i, k, color) {
 	/*
 		Adds x number of copies of node[from] to node[to] where
 		x in the total count of new packets received. In the form
@@ -161,7 +164,7 @@ function Animations(){
 				to:    to,
 				stop:  0,
 				wait:  1,
-				color: this.getNodeColor(from),
+				color: (color == undefined) ? 'grey' : color,
 				count: count
 			};
 

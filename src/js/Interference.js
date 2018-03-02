@@ -10,9 +10,7 @@ function Interference(){
 	this.grid = new Grid();
 	this.api = new API();
 	this.nodes = new Nodes();
-	this.timer = null;
-	this.rect = null;
-	this.pos = 1;
+	this.control = [];
 
 	this.setup = function(teams, id){
 		this.teams = teams;
@@ -22,6 +20,8 @@ function Interference(){
 	
 	this.start = function(mode){
 		this.rects = this.grid.getRectangles();
+		this.subscribeToControl();
+		this.scroll()
 	}
 
 	this.setElem = function(id){
@@ -35,10 +35,10 @@ function Interference(){
 		if the response is successful then an interference animation is drawn for the 
 		time specified.
 	*/
-		var i = this, time = 15;
+		var time = 5;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
-		this.api.post(url, {
+		// var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+		this.api.postOrig(url, {
 			'_id': 		 'node'+node,
 			'type': 	 'jammer',
 			'completed': String(false),
@@ -53,33 +53,117 @@ function Interference(){
 		}, (function(data){
 			// add check for valid data
 			$('#serverOutputPost').text(JSON.stringify(data));
-			i.scroll(node, time)
-			i.startTimer(i.nodes.getNodeLocation(node), time)
+			
+			// won't be necessary b/c of subscribeToControl()
+			var i = self.data.graphs.interference.fn;
+			n = i.nodes.getNodeLocation(node)
+			i.control[n] = {}
+			i.control[n].fn = new InterferenceAnimation();
+			i.control[n].fn.startInterference(n, time, i.rects)
 		}));
 	}	
+
+	this.subscribeToControl = function(){
+		var url = "http://dwslgrid.ece.drexel.edu:5000/stream", 
+			source = new EventSource(url), 
+			self = this, 
+			time = 5;
+		source.onmessage = function (event) {
+			d = JSON.parse(event.data);
+			for (let i in d){
+				if (d[i].completed.toLowerCase() != 'false') {
+					n = self.nodes.getNodeLocation(d[i]._id.replace('node', ''))
+					console.log(n)
+					if (d[i].type.toLowerCase() == 'jammer' ) {
+						// display interference
+						a = new InterferenceAnimation();
+						a.startTimer(n, time, self.rects)
+						console.log('hi', self)
+					} else if (d[i].type.toLowerCase() == 'capture' ) {
+						// display capture
+						a = new InterferenceAnimation();
+						a.startTimer(n, time, self.rects)
+						console.log('hi', self)
+					}
+				}
+			}
+		};
+	}
+
+	this.scroll = function(){
+	/*
+		Displays a notification at the top of the screen to notify players
+		what node interference is running on. Could be changed to a more
+		ticker like scroll
+
+		Future: https://codepen.io/lewismcarey/pen/GJZVoG
+	*/
+		var t = '', control = self.data.graphs.interference.fn.control;
+		for (let i in control){
+			if ( control[i] != null ){
+				n = self.data.graphs.interference.fn.nodes.getNodeLocationReal(i)
+				t = t + 'Interference on Node #'+n+'! '
+			}
+		}
+		if (t != '') {
+			$('#scroll').text(t);
+			$('.notifications').css('display', 'block');
+		} else {
+			$('.notifications').css('display', 'none');
+		}
+
+		setTimeout(self.data.graphs.interference.fn.scroll, 500)
+	}
+}
+
+function InterferenceAnimation() {
+	this.timer = null;
+	this.rect = null;
+	this.rects = null;
+	this.pos = 1;
+	this.canvas = null;
+	this.elem = null;
+
+	this.startInterference = function(node, time, rects){
+	/*
+		Creates a new canvas element in order to animate each node's 
+		interference. Will use the previously created element if interference
+		has already run on that node.
+	*/
+		this.rects = rects;
+		id = 'interference_'+node;
+		
+		if (!$('#'+id).length){
+			$('#gridView').append('<canvas id="'+id+'" class="interference-canvas" width="450" height="450" style="padding-top: 50px;"></canvas>')
+		}
+		this.canvas = document.getElementById(id);
+		this.elem = this.canvas.getContext('2d');
+		
+		this.startTimer(node, time)
+	}
 
 	this.animate = function(node, time) {
 	/*
 		Animate the pulsating interference ring, called by startTimer().
 	*/
-		var i = self.data.graphs.interference.fn, dist = 150;
-		i.elem.clearRect(0, 0, i.canvas.width, i.canvas.height);
+		var dist = 150;
+		this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		// choose growing or shrinking
-		if ( i.rect.width > dist && i.pos == 1 ) {
-			i.pos = 0;
-		} else if (i.rect.width < 8 && i.pos == 0) {
-			i.pos = 1;
+		if ( this.rect.width > dist && this.pos == 1 ) {
+			this.pos = 0;
+		} else if (this.rect.width < 8 && this.pos == 0) {
+			this.pos = 1;
 		}
 
-		i.rect.width += (i.pos) ? 1 : -1;
+		this.rect.width += (this.pos) ? 1 : -1;
 		
-		i.elem.beginPath();
-		i.elem.arc(i.rect.x, i.rect.y, i.rect.width/2, 0, 2 * Math.PI);
-		i.elem.strokeStyle = 'orange';
-		i.elem.lineWidth=2;
-		i.elem.stroke();
-		i.elem.closePath();
+		this.elem.beginPath();
+		this.elem.arc(this.rect.x, this.rect.y, this.rect.width/2, 0, 2 * Math.PI);
+		this.elem.strokeStyle = 'orange';
+		this.elem.lineWidth=2;
+		this.elem.stroke();
+		this.elem.closePath();
 	}
 
 	this.startTimer = function(node, time) {
@@ -88,32 +172,24 @@ function Interference(){
 		animation. 
 	*/
 		this.setInitialRectParameters(node)
-		setTimeout(this.stopTimer, time * 1000)
+		setTimeout(this.stopTimer, time * 1000, node)
 
 		var i = this;
-		self.data.graphs.interference.fn.timer = window.setInterval(function(){
+		this.timer = window.setInterval(function(){
 			i.animate(node, time)
 		}, 10);
 	}
 
-	this.stopTimer = function(){
+	this.stopTimer = function(node){
 	/*
-		Stops the timer to mark the end of the interference animation.
+		Stops the timer to mark the end of the interference animation. This data is
+		held in the control array in Interference().
 	*/
-		i = self.data.graphs.interference.fn
+		i = self.data.graphs.interference.fn.control[node].fn
 		i.elem.clearRect(0, 0, i.canvas.width, i.canvas.height);
 		window.clearInterval(i.timer);
-	}
 
-	this.scroll = function(node, time){
-	/*
-		Displays a notification at the top of the screen to notify players
-		what node interference is running on.
-	*/
-		setTimeout(function(){$('.notifications').css('display', 'none');}, time * 1000)
-		
-		$('#scroll').text('Interference on Node #'+node+'!');
-		$('.notifications').css('display', 'block');
+		self.data.graphs.interference.fn.control[node] = null;
 	}
 
 	this.setInitialRectParameters = function(node) {
@@ -122,9 +198,8 @@ function Interference(){
 		NOTE: the second addition for the x & y parameters is due to the canvas
 		being off center in order to display the full ring.
 	*/
-		var i = self.data.graphs.interference.fn;
-		i.rect = Object.assign({}, i.rects[node]);
-		i.rect.x += (12.5) + 53;
-		i.rect.y += (12.5) + 44;
+		this.rect = Object.assign({}, this.rects[node]);
+		this.rect.x += (12.5) + 53;
+		this.rect.y += (12.5) + 44;
 	}
 }

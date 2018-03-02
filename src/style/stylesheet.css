@@ -150,6 +150,11 @@ button:disabled {
 	margin-left: -48px;
 	top: -20px;
 }
+.interference-canvas {
+	position: absolute;
+	top: -20px;
+	margin-left: -48px;
+}
 #countdownTimerContainer, #interferenceContainer {
 	position: absolute;
 	top: 500px;
@@ -271,6 +276,9 @@ button:disabled {
 #scroll{
 	position: absolute;
 	color: white;
+	width: 100%;
+	max-height: 35px;
+	overflow: hidden;
 	-webkit-animation: mymove 5s infinite;
 	-webkit-animation-direction: normal;
 	animation-direction: normal;
@@ -279,13 +287,13 @@ button:disabled {
 }
 
 @-webkit-keyframes mymove {
-    from {left:50px;}
+    from {left:10px;}
   	to {left:90%;}
 }
 
 @keyframes mymove {
-    from {left:150px;}
-  	to {left:80%}
+    from {left:10px;}
+  	to {left:90%}
 }
 #keyboardControls td:first-child{
 	width: 345px;

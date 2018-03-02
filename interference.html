@@ -6,6 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>		
 		<script src="src/js/plugins/knob.min.js"></script>
+		<script src="src/js/plugins/EventSource.js"></script>
 
 		<!-- layout -->
 		<link rel="stylesheet" type="text/css" href="src/style/stylesheet.css">
@@ -28,7 +29,7 @@
 					<span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
 					<div id="gridLine" class="line"></div>
 					<div id="gridViewContainer">
-						<div class="canvas chart">
+						<div class="canvas chart" id="gridView">
 							<canvas id="grid" width="400" height="450" style="padding-top: 50px;"></canvas>
 							<canvas id="animations" width="400" height="450" style="padding-top: 50px;"></canvas>
 							<canvas id="keyboard" width="400" height="450" style="padding-top: 50px;"></canvas>
