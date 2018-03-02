@@ -97,12 +97,9 @@
 
 			$data['_id'] = "node".$chi;
 			
-			if ( $m > 12 ) {
+			if ( $m > 14 || $chi == 13) {
 				$data['owner'] = $o[$key];
 			} 
-			if ($chi == 13){
-				$data['owner'] = $o[$key];
-			}
 
 			array_push($ret, $data);
 		}
