@@ -69,6 +69,10 @@ var data = {
 		},
 		animations: {
 			fn: null
+		},
+		interference: {
+			fn: null
 		}
-	}
+	},
+	mode: 'viewer'
 }

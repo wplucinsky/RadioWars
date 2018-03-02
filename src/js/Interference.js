@@ -57,33 +57,37 @@ function Interference(){
 			// won't be necessary b/c of subscribeToControl()
 			var i = self.data.graphs.interference.fn;
 			n = i.nodes.getNodeLocation(node)
-			i.control[n] = {}
-			i.control[n].fn = new InterferenceAnimation();
-			i.control[n].fn.startInterference(n, time, i.rects)
+			if (i.control[n] == undefined || i.control[n] == null) {
+				i.control[n] = {}
+				i.control[n].fn = new InterferenceAnimation();
+				i.control[n].fn.startInterference(n, time, i.rects)
+			}
 		}));
 	}	
 
 	this.subscribeToControl = function(){
-		var url = "http://dwslgrid.ece.drexel.edu:5000/stream", 
-			source = new EventSource(url), 
-			self = this, 
-			time = 5;
+		var url = "http://dwslgrid.ece.drexel.edu:5000/stream";
+		source = new EventSource(url);
+		var self = this, time = 5;
 		source.onmessage = function (event) {
 			d = JSON.parse(event.data);
 			for (let i in d){
 				if (d[i].completed.toLowerCase() != 'false') {
 					n = self.nodes.getNodeLocation(d[i]._id.replace('node', ''))
-					console.log(n)
 					if (d[i].type.toLowerCase() == 'jammer' ) {
-						// display interference
-						a = new InterferenceAnimation();
-						a.startTimer(n, time, self.rects)
-						console.log('hi', self)
+						display interference
+						if (self.control[n] == undefined || self.control[n] == null) {
+							self.control[n] = {}
+							self.control[n].fn = new InterferenceAnimation();
+							self.control[n].fn.startInterference(n, time, self.rects)
+						}
 					} else if (d[i].type.toLowerCase() == 'capture' ) {
-						// display capture
-						a = new InterferenceAnimation();
-						a.startTimer(n, time, self.rects)
-						console.log('hi', self)
+						display capture
+						if (self.control[n] == undefined || self.control[n] == null) {
+							self.control[n] = {}
+							self.control[n].fn = new InterferenceAnimation();
+							self.control[n].fn.startInterference(n, time, self.rects)
+						}
 					}
 				}
 			}
@@ -96,7 +100,7 @@ function Interference(){
 		what node interference is running on. Could be changed to a more
 		ticker like scroll
 
-		Future: https://codepen.io/lewismcarey/pen/GJZVoG
+		Future: https://maze.digital/webticker/
 	*/
 		var t = '', control = self.data.graphs.interference.fn.control;
 		for (let i in control){
@@ -132,9 +136,9 @@ function InterferenceAnimation() {
 	*/
 		this.rects = rects;
 		id = 'interference_'+node;
-		
+		classes = self.data.mode == 'viewer' ? 'interference-canvas viewer' : 'interference-canvas';
 		if (!$('#'+id).length){
-			$('#gridView').append('<canvas id="'+id+'" class="interference-canvas" width="450" height="450" style="padding-top: 50px;"></canvas>')
+			$('#gridView').append('<canvas id="'+id+'" class="'+classes+'" width="450" height="450" style="padding-top: 50px;"></canvas>')
 		}
 		this.canvas = document.getElementById(id);
 		this.elem = this.canvas.getContext('2d');

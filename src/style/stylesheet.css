@@ -50,7 +50,7 @@
 	height: 400px;
 }
 #gridView{
-	margin-left: 25px;
+	/*margin-left: 25px;*/
 }
 #charts{
 	margin-bottom: 100px;
@@ -154,6 +154,9 @@ button:disabled {
 	position: absolute;
 	top: -20px;
 	margin-left: -48px;
+}
+.interference-canvas.viewer {
+	margin-left: -53px;
 }
 #countdownTimerContainer, #interferenceContainer {
 	position: absolute;

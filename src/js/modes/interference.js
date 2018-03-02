@@ -90,5 +90,6 @@ var data = {
 		4: 'normalFrequency',
 		5: 'sampleRate',
 		6: 'frameSize'
-	}
+	},
+	mode: 'interference'
 }

@@ -71,10 +71,10 @@ function Animations(){
 		}
 		this.timerVal = new Date();
 		// console.clear()
-		console.log(this.m)
+		// console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/";
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
@@ -90,7 +90,6 @@ function Animations(){
 						for ( let j in data[i].packetsReceived) {
 							var from = data[i]._id.replace('node',''),
 								to = j.replace('node','');
-								console.log(from, to);
 							if (a.checkPreviousData()) {
 								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
 								diff = a.getNodeCount(data[i].packetsReceived[j]);
@@ -168,7 +167,7 @@ function Animations(){
 				to:    to,
 				stop:  0,
 				wait:  1,
-				color: (color == undefined) ? 'grey' : color,
+				color: (color == undefined) ? 'rgb(201, 203, 207)' : color,
 				count: count
 			};
 
@@ -358,7 +357,7 @@ function Animations(){
 			this.grid.drawRectangles();
 		}
 		for (let i = 0; i < nodes.length; i++) {
-			nodes[i].owner = (nodes[i].owner.toLowerCase() == 'neutral') ? 'grey' : nodes[i].owner.toLowerCase();
+			nodes[i].owner = (nodes[i].owner.toLowerCase() == 'neutral') ? 'rgb(201, 203, 207)' : nodes[i].owner.toLowerCase();
 			this.grid.on(this.nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1)
 		}
 	}
