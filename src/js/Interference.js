@@ -75,14 +75,7 @@ function Interference(){
 				if (d[i].completed.toLowerCase() != 'false') {
 					n = self.nodes.getNodeLocation(d[i]._id.replace('node', ''))
 					if (d[i].type.toLowerCase() == 'jammer' ) {
-						display interference
-						if (self.control[n] == undefined || self.control[n] == null) {
-							self.control[n] = {}
-							self.control[n].fn = new InterferenceAnimation();
-							self.control[n].fn.startInterference(n, time, self.rects)
-						}
-					} else if (d[i].type.toLowerCase() == 'capture' ) {
-						display capture
+						// display interference
 						if (self.control[n] == undefined || self.control[n] == null) {
 							self.control[n] = {}
 							self.control[n].fn = new InterferenceAnimation();

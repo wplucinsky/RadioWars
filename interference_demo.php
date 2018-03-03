@@ -84,7 +84,15 @@
 
 			foreach (getChildOwner() as $key2 => $chOwn) {
 				if ( $chOwn == $c[$key] ) {
-					$packetsReceived['node'.$chi[$key2]] = $m*$m;
+					if ($m >= 23){
+						$packetsReceived['node'.$chi[$key2]] = 22*22;
+					} else {
+						$packetsReceived['node'.$chi[$key2]] = $m*$m;
+					}
+
+					if ( $par == 14 ){
+						$packetsReceived['node'.$chi[$key2]] = $m*$m;
+					}
 				}
 			}
 			$data['packetsReceived'] = $packetsReceived;
@@ -112,10 +120,10 @@
 		$data = round2($_GET['m']);
 	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 10 ) {
 		$data = round2(5, $_GET['m']);
-	} elseif ( isset($_GET['demo']) && $_GET['m'] >= 10 ) {
+	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 20 ) {
 		$data = round3($_GET['m']);
-	} else {
-		$data = 'test';
+	} elseif ( isset($_GET['demo']) && $_GET['m'] >= 20) {
+		$data = round3($_GET['m']);
 	}
 
 

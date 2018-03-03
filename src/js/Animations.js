@@ -90,7 +90,7 @@ function Animations(){
 						for ( let j in data[i].packetsReceived) {
 							var from = data[i]._id.replace('node',''),
 								to = j.replace('node','');
-							if (a.checkPreviousData()) {
+							if (a.checkPreviousData(i, j)) {
 								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
 								diff = a.getNodeCount(data[i].packetsReceived[j]);
 							} else {
@@ -399,7 +399,7 @@ function Animations(){
 		return true;
 	}
 
-	this.checkPreviousData = function(){
+	this.checkPreviousData = function(i, j){
 	/*
 		TRUE: previous data is not set
 		FALSE: previous data was set
