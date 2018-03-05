@@ -35,10 +35,10 @@ function Interference(){
 		if the response is successful then an interference animation is drawn for the 
 		time specified.
 	*/
-		var time = 5;
+		var time = 10;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
-		this.api.postOrig(url, {
+		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+		this.api.post(url, {
 			'_id': 		 'node'+node,
 			'type': 	 'jammer',
 			'completed': String(false),
@@ -68,11 +68,14 @@ function Interference(){
 	this.subscribeToControl = function(){
 		var url = "http://dwslgrid.ece.drexel.edu:5000/stream";
 		source = new EventSource(url);
-		var self = this, time = 5;
+		var self = this;
+
 		source.onmessage = function (event) {
 			d = JSON.parse(event.data);
 			for (let i in d){
-				if (d[i].completed.toLowerCase() != 'false') {
+				t = new Date(); t.setSeconds(t.getSeconds() - d[i].time); // check if interference hasn't elapsed
+				a = new Date(d[i].date); time = (a-t)/1000; // get time remaining
+				if (d[i].date >= t.toISOString()) {
 					n = self.nodes.getNodeLocation(d[i]._id.replace('node', ''))
 					if (d[i].type.toLowerCase() == 'jammer' ) {
 						// display interference
