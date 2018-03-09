@@ -324,7 +324,7 @@ function Animations(){
 		data object, can be though of as a difference function.
 	*/
 		animData = this.getData();
-		if ( animData === undefined || animData[i] === undefined || animData[i][k] == undefined ){
+		if ( animData === null || animData[i] === undefined || animData[i][k] == undefined ){
 			return 0;
 		} else {
 			animData = animData[i][k];
