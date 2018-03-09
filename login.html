@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Radio Wars - Login</title>
-		<link rel="icon" type="image/png" href="src/img/logo.png">
+		<link rel="icon" href="src/img/favicon.ico"/>
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="src/style/login.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,7 +10,8 @@
 		<script type="text/javascript">
 			function login(){
 				var api = new API(),
-					url = 'http://www.craigslistadsaver.com/cgi-bin/mockdata.php?login=1';
+					// url = 'http://www.craigslistadsaver.com/cgi-bin/mockdata.php?login=1';
+					url = 'http://dwslgrid.ece.drexel.edu:5000/login';
 				if ( $('#username').val() == '' || $('#password').val() == '') {
 					$('#errorMsg').text('Username and Password Required').css('display', 'block');
 					return;
@@ -26,14 +27,17 @@
 					} else {
 						api.set('_id', data.cookie, 7)
 						api.set('team_id', data.team_id, 7)
-						window.location.href = data.location+'.html';
+						window.location.href = data.location;
 					}
 				}));
+				$( document ).ajaxError(function( event, request, settings ) {
+					$('#errorMsg').text('Server issue, please try again.').css('display', 'block');
+				});
 			}
 		</script>
 	</head>
 			
-	<body style="">
+	<body>
 		<div class="container">
 			<div id="login-form">
 				<img id="logo" src="src/img/drexel.jpg">

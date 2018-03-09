@@ -19,7 +19,7 @@
 		return array(18, 13, 9, 11, 50, 12, 8, 6, 7);
 	}
 	function getChildOwner(){
-		return array('#1abc9c', '#1abc9c', '#f1c40f', '#d35400', '#3498db', '#e74c3c', '#3498db', '#d35400', '#8e44ad');
+		return array('', '#1abc9c', '#f1c40f', '#d35400', '', '#e74c3c', '#3498db', '', '#8e44ad');
 	}
 
 	function round1($m){
@@ -41,6 +41,8 @@
 	function round2($m, $t = 0){
 		$ret = array();
 		$c = getParentColors();
+		$chi = getChild();
+		$o = getChildOwner();
 		foreach (getParent() as $key => $par) {
 			$data = array();
 			$packetsReceived = array();
@@ -48,23 +50,59 @@
 			$data['_id'] = "node".$par;
 			$data['owner'] = $c[$key];
 
-			if ( $par == 10 ){
-				if ($t != 0){
-					$packetsReceived['node13'] = $t*$t;
-				} else {
-					$packetsReceived['node13'] = $m*$m;
+			foreach (getChildOwner() as $key2 => $chOwn) {
+				if ( $chOwn == $c[$key] ) {
+					if ($par == 10 && $t <= 5){
+						$packetsReceived['node'.$chi[$key2]] = $t*$t;
+						$data['packetsReceived'] = $packetsReceived;
+					} elseif ( $par != 10 && $t > 4 && $t <= 11){
+						$packetsReceived['node'.$chi[$key2]] = $t*$t;
+						$data['packetsReceived'] = $packetsReceived;
+					} elseif ( $par != 10 && $t > 14 && $t < 18 ) {
+						$packetsReceived['node'.$chi[$key2]] = $t*$t;
+						$data['packetsReceived'] = $packetsReceived;
+					}
 				}
-				$data['packetsReceived'] = $packetsReceived;
 			}
 
 			array_push($ret, $data);
 		}
-		if ( $m == 5 ) {
-			$data = array();
-			$data['_id'] = "node13";
-			$data['owner'] = $c[0];
 
+		// 13 captures 50
+		if ( $t > 5){
+			$par = 13;
+			$data = array();
+			$packetsReceived = array();
+			$data['_id'] = "node".$par;
+			$data['owner'] = '#1abc9c';
+			if ( $t > 6 && $t <= 10){
+				$packetsReceived['node50'] = $t*$t;
+				$data['packetsReceived'] = $packetsReceived;
+			}
 			array_push($ret, $data);
+		}
+		if ( $t >= 10){
+			$par = 50;
+			$data = array();
+			$packetsReceived = array();
+			$data['_id'] = "node".$par;
+			$data['owner'] = '#1abc9c';
+			array_push($ret, $data);
+		}
+
+		if ($t > 16){
+			foreach (getChild() as $key => $chi) {
+				$data = array();
+				$packetsReceived = array();
+
+				$data['_id'] = "node".$chi;
+				
+				if ($o[$key] != '') {
+					$data['owner'] = $o[$key];
+				}
+
+				array_push($ret, $data);
+			}
 		}
 
 		return $ret;
@@ -86,12 +124,13 @@
 				if ( $chOwn == $c[$key] ) {
 					if ($m >= 23){
 						$packetsReceived['node'.$chi[$key2]] = 22*22;
-					} else {
-						$packetsReceived['node'.$chi[$key2]] = $m*$m;
-					}
-
-					if ( $par == 14 ){
-						$packetsReceived['node'.$chi[$key2]] = $m*$m;
+						if ( $par == 14 ){
+							$packetsReceived['node'.$chi[$key2]] = $m*$m;
+						}
+					} elseif (!( $m >= 16 && $m <= 19)){
+						if (!($m - 10 > 0 && $key > ($m - 10))){
+							$packetsReceived['node'.$chi[$key2]] = $m*$m;
+						}
 					}
 				}
 			}
@@ -99,14 +138,17 @@
 
 			array_push($ret, $data);
 		}
+
 		foreach (getChild() as $key => $chi) {
 			$data = array();
 			$packetsReceived = array();
 
 			$data['_id'] = "node".$chi;
 			
-			if ( $m > 14 || $chi == 13) {
-				$data['owner'] = $o[$key];
+			if ( $m > 20 || $chi == 13) {
+				if ($o[$key] != '') {
+					$data['owner'] = $o[$key];
+				}
 			} 
 
 			array_push($ret, $data);
@@ -116,15 +158,14 @@
 
 	if ( isset($_GET['demo']) && $_GET['m'] == 1 ) {
 		$data = round1($_GET['m']);
-	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 5 ) {
-		$data = round2($_GET['m']);
-	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 10 ) {
-		$data = round2(5, $_GET['m']);
 	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 20 ) {
-		$data = round3($_GET['m']);
-	} elseif ( isset($_GET['demo']) && $_GET['m'] >= 20) {
-		$data = round3($_GET['m']);
-	}
+		$data = round2(5, $_GET['m']);
+	} 
+	// elseif ( isset($_GET['demo']) && $_GET['m'] <= 20 ) {
+	// 	$data = round3($_GET['m']);
+	// } elseif ( isset($_GET['demo']) && $_GET['m'] >= 20) {
+	// 	$data = round3($_GET['m']);
+	// }
 
 
 /*

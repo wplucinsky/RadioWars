@@ -74,7 +74,7 @@ function Animations(){
 		// console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/dump";
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
@@ -146,7 +146,7 @@ function Animations(){
 		sendPacket() work. It appends it to the global getData() and returns.
 	*/
 		animData = this.getData();
-		if ( animData === null || animData[i] === null  || animData[i][k] === null || animData[i][k] === undefined ) { 
+		if ( animData === null || animData[i] === undefined  || animData[i][k] === undefined || animData[i][k] === undefined ) { 
 			offset = 0;
 			animData = {};
 		} else {
@@ -324,7 +324,7 @@ function Animations(){
 		data object, can be though of as a difference function.
 	*/
 		animData = this.getData();
-		if ( animData === null || animData[i] === null || animData[i][k] == null ){
+		if ( animData === undefined || animData[i] === undefined || animData[i][k] == undefined ){
 			return 0;
 		} else {
 			animData = animData[i][k];
