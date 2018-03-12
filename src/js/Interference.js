@@ -66,7 +66,7 @@ function Interference(){
 	}	
 
 	this.subscribeToControl = function(){
-		var url = "http://dwslgrid.ece.drexel.edu:5000/stream";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/stream/control";
 		source = new EventSource(url);
 		var self = this;
 

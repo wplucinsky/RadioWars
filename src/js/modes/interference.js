@@ -81,6 +81,9 @@ var data = {
 		},
 		capture: {
 			fn: null
+		},
+		score: {
+			fn: null
 		}
 	},
 	controls: {
