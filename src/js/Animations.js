@@ -74,11 +74,11 @@ function Animations(){
 		// console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/dump";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/dump";
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
-				if ( data.length != 0 && self.data.graphs.animations.fn.getPreviousUntouchedData() != JSON.stringify(data)){
+				if ( data != null && data.length != 0 && self.data.graphs.animations.fn.getPreviousUntouchedData() != JSON.stringify(data)){
 					a.setPreviousUntouchedData(JSON.stringify(data));
 					var animationData = [],
 						k = 0,
