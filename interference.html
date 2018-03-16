@@ -21,6 +21,12 @@
 		<div class="title">
 			<h1 class="text-center">Radio Wars</h1>
 		</div>
+		<div id="loading-blocker">
+            <div class="loading-img">
+                <img src="src/img/loading.gif" alt="loading">
+            </div>
+            <div class="background"></div>
+        </div>
 		<div class="container" style="width: 95%;">
 			<div class="row top-pad">
 				<div class="col-md-4 grid-holder">
@@ -85,7 +91,7 @@
 				<div class="col-md-8 node-holder">
 					<div class="row">
 						<div class="col-md-6 node-info team_x">
-							<h3 class="text-center">Node <span class="_id_x">1</span></h3>
+							<h3 class="text-center">Node <span class="_id_x"></span></h3>
 							<div class="line"></div>
 							<div class="row">	
 								<div class="col-md-8">
@@ -142,7 +148,7 @@
 									</table>
 								</div>
 								<div class="col-md-4">
-									<img class="logo" id="radioDirection_1" src="src/img/PatternOmni.png">
+									<img class="logo radioDirection_x" src="src/img/PatternOmni.png">
 								</div>
 							</div>
 						</div>
@@ -154,101 +160,95 @@
 								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
-											class="knob" 
+											class="knob power_x_knob" 
 											data-width="75" 
 											data-height="85" 
 											data-cursor="true" 
 											data-fgcolor="#222222" 
 											data-thickness=".3" 
-											id="power_1_knob" 
 											value="0"
 											data-min="0"
 											data-max="1000"
 											data-step="50">
 									</div>
-									<div class="knob-text" id="power_1_knob_text">Power</div>
+									<div class="knob-text power_x_knob_text">Power</div>
 								</div>
 								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
-											class="knob" 
+											class="knob rxGain_x_knob" 
 											data-width="75" 
 											data-height="85" 
 											data-cursor="true" 
 											data-fgcolor="#222222" 
 											data-thickness=".3" 
-											id="rxGain_1_knob" 
 											value="0"
 											data-step="1">
 									</div>
-									<div class="knob-text" id="rxGain_1_knob_text">Rx Gain</div>
+									<div class="knob-text rxGain_x_knob_text">Rx Gain</div>
 								</div>
 								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
-											class="knob" 
+											class="knob txGain_x_knob" 
 											data-width="75" 
 											data-height="85" 
 											data-cursor="true" 
 											data-fgcolor="#222222" 
 											data-thickness=".3" 
-											id="txGain_1_knob" 
 											value="0"
 											data-step="1">
 									</div>
-									<div class="knob-text" id="txGain_1_knob_text">Tx Gain</div>
+									<div class="knob-text txGain_x_knob_text">Tx Gain</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
-											class="knob" 
+											class="knob normalFrequency_x_knob" 
 											data-width="75" 
 											data-height="85" 
 											data-cursor="true" 
 											data-fgcolor="#222222" 
 											data-thickness=".3" 
-											id="normalFrequency_1_knob" 
 											value="0"
 											data-min="0"
 											data-max="1000"
 											data-step="10">
 									</div>
-									<div class="knob-text" id="normalFrequency_1_knob_text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
+									<div class="knob-text normalFrequency_x_knob_text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
 								</div>
 								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
-											class="knob" 
+											class="knob sampleRate_x_knob" 
 											data-width="75" 
 											data-height="85" 
 											data-cursor="true" 
 											data-fgcolor="#222222" 
 											data-thickness=".3" 
-											id="sampleRate_1_knob" 
 											value="0"
 											data-step="1">
 									</div>
-									<div class="knob-text" id="sampleRate_1_knob_text">Sample Rate</div>
+									<div class="knob-text sampleRate_x_knob_text">Sample Rate</div>
 								</div>
 								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input
-											class="knob" 
+											class="knob frameSize_x_knob" 
 											data-width="75" 
 											data-height="85" 
 											data-cursor="true" 
 											data-fgcolor="#222222" 
 											data-thickness=".3" 
-											id="frameSize_1_knob" 
 											data-min="128"
 											data-max="2048"
 											data-step="64"
 											value="0"
 											stopper="true">
 									</div>
-									<div class="knob-text" id="frameSize_1_knob_text">Frame Size</div>
+									<div class="knob-text frameSize_x_knob_text">Frame Size</div>
 								</div>
 							</div>
 						</div>
@@ -540,8 +540,8 @@
 	<script>
 		window._id = api.getCookie('team_id');
 		if (window._id == undefined){
-			if (window.location.hostname == "") {
-				window._id = 1
+			if (window.location.hostname == "") { // local dev env
+				window._id = 3
 			} else {
 				window.location.href = '/'
 			}
@@ -552,11 +552,13 @@
 		function setup() {
 			for (let team_id in data.teams) {
 				if ( team_id != window._id ) { continue; }
+				var set = 1;
 				data.nodes = new Nodes();
 				data.teams[team_id].team = new Team(team_id);
 				data.teams[team_id].team.setInformation(data.teams[team_id].information)
 				data.teams[team_id].team.setRadio(data.teams[team_id].radio, true)
 			}
+			if ( Object.keys(data.teams).indexOf(window._id+'') !== -1) { $('#loading-blocker').css('display', 'none'); } else { throw new Error('Invalid `team_id` cookie. Clear cookies and re-login or update config file to include team `'+window._id+'`.'); }
 
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn = eval(graph_name);

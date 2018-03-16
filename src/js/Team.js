@@ -7,6 +7,8 @@ function Team(team_id){
 	$('.team_x').attr('id', 'team_'+window._id)
 	for ( let x in data.teams[window._id].radio) {
 		$('.'+x+'_x').attr('id', x+'_'+window._id)
+		$('.'+x+'_x_knob').attr('id', x+'_'+window._id+'_knob')
+		$('.'+x+'_x_knob_text').attr('id', x+'_'+window._id+'_knob_text')
 	}
 
 	this.setInformation = function(data){
