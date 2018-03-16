@@ -11,10 +11,10 @@ function Keyboard(){
 	this.eventListeners = null;
 	this.grid = new Grid();
 	this.nodes = new Nodes();
-	this.currNode = 9;
-	this.currNodeReal = this.nodes.getNodeLocationReal(this.currNode);
+	this.currNode = null;
+	this.currNodeReal = null;
 	this.interference = new Interference();
-	this.team = 1;
+	this.team = null;
 	this.capture = {
 		id: 0,
 		node: this.currNode,
@@ -25,6 +25,9 @@ function Keyboard(){
 	this.setup = function(teams, id){
 		this.teams = teams
 		this.setElem(id)
+		this.team = window._id;
+		this.currNodeReal = self.data.teams[window._id].radio._id.value;
+		this.currNode = this.nodes.getNodeLocation(self.data.teams[window._id].radio._id.value);
 		this.grid.setup(teams, id, true);
 	}
 

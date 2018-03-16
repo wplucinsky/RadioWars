@@ -84,51 +84,51 @@
 				</div>
 				<div class="col-md-8 node-holder">
 					<div class="row">
-						<div class="col-md-6 node-info" id="team_1">
-							<h3 class="text-center">Node <span id="_id_1">1</span></h3>
+						<div class="col-md-6 node-info team_x">
+							<h3 class="text-center">Node <span class="_id_x">1</span></h3>
 							<div class="line"></div>
 							<div class="row">	
 								<div class="col-md-8">
 									<table class="team_data">
 										<tr>
 											<td>Rx Gain</td>
-											<td id="rxGain_1">0</td>
+											<td class="rxGain_x">0</td>
 										</tr>
 										<tr>
 											<td>Tx Gain</td>
-											<td id="txGain_1">0</td>
+											<td class="txGain_x">0</td>
 										</tr>
 										<tr>
 											<td>Normal Frequency</td>
-											<td id="normalFrequency_1">0</td>
+											<td class="normalFrequency_x">0</td>
 										</tr>
 										<tr>
 											<td>Power</td>
-											<td id="power_1">0</td>
+											<td class="power_x">0</td>
 										</tr>
 										<tr>
 											<td>Sample Rate</td>
-											<td id="sampleRate_1">0</td>
+											<td class="sampleRate_x">0</td>
 										</tr>
 										<tr>
 											<td>Frame Size</td>
-											<td id="frameSize_1">0</td>
+											<td class="frameSize_x">0</td>
 										</tr>
 										<tr>
 											<td>Node Id</td>
-											<td id="nodeId_1">0</td>
+											<td class="nodeId_x">0</td>
 										</tr>
 										<tr>
 											<td>USRP Address</td>
-											<td id="usrpAddress_1">0</td>
+											<td class="usrpAddress_x">0</td>
 										</tr>
 										<tr>
 											<td>Node Address</td>
-											<td id="nodeAddress_1">0</td>
+											<td class="nodeAddress_x">0</td>
 										</tr>
 										<tr>
 											<td>Captured Nodes</td>
-											<td id="captured_1">0</td>
+											<td class="captured_x">0</td>
 										</tr>
 										<tr style="height: 10px;"></tr>
 										<tr>
@@ -146,7 +146,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6 control-info" id="team_1">
+						<div class="col-md-6 control-info team_x">
 							<h3 class="text-center">Controls</span></h3>
 							<span id="controlsConfirmChanges">press ENTER to confirm changes</span>
 							<div class="line"></div>
@@ -254,7 +254,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6" id="team_1">
+						<div class="col-md-6 team_x">
 							<h3 class="text-center">Nodes</h3>
 							<div class="line"></div>
 							<table class="node_data">
@@ -324,7 +324,7 @@
 								</tr>
 							</table>
 						</div>
-						<div class="col-md-6" id="team_1">
+						<div class="col-md-6 team_x">
 							<h3 class="text-center">Server Output</h3>
 							<div class="line"></div>
 							<p id="serverOutputGet" class="json">
@@ -538,8 +538,20 @@
 	<script src="src/js/Score.js"></script>
 	<script src="src/js/Keyboard.js"></script>
 	<script>
+		window._id = api.getCookie('team_id');
+		if (window._id == undefined){
+			if (window.location.hostname == "") {
+				window._id = 1
+			} else {
+				window.location.href = '/'
+			}
+		} else {
+			window._id = parseInt(window._id)
+		}
+
 		function setup() {
 			for (let team_id in data.teams) {
+				if ( team_id != window._id ) { continue; }
 				data.nodes = new Nodes();
 				data.teams[team_id].team = new Team(team_id);
 				data.teams[team_id].team.setInformation(data.teams[team_id].information)
@@ -548,7 +560,7 @@
 
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn = eval(graph_name);
-				data.graphs[graph_name].fn.setup(data.teams, graph_name) // add team number
+				data.graphs[graph_name].fn.setup(data.teams, graph_name)
 			}
 			for (let graph_name in data.graphs) {
 				data.graphs[graph_name].fn.start('interference')

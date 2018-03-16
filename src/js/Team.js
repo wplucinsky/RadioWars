@@ -3,7 +3,11 @@ function Team(team_id){
 	this.api = new API();
 	this.radio = {};
 	this.information = {};
-	// this.tree = new Tree(); // wait to implement
+
+	$('.team_x').attr('id', 'team_'+window._id)
+	for ( let x in data.teams[window._id].radio) {
+		$('.'+x+'_x').attr('id', x+'_'+window._id)
+	}
 
 	this.setInformation = function(data){
 	/*

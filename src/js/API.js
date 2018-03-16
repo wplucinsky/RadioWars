@@ -1,3 +1,5 @@
+var api = new API();
+
 function API(){
 	this.get = function(url, callbackFunc) {
 		$.ajax({
@@ -36,12 +38,12 @@ function API(){
 			success: function(data){ 
 				console.log(data, a)
 				if (!data.success){
-					a.set('_id', null, 7)
-					a.set('team_id', null, 7)
+					a.setCookie('_id', null, 7)
+					a.setCookie('team_id', null, 7)
 					window.location.href = 'login.html';
 				} else {
-					a.set('_id', data.cookie, 7)
-					a.set('team_id', data.team_id, 7)
+					a.setCookie('_id', data.cookie, 7)
+					a.setCookie('team_id', data.team_id, 7)
 				}
 			},
 			data: { hash: document.cookie._id },
@@ -49,13 +51,18 @@ function API(){
 		});
 	}
 
-	this.set = function(c_name,c_value,exdays) {
+	this.setCookie = function(c_name,c_value,exdays) {
 		var exdate = new Date();
 		exdate.setDate(exdate.getDate() + exdays);
 		document.cookie=encodeURIComponent(c_name) 
 			+ "=" + encodeURIComponent(c_value)
 			+ (!exdays ? "" : "; expires="+exdate.toUTCString());
 		;
+	}
+
+	this.getCookie = function(name) {
+		match = document.cookie.match(new RegExp(name + '=([^;]+)'));
+		if (match) return match[1];
 	}
 
 	$( document ).ajaxError(function( event, request, settings ) {

@@ -25,8 +25,8 @@
 					if (!data.success) {
 						$('#errorMsg').text('Login Invalid').css('display', 'block');
 					} else {
-						api.set('_id', data.cookie, 7)
-						api.set('team_id', data.team_id, 7)
+						api.setCookie('_id', data.cookie, 7)
+						api.setCookie('team_id', data.team_id, 7)
 						window.location.href = data.location;
 					}
 				}));

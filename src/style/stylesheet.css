@@ -272,7 +272,7 @@ button:disabled {
 	display: inline-block;
 	line-height: 35px;
 	z-index: 5;
-	display: block;
+	display: none;
 	overflow: hidden;
 }
 .title{
