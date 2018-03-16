@@ -47,7 +47,6 @@ function Capture(){
 			'freq': 	 $('#frequency_interference_knob').val(),
 			'nodeToCapture': String(node2)
 		}, (function(data){
-			console.log(data)
 			
 			$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
 			$('#gridConfirmation').css('display', 'block');

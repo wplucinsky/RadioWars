@@ -82,9 +82,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-8 node-holder">
 					<div class="row">
-						<div class="col-md-6" id="team_1">
+						<div class="col-md-6 node-info" id="team_1">
 							<h3 class="text-center">Node <span id="_id_1">1</span></h3>
 							<div class="line"></div>
 							<div class="row">	
@@ -146,12 +146,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-md-6" id="team_1">
+						<div class="col-md-6 control-info" id="team_1">
 							<h3 class="text-center">Controls</span></h3>
 							<span id="controlsConfirmChanges">press ENTER to confirm changes</span>
 							<div class="line"></div>
 							<div class="row">	
-								<div class="col-md-4 knob-holder">
+								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
 											class="knob" 
@@ -168,7 +168,7 @@
 									</div>
 									<div class="knob-text" id="power_1_knob_text">Power</div>
 								</div>
-								<div class="col-md-4 knob-holder">
+								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
 											class="knob" 
@@ -183,7 +183,7 @@
 									</div>
 									<div class="knob-text" id="rxGain_1_knob_text">Rx Gain</div>
 								</div>
-								<div class="col-md-4 knob-holder">
+								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
 											class="knob" 
@@ -200,7 +200,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-md-4 knob-holder">
+								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
 											class="knob" 
@@ -217,7 +217,7 @@
 									</div>
 									<div class="knob-text" id="normalFrequency_1_knob_text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
 								</div>
-								<div class="col-md-4 knob-holder">
+								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input 
 											class="knob" 
@@ -232,7 +232,7 @@
 									</div>
 									<div class="knob-text" id="sampleRate_1_knob_text">Sample Rate</div>
 								</div>
-								<div class="col-md-4 knob-holder">
+								<div class="col-md-4 knob-holder control">
 									<div class="knob-container">
 										<input
 											class="knob" 
@@ -254,7 +254,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-6" id="team_1">
 							<h3 class="text-center">Nodes</h3>
 							<div class="line"></div>
 							<table class="node_data">
@@ -324,7 +324,7 @@
 								</tr>
 							</table>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6" id="team_1">
 							<h3 class="text-center">Server Output</h3>
 							<div class="line"></div>
 							<p id="serverOutputGet" class="json">
@@ -347,7 +347,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
+						<button type="button" class="close" data-dismiss="modal">x</button>
 						<h5 class="modal-title">Help</h5>
 					</div>
 					<div class="modal-body">
@@ -525,6 +525,7 @@
 			</div>
 		</div>
 
+	<script src="src/js/plugins/onPage.js"></script>
 	<script src="src/js/modes/interference.js"></script>
 	<script src="src/js/API.js"></script>
 	<script src="src/js/Team.js"></script>

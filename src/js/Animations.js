@@ -74,7 +74,7 @@ function Animations(){
 		// console.log(this.m)
 		var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/dump";
+		// var url = "http://dwslgrid.ece.drexel.edu:5000/dump";
 		var a = this;
 		this.api.get(url, (function(data) {
 				$('#serverOutputGet').text(JSON.stringify(data));
@@ -199,6 +199,7 @@ function Animations(){
 			elem.clearRect(0, 0, w, h);
 			k1 = Object.keys(data);
 			for (let i_k = 0; i_k < k1.length; i_k++) {
+				if (document.body.className == 'hidden') { continue; }
 				i = k1[i_k]
 				k2 = Object.keys(data[i]);
 				for (let j_k = 0; j_k < k2.length; j_k++) {
@@ -224,7 +225,7 @@ function Animations(){
 									data[i][j][k].y = rects[data[i][j][k].to].y + 18;
 
 									// change from 1 to some fraction for needed nodes to capture
-									this.data.graphs.grid.fn.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
+									self.data.graphs.grid.fn.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
 								}
 
 

@@ -403,11 +403,11 @@ function Grid(){
 		$('#node_'+node).empty()
 		$('#node_'+node).append('<div id="contention1_'+node+'""></div><div id="contention2_'+node+'""></div>')
 		if ( left ) {
-			$('#contention1_'+node).css({'width': 300*widthPercentage.toFixed(2), 'background-color': color1, 'float': 'left'});
-			$('#contention2_'+node).css({'width': 300*(1-widthPercentage.toFixed(2)), 'background-color': color2, 'float': 'right'});
+			$('#contention1_'+node).css({'width': 100*widthPercentage.toFixed(2)+'%', 'background-color': color1, 'float': 'left'});
+			$('#contention2_'+node).css({'width': 100*(1-widthPercentage.toFixed(2))+'%', 'background-color': color2, 'float': 'right'});
 		} else {
-			$('#contention1_'+node).css({'width': 300*(1-alpha.toFixed(2)), 'background-color': color2, 'float': 'left'});
-			$('#contention2_'+node).css({'width': 300*widthPercentage.toFixed(2), 'background-color': color1, 'float': 'right'});
+			$('#contention1_'+node).css({'width': 100*(1-alpha.toFixed(2))+'%', 'background-color': color2, 'float': 'left'});
+			$('#contention2_'+node).css({'width': 100*widthPercentage.toFixed(2)+'%', 'background-color': color1, 'float': 'right'});
 		}
 	}
 

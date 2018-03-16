@@ -73,6 +73,7 @@ function Interference(){
 		source.onmessage = function (event) {
 			d = JSON.parse(event.data);
 			for (let i in d){
+				if (document.body.className == 'hidden') { continue; }
 				t = new Date(); t.setSeconds(t.getSeconds() - d[i].time); // check if interference hasn't elapsed
 				a = new Date(d[i].date); time = (a-t)/1000; // get time remaining
 				if (d[i].date >= t.toISOString()) {
