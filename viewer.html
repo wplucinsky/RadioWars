@@ -43,29 +43,7 @@
 	<script src="src/js/Grid.js"></script>
 	<script src="src/js/Animations.js"></script>
 	<script src="src/js/Interference.js"></script>
-	<script>
-		function setup() {
-			for (let team_id in data.teams) {
-				data.nodes = new Nodes();
-				data.teams[team_id].team = new Team(team_id);
-				data.teams[team_id].team.setInformation(data.teams[team_id].information)
-				data.teams[team_id].team.setRadio(data.teams[team_id].radio, true)
-			}
-
-			for (let graph_name in data.graphs) {
-				data.graphs[graph_name].fn = eval(graph_name);
-				data.graphs[graph_name].fn.setup(data.teams, graph_name) // add team number
-			}
-			for (let graph_name in data.graphs) {
-				data.graphs[graph_name].fn.start('interference')
-			}
-		}
-		setup()
-
-		function stop(){
-			this.data.graphs.grid.fn.stop()
-			this.data.graphs.countdownTimer.fn.stop()
-		}
-	</script>
+	
+	<script src="src/js/setup.js"></script>
 	</body>
 </html>

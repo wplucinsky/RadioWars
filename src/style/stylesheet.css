@@ -43,13 +43,15 @@
 .fullscreen{
 	width: 25px; float: right; cursor: pointer;
 }
-#waterfall{
+#waterfall {
+    width: 100%;
+    overflow: hidden;
+}
+
+#waterfall img {
 	width: 100%;
 }
 
-@media screen and (max-width:992px){
-	
-}
 .grid-holder{
 	height: 400px;
 }
