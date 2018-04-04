@@ -13,7 +13,6 @@ function Animations(){
 	this.previousData = null;
 	this.previousUntouchedData = null;
 	this.timer = null;
-	this.timerVal = null;
 	this.sending = false;
 	this.gridDirty = false;
 	this.grid = new Grid();
@@ -53,9 +52,42 @@ function Animations(){
 
 	this.apiCallGet = function(start){
 	/*
-		Calls the API get() to call the Flask webserver to retrieve node information 
-		from MongoDB then calls a variety of animation functions to display this data 
-		to the user.
+		If in test mode uses the API get(), if in production uses a SocketIO 
+		connection to call the Flask webserver to retrieve node information from 
+		MongoDB then calls processData() to trigger a variety of animation 
+		functions to display this data to the user.
+	*/
+		if ( start ){
+			this.grid.clearNodeGraph()
+			this.stopTimer();
+		}
+		
+		var self = this;
+		if (TEST_MODE) {
+			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
+
+			this.startTimer();
+			this.api.get(url, function(data) {
+				self.processData(data, start)
+			});
+		} else {
+			var self = this
+			socket.on('connect', function() {
+				console.log('socket is connected')
+				socket.on('gridNodes', function (msg) {
+					console.log('message received', msg)
+					self.processData(JSON.parse(msg.data))
+				});
+			});
+		}
+		this.m++;
+	}
+
+	this.processData = function(data, start){
+	/*
+		Takes the MongoDB data and triggers a variety of animation functions to display 
+		this data to the user.
 		Process
 			- check if data changed
 			- check if packets were received in the last 2 seconds
@@ -64,70 +96,54 @@ function Animations(){
 			- start animation
 			- update grid and radio information
 	*/
-		if ( start ){
-			this.grid.clearNodeGraph()
-			this.stopTimer();
-			this.startTimer();
-		}
-		this.timerVal = new Date();
-		// console.clear()
-		// console.log(this.m)
-		var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
-		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/dump";
-		var a = this;
-		this.api.get(url, (function(data) {
-				$('#serverOutputGet').text(JSON.stringify(data));
-				if ( data != null && data.length != 0 && self.data.graphs.animations.fn.getPreviousUntouchedData() != JSON.stringify(data)){
-					a.setPreviousUntouchedData(JSON.stringify(data));
-					var animationData = [],
-						k = 0,
-						count = a.getCount();
-					for ( let i in data ) {
-						animationData[i] = {}
-						old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
-						
-						for ( let j in data[i].packetsReceived) {
-							var from = data[i]._id.replace('node',''),
-								to = j.replace('node','');
-							if (a.checkPreviousData(i, j)) {
-								data[i].packetsReceived[j+'_altered'] = a.getNodeCount(data[i].packetsReceived[j]);
-								diff = a.getNodeCount(data[i].packetsReceived[j]);
-							} else {
-								// total received
-								data[i].packetsReceived[j+'_altered'] = a.previousData[i].packetsReceived[j+'_altered'];
-								data[i].packetsReceived[j+'_altered'] = data[i].packetsReceived[j+'_altered'] + a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
-								// difference
-								diff = a.getNodeCount(data[i].packetsReceived[j] - a.previousData[i].packetsReceived[j]);
-							}
-							if (old || to == 0){
-								continue;
-							}
-							animationData[i][k] = a.getAnimationData(a.nodes.getNodeLocation(from), a.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
-
-							offset = a.getOffset(i,k); // how many packets have been sent so far
-
-							if ( animationData[i][k][offset] != undefined ){
-								animationData[i][k][offset].wait = 0;
-								count = a.addToCount(diff)
-
-								// console.log(from, '->', to, ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
-							}
-							k++;
-						}
-						// update team info with radio info
-						a.setNodeColor(data)
+		$('#serverOutputGet').text(JSON.stringify(data));
+		if ( data != null && data.length != 0 && self.data.graphs.animations.fn.getPreviousUntouchedData() != JSON.stringify(data)){
+			this.setPreviousUntouchedData(JSON.stringify(data));
+			var animationData = [],
+				k = 0,
+				count = this.getCount();
+			for ( let i in data ) {
+				animationData[i] = {}
+				old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
+				
+				for ( let j in data[i].packetsReceived) {
+					var from = data[i]._id.replace('node',''),
+						to = j.replace('node','');
+					if (this.checkPreviousData(i, j)) {
+						data[i].packetsReceived[j+'_altered'] = this.getNodeCount(data[i].packetsReceived[j]);
+						diff = this.getNodeCount(data[i].packetsReceived[j]);
+					} else {
+						// total received
+						data[i].packetsReceived[j+'_altered'] = this.previousData[i].packetsReceived[j+'_altered'];
+						data[i].packetsReceived[j+'_altered'] = data[i].packetsReceived[j+'_altered'] + this.getNodeCount(data[i].packetsReceived[j] - this.previousData[i].packetsReceived[j]);
+						// difference
+						diff = this.getNodeCount(data[i].packetsReceived[j] - this.previousData[i].packetsReceived[j]);
 					}
-					if ( a.resetAnimData(animationData) ) {
-						a.setPreviousData(data);
-						if ( start || !self.data.graphs.animations.fn.sending ){
-							a.sendPacket();
-						}
-					} 
+					if (old || to == 0){
+						continue;
+					}
+					animationData[i][k] = this.getAnimationData(this.nodes.getNodeLocation(from), this.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
+
+					offset = this.getOffset(i,k); // how many packets have been sent so far
+
+					if ( animationData[i][k][offset] != undefined ){
+						animationData[i][k][offset].wait = 0;
+						count = this.addToCount(diff)
+
+						// console.log(from, '->', to, ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
+					}
+					k++;
 				}
-			})
-		);
-		this.m++;
+				// update team info with radio info
+				this.setNodeColor(data)
+			}
+			if ( this.resetAnimData(animationData) ) {
+				this.setPreviousData(data);
+				if ( start || !self.data.graphs.animations.fn.sending ){
+					this.sendPacket();
+				}
+			} 
+		}
 	}
 
 	this.getAnimationData = function(from, to, count, i, k, color) {

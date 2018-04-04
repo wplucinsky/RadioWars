@@ -1,3 +1,6 @@
+var TEST_MODE = window.location.hostname == "" ? true : false;
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
 window._id = api.getCookie('team_id');
 if (window._id == undefined){
 	if (window.location.hostname == "") { // local dev env
@@ -28,9 +31,10 @@ function setup() {
 		data.graphs[graph_name].fn.start('interference')
 	}
 }
-setup()
 
 function stop(){
 	this.data.graphs.grid.fn.stop()
 	this.data.graphs.countdownTimer.fn.stop()
 }
+
+setup()
