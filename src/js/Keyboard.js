@@ -52,6 +52,7 @@ function Keyboard(){
 	this.startEventListeners = function(){
 	/*
 		Starts the JS listeners for a variety of keyboard commands.
+		
 		#helpModal should be updated when additional commands are added.
 	*/
 		this.eventListeners = document.addEventListener('keydown', function(event){

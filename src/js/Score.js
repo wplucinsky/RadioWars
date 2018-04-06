@@ -11,15 +11,19 @@ function Score(){
 	}
 
 	this.subscribeToTeams = function(){
-		var url = "http://dwslgrid.ece.drexel.edu:5000/stream/teams";
-		source = new EventSource(url);
-		var self = this;
+		if (!TEST_MODE){
+			var self = this
+			socket.on('connect/teams', function() {
+				socket.on('teams', function (msg) {
+					self.processTeams(JSON.parse(msg.data))
+				});
+			});
+		}
+	}
 
-		source.onmessage = function (event) {
-			d = JSON.parse(event.data);
-			for (let i in d){
-				$('#'+d[i].teamname+'_score').text(d[i].score)
-			}
-		};
+	this.processTeams = function(data){
+		for (let i in data){
+			$('#'+data[i].teamname+'_score').text(data[i].score)
+		}
 	}
 }

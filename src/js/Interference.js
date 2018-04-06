@@ -66,36 +66,50 @@ function Interference(){
 	}	
 
 	this.subscribeToControl = function(){
-		var url = "http://dwslgrid.ece.drexel.edu:5000/stream/control";
-		source = new EventSource(url);
-		var self = this;
+	/*
+		If not in TEST_MODE a SocketIO connection is started to listen for the 
+		control event coming from MongoDB. processControl() is called to animate 
+		the data.
+	*/
+		if (!TEST_MODE){
+			var self = this
+			socket.on('connect/control', function() {
+				socket.on('control', function (msg) {
+					self.processControl(JSON.parse(msg.data))
+				});
+			});
+		}
+	}
 
-		source.onmessage = function (event) {
-			d = JSON.parse(event.data);
-			for (let i in d){
-				if (document.body.className == 'hidden') { continue; }
-				t = new Date(); t.setSeconds(t.getSeconds() - d[i].time); // check if interference hasn't elapsed
-				a = new Date(d[i].date); time = (a-t)/1000; // get time remaining
-				if (d[i].date >= t.toISOString()) {
-					n = self.nodes.getNodeLocation(d[i]._id.replace('node', ''))
-					if (d[i].type.toLowerCase() == 'jammer' ) {
-						// display interference
-						if (self.control[n] == undefined || self.control[n] == null) {
-							self.control[n] = {}
-							self.control[n].fn = new InterferenceAnimation();
-							self.control[n].fn.startInterference(n, time, self.rects)
-						}
+	this.processControl = function(data){
+	/*
+		This function takes the MongoDB data, checks if the user is currently 
+		viewing the screen and not on another tab/window then calls
+		startInterference() to display the pulsating interference ring.
+	*/
+		for (let i in data){
+			if (document.body.className == 'hidden') { continue; }
+			t = new Date(); t.setSeconds(t.getSeconds() - data[i].time); // check if interference hasn't elapsed
+			a = new Date(data[i].date); time = (a-t)/1000; // get time remaining
+			if (data[i].date >= t.toISOString()) {
+				n = self.nodes.getNodeLocation(data[i]._id.replace('node', ''))
+				if (data[i].type.toLowerCase() == 'jammer' ) {
+					// display interference
+					if (self.control[n] == undefined || self.control[n] == null) {
+						self.control[n] = {}
+						self.control[n].fn = new InterferenceAnimation();
+						self.control[n].fn.startInterference(n, time, self.rects)
 					}
 				}
 			}
-		};
+		}
 	}
 
 	this.scroll = function(){
 	/*
 		Displays a notification at the top of the screen to notify players
 		what node interference is running on. Could be changed to a more
-		ticker like scroll
+		ticker like scroll.
 
 		Future: https://maze.digital/webticker/
 	*/

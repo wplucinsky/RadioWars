@@ -53,7 +53,7 @@ function Animations(){
 	this.apiCallGet = function(start){
 	/*
 		If in test mode uses the API get(), if in production uses a SocketIO 
-		connection to call the Flask webserver to retrieve node information from 
+		connection. Both call the Flask webserver to retrieve node information from 
 		MongoDB then calls processData() to trigger a variety of animation 
 		functions to display this data to the user.
 	*/
@@ -66,14 +66,15 @@ function Animations(){
 		if (TEST_MODE) {
 			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
+			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
 
-			this.startTimer();
+			if ( start ){ this.startTimer(); }
 			this.api.get(url, function(data) {
 				self.processData(data, start)
 			});
 		} else {
 			var self = this
-			socket.on('connect', function() {
+			socket.on('connect/grid', function() {
 				console.log('socket is connected')
 				socket.on('gridNodes', function (msg) {
 					console.log('message received', msg)
@@ -381,7 +382,8 @@ function Animations(){
 
 	this.startTimer = function(){
 	/*
-		Calls the API get() if no call has happened in the last 1500ms.
+		Calls the API get() if no call has happened in the last 1500ms. Only
+		used when in TEST_MODE.
 	*/
 		this.timer = window.setInterval(function(){
 			self.data.graphs.animations.fn.apiCallGet();

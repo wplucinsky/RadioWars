@@ -1,9 +1,26 @@
+/*
+	!TEST_MODE
+		- create SocketIO connection
+		- check if user logged in (valid cookie), else redirect to login page
+	TEST_MODE
+		- assign user a random cookie
+
+	All
+		- read `var data` from js file in /src/js/modes/
+		- use window._id (cookie) to choose correct team in `var data`
+		- call setup of each graphs element in `var data`
+		- call start of each graphs element in `var data` with relevant game mode
+*/
+
+
 var TEST_MODE = window.location.hostname == "" ? true : false;
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+if (!TEST_MODE){
+	var socket = io.connect('http://' + document.domain + ':' + location.port);
+}
 
 window._id = api.getCookie('team_id');
 if (window._id == undefined){
-	if (window.location.hostname == "") { // local dev env
+	if (TEST_MODE) {
 		window._id = 3
 	} else {
 		window.location.href = '/'
