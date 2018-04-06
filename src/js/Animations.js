@@ -68,18 +68,15 @@ function Animations(){
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
 			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
 
-			if ( start ){ this.startTimer(); }
+			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
 				self.processData(data, start)
 			});
 		} else {
 			var self = this
-			socket.on('connect/grid', function() {
-				console.log('socket is connected')
-				socket.on('gridNodes', function (msg) {
-					console.log('message received', msg)
-					self.processData(JSON.parse(msg.data))
-				});
+			socket.on('gridNodes', function (msg) {
+				console.log('[grid]', msg)
+				self.processData(JSON.parse(msg.data))
 			});
 		}
 		this.m++;
@@ -385,6 +382,7 @@ function Animations(){
 		Calls the API get() if no call has happened in the last 1500ms. Only
 		used when in TEST_MODE.
 	*/
+
 		this.timer = window.setInterval(function(){
 			self.data.graphs.animations.fn.apiCallGet();
 		}, 1500);

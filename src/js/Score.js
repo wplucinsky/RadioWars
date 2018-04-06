@@ -13,10 +13,9 @@ function Score(){
 	this.subscribeToTeams = function(){
 		if (!TEST_MODE){
 			var self = this
-			socket.on('connect/teams', function() {
-				socket.on('teams', function (msg) {
-					self.processTeams(JSON.parse(msg.data))
-				});
+			socket.on('teams', function (msg) {
+				console.log('[teams]', msg)
+				self.processTeams(JSON.parse(msg.data))
 			});
 		}
 	}

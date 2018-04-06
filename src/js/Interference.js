@@ -73,10 +73,9 @@ function Interference(){
 	*/
 		if (!TEST_MODE){
 			var self = this
-			socket.on('connect/control', function() {
-				socket.on('control', function (msg) {
-					self.processControl(JSON.parse(msg.data))
-				});
+			socket.on('control', function (msg) {
+				console.log('[control]', msg)
+				self.processControl(JSON.parse(msg.data))
 			});
 		}
 	}

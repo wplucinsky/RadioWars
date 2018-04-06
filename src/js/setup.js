@@ -1,6 +1,7 @@
 /*
 	!TEST_MODE
 		- create SocketIO connection
+		- call SocketIO connect() fn to start data flow
 		- check if user logged in (valid cookie), else redirect to login page
 	TEST_MODE
 		- assign user a random cookie
@@ -16,6 +17,9 @@
 var TEST_MODE = window.location.hostname == "" ? true : false;
 if (!TEST_MODE){
 	var socket = io.connect('http://' + document.domain + ':' + location.port);
+	socket.on('connect', function() {
+		console.log('socket is connected')
+	});
 }
 
 window._id = api.getCookie('team_id');
