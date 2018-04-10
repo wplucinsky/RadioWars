@@ -396,3 +396,27 @@ button:disabled {
 	opacity: 1;
 	background: #CCC;
 }
+#colors {
+	width: 0px;
+	margin: auto;
+}
+.color-div {
+	width: 58px;
+    height: 23px;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 3px 0 0;
+    float: left;
+    background-color: transparent;
+}
+.color-div div{
+	width: 23px;
+    height: 23px;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 3px 0 0;
+    float: left;
+}
+.color-div span{
+	margin-left: 4px;
+}

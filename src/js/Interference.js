@@ -86,6 +86,7 @@ function Interference(){
 		viewing the screen and not on another tab/window then calls
 		startInterference() to display the pulsating interference ring.
 	*/
+		var self = this;
 		for (let i in data){
 			if (document.body.className == 'hidden') { continue; }
 			t = new Date(); t.setSeconds(t.getSeconds() - data[i].time); // check if interference hasn't elapsed
