@@ -22,6 +22,9 @@
         <div class="notifications">
             <span id="scroll">Test</span>
         </div>
+        <div id="sizeWarning" class="hidden">
+            <span>Display smaller than 768px. Bugs may occur.</span>
+        </div>
         <div id="loading-blocker">
             <div class="loading-img">
                 <img src="src/img/loading.gif" alt="loading">
@@ -94,6 +97,46 @@
 
                         <!-- <div class="container" style="width: 95%;"> -->
                         <div class="row team_x">
+                            <div class="col-md-8 flip">
+                                <div class="row">
+                                    <div class="col-md-12 grid-holder">
+                                        <!-- grid -->
+                                        <h4 class="text-center">Grid Nodes</h4>
+                                        <span id="gridConfirmation"></span>
+                                        <span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
+                                        <div id="gridLine" class="line"></div>
+                                        <div id="gridViewContainer">
+                                            <div class="canvas chart" id="gridView">
+                                                <canvas id="grid" width="600" height="550" style="padding-top: 50px;"></canvas>
+                                                <canvas id="animations" width="600" height="550" style="padding-top: 50px;"></canvas>
+                                                <canvas id="keyboard" width="600" height="550" style="padding-top: 50px;"></canvas>
+                                                <canvas id="interference" width="650" height="550" style="padding-top: 50px;"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="score_graph_container">
+                                    <div class="col-md-12 score-info team_x">
+                                        <!-- score -->
+                                        <h4 class="text-center">Score</span></h4>
+                                        <div class="line"></div>
+                                        <div id="missingscore">
+                                            <h5 class="text-center">Score Currently Unavailable</h5>
+                                        </div>
+                                        <div id="score" style="display: none; width: 100%; height: 170px;">
+                                            <div class="col-md-6">
+                                                <canvas id="scoring_total" width="300" height="100"></canvas>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <canvas id="scoring" width="300" height="100"></canvas>
+                                            </div>
+                                        </div>
+                                        <div id="colors" style="display: none;">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <div class="row" id="radio_controls_container">
                                     <div class="col-md-12 control-info">
@@ -311,46 +354,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <div class="row">
-                                    <div class="col-md-12 grid-holder">
-                                        <!-- grid -->
-                                        <h4 class="text-center">Grid Nodes</h4>
-                                        <span id="gridConfirmation"></span>
-                                        <span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
-                                        <div id="gridLine" class="line"></div>
-                                        <div id="gridViewContainer">
-                                            <div class="canvas chart" id="gridView">
-                                                <canvas id="grid" width="600" height="550" style="padding-top: 50px;"></canvas>
-                                                <canvas id="animations" width="600" height="550" style="padding-top: 50px;"></canvas>
-                                                <canvas id="keyboard" width="600" height="550" style="padding-top: 50px;"></canvas>
-                                                <canvas id="interference" width="650" height="550" style="padding-top: 50px;"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" id="score_graph_container">
-                                    <div class="col-md-12 score-info team_x">
-                                        <!-- score -->
-                                        <h4 class="text-center">Score</span></h4>
-                                        <div class="line"></div>
-                                        <div id="missingscore">
-                                            <h5 class="text-center">Score Currently Unavailable</h5>
-                                        </div>
-                                        <div id="score" style="display: none; width: 100%; height: 170px;">
-                                            <div class="col-md-6">
-                                                <canvas id="scoring_total" width="300" height="100"></canvas>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <canvas id="scoring" width="300" height="100"></canvas>
-                                            </div>
-                                        </div>
-                                        <div id="colors" style="display: none;">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </nav>
