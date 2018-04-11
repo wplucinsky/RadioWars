@@ -5,6 +5,7 @@ function Interference(){
 	this.teams = null;
 	this.elem = null;
 	this.rects = null;
+	this.radio = {};
 
 	// specific
 	this.grid = new Grid();
@@ -20,6 +21,7 @@ function Interference(){
 	
 	this.start = function(mode){
 		this.rects = this.grid.getRectangles();
+		this.setKnobs();
 		this.subscribeToControl();
 		this.scroll()
 	}
@@ -27,6 +29,30 @@ function Interference(){
 	this.setElem = function(id){
 		this.canvas = document.getElementById(id);
 		this.elem = this.canvas.getContext('2d');
+	}
+
+	this.setKnobs = function(){
+	/*
+		Set's the interference knobs to their default value.
+	*/
+		for ( let i in data.teams[window._id].radio ){
+			this.radio[i] = {}
+			this.radio[i].value = data.teams[window._id].radio[i].value
+			if ( data.teams[window._id].radio[i].type !== undefined ){
+				this.radio[i].type = data.teams[window._id].radio[i].type
+			} else {
+				this.radio[i].type = 'text';
+			}
+
+			if (this.radio[i].type == 'text') {
+				$('#interference_'+i+'_'+window._id).text(this.radio[i].value)
+				$('#interference_'+i+'_'+window._id+'_knob').val(this.radio[i].value).trigger('change');
+			}
+			if (this.radio[i].type == 'imgSrc') {
+				$('#interference_'+i+'_'+window._id).attr('src', 'src/img/Pattern'+this.radio[i].value+'.png')
+			}
+		}
+		$('#interferenceControlsConfirmChanges').css('display', 'none')
 	}
 
 	this.startInterference = function(node){
@@ -38,23 +64,9 @@ function Interference(){
 		var time = 6;
 		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
-		this.api.post(url, {
-			'_id': 		 'node'+node,
-			'type': 	 'jammer',
-			'completed': String(false),
-			'date': 	 new Date().toISOString(),
-			'time': 	 String(time),
-			'direction': String(1),
-			'rxGain': 	 $('#rxGain_1_knob').val(),
-			'txGain': 	 $('#txGain_1_knob').val(),
-			'power': 	 $('#power_interference_knob').val(),
-			'freq': 	 $('#frequency_interference_knob').val(),
-			'nodeToCapture': String(node)
-		}, (function(data){
-			// add check for valid data
-			$('#serverOutputPost').text(JSON.stringify(data));
-			
-			// won't be necessary b/c of subscribeToControl()
+		$('#interferenceControlsConfirmChanges').css('display', 'none')
+
+		if (TEST_MODE) {
 			var i = self.data.graphs.interference.fn;
 			n = i.nodes.getNodeLocation(node)
 			if (i.control[n] == undefined || i.control[n] == null) {
@@ -62,7 +74,33 @@ function Interference(){
 				i.control[n].fn = new InterferenceAnimation();
 				i.control[n].fn.startInterference(n, time, i.rects)
 			}
-		}));
+		} else {
+			this.api.post(url, {
+				'_id': 		 'node'+node,
+				'type': 	 'jammer',
+				'completed': String(false),
+				'date': 	 new Date().toISOString(),
+				'time': 	 String(time),
+				'direction': String(1),
+				'rxGain': 	 $('#interference_radio_rxGain_1_knob').val(),
+				'txGain': 	 $('#interference_radio_txGain_1_knob').val(),
+				'power': 	 $('#interference_radio_power_interference_knob').val(),
+				'freq': 	 $('#interference_radio_frequency_interference_knob').val(),
+				'nodeToCapture': String(node)
+			}, (function(data){
+				// add check for valid data
+				$('#serverOutputPost').text(JSON.stringify(data));
+				
+				// won't be necessary b/c of subscribeToControl()
+				var i = self.data.graphs.interference.fn;
+				n = i.nodes.getNodeLocation(node)
+				if (i.control[n] == undefined || i.control[n] == null) {
+					i.control[n] = {}
+					i.control[n].fn = new InterferenceAnimation();
+					i.control[n].fn.startInterference(n, time, i.rects)
+				}
+			}));
+		}
 	}	
 
 	this.subscribeToControl = function(){
@@ -149,7 +187,7 @@ function InterferenceAnimation() {
 		id = 'interference_'+node;
 		classes = self.data.mode == 'viewer' ? 'interference-canvas viewer' : 'interference-canvas';
 		if (!$('#'+id).length){
-			$('#gridView').append('<canvas id="'+id+'" class="'+classes+'" width="450" height="450" style="padding-top: 50px;"></canvas>')
+			$('#gridView').append('<canvas id="'+id+'" class="'+classes+'" width="650" height="650" style="padding-top: 50px;"></canvas>')
 		}
 		this.canvas = document.getElementById(id);
 		this.elem = this.canvas.getContext('2d');

@@ -6,9 +6,15 @@ function Team(team_id){
 
 	$('.team_x').attr('id', 'team_'+window._id)
 	for ( let x in data.teams[window._id].radio) {
+		// radio
 		$('.'+x+'_x').attr('id', x+'_'+window._id)
 		$('.'+x+'_x_knob').attr('id', x+'_'+window._id+'_knob')
 		$('.'+x+'_x_knob_text').attr('id', x+'_'+window._id+'_knob_text')
+
+		// interference
+		$('.interference_'+x+'_x').attr('id', 'interference_'+x+'_'+window._id)
+		$('.interference_'+x+'_x_knob').attr('id', 'interference_'+x+'_'+window._id+'_knob')
+		$('.interference_'+x+'_x_knob_text').attr('id', 'interference_'+x+'_'+window._id+'_knob_text')
 	}
 
 	this.setInformation = function(data){
@@ -59,7 +65,7 @@ function Team(team_id){
 				$('#'+i+'_'+this.id).attr('src', 'src/img/Pattern'+this.radio[i].value+'.png')
 			}
 		}
-		$('#controlsConfirmChanges').css('display', 'none')
+		$('#radioControlsConfirmChanges').css('display', 'none')
 	}
 
 	this.getRadio = function(){

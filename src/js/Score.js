@@ -147,7 +147,7 @@ function Score(){
 					fill: false,
 				});
 
-				$('#colors').css('width', parseInt($('#colors').css('width'), 10) + 58 + 'px')
+				$('#colors').css('width', parseInt($('#colors').css('width'), 10) + 62 + 'px')
 				$('#colors').append("<div class='color-div'><div style='background-color: "+nm+"'></div><span id='"+nm+"_score'>0</span></div>")
 			}
 		}

@@ -51,14 +51,15 @@ function Grid(){
 		Generate the cooridinates and size for the grid nodes.
 	*/
 		this.rects = []
+		s = 1.5;
 		c = 0;
 		for (let i=0; i<=2; i++){
 			for (let j=0; j<=3; j++){
 				if ( i == 1) {
 					if ( j == 3 ){
 						var rect = {}
-						rect.x = (75 * i) + (i * 5) + 80;
-						rect.y = (65 * j) + (j * 5);
+						rect.x = ((75*s) * i) + (i * (5*s)) + (80*s);
+						rect.y = ((65*s) * j) + (j * (5*s));
 						rect.width = 35;
 						rect.height = 35;
 						rect.alpha = 0;
@@ -68,8 +69,8 @@ function Grid(){
 					}
 				} else {
 					var rect = {}
-					rect.x = (75 * i) + (i * 5) + 80;
-					rect.y = (75 * j) + (j * 5) + 5;
+					rect.x = ((75*s) * i) + (i * (5*s)) + (80*s);
+					rect.y = ((75*s) * j) + (j * (5*s)) + 5;
 					rect.width = 35;
 					rect.height = 35;
 					rect.alpha = 0;
@@ -81,10 +82,10 @@ function Grid(){
 		}
 		for (let i=0; i<=1; i++){
 			for (let j=0; j<=2; j++){
-				k = (i == 0) ? 5 : 235;
+				k = (i == 0) ? (5*s) : (78*s)*3;
 				var rect = {}
-				rect.x = (75 * i) + (i * 5) + k;
-				rect.y = (140 * j) + (j * 5) + 5;
+				rect.x = ((75*s) * i) + (i * (5*s)) + k;
+				rect.y = ((140*s) * j) + (j * (5*s)) + 5;
 				rect.width = 35;
 				rect.height = 35;
 				rect.alpha = 0;

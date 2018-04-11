@@ -287,8 +287,13 @@ function Keyboard(){
 
 	$(".knob").knob({
 	    release : function (value) {
-	    	$('#controlsConfirmChanges').css('display', 'block')
-	        // console.log(this.$.attr('id'),':',value);
+	    	// console.log(this.$.attr('id'),':',value);
+
+	    	if (this.$.attr('id').indexOf('interference_') !== -1 ) {
+	    		$('#interferenceControlsConfirmChanges').css('display', 'block')
+	    	} else {
+	    		$('#radioControlsConfirmChanges').css('display', 'block')
+	    	}
 	    }
 	});
 }

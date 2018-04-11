@@ -1,3 +1,6 @@
+.hidden {
+	display: none;
+}
 .nav-header{
 	padding: 10px 5px; cursor: pointer;
 }
@@ -53,11 +56,18 @@
 }
 
 .grid-holder{
-	height: 400px;
+	height: 550px;
+}
+#gridViewContainer {
+	width: 100%;
+	height: 100%;
 }
 #gridView{
-	/*margin-left: 25px;*/
+	width: 512px;
+	height: 100%;
+	margin: auto;
 }
+
 #charts{
 	margin-bottom: 100px;
 }
@@ -250,7 +260,7 @@ button:disabled {
 	color: green;
 	display: none;
 }
-#gridConfirmChanges, #controlsConfirmChanges{
+#gridConfirmChanges, #radioControlsConfirmChanges, #interferenceControlsConfirmChanges{
 	position: absolute;
 	top: 43px;
 	font-size: 9px;

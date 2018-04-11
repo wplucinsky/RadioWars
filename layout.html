@@ -29,178 +29,261 @@
 			<div class="background"></div>
 		</div>
 		<div class="container" style="width: 95%;">
-			<div class="row top-pad">
+			<div class="row team_x">
 				<div class="col-md-4">
-					<h3 class="text-center">Game Controls</h3>
-					<div id="gridLine" class="line"></div>
-					<div id="">
-						<h6 class="text-center">Interference Controls</h6>
-						<div class="knob-holder" style="">
-							<div class="knob-container">
-								<input 
-									class="knob" 
-									data-width="75" 
-									data-height="85" 
-									data-cursor="true" 
-									data-fgcolor="#222222" 
-									data-thickness=".3" 
-									id="power_interference_knob" 
-									value="25"
-									data-min="1"
-									data-max="100"
-									data-step="1">
+					<div class="row">
+						<div class="col-md-12 control-info">
+							<!-- radio controls -->
+							<h4 class="text-center">Radio Controls</span></h4>
+							<span id="radioControlsConfirmChanges">press ENTER to confirm changes</span>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob power_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-min="0"
+											data-max="1000"
+											data-step="50">
+									</div>
+									<div class="knob-text power_x_knob_text">Power</div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob rxGain_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-step="1">
+									</div>
+									<div class="knob-text rxGain_x_knob_text">Rx Gain</div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob txGain_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-step="1">
+									</div>
+									<div class="knob-text txGain_x_knob_text">Tx Gain</div>
+								</div>
 							</div>
-							<div class="knob-text">Power</div>
+							<div class="row">
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob normalFrequency_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-min="0"
+											data-max="1000"
+											data-step="10">
+									</div>
+									<div class="knob-text normalFrequency_x_knob_text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob sampleRate_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-step="1">
+									</div>
+									<div class="knob-text sampleRate_x_knob_text">Sample Rate</div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input
+											class="knob frameSize_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											data-min="128"
+											data-max="2048"
+											data-step="64"
+											value="0"
+											stopper="true">
+									</div>
+									<div class="knob-text frameSize_x_knob_text">Frame Size</div>
+								</div>
+							</div>
 						</div>
-						<div class="knob-holder" style="">
-							<div class="knob-container">
-								<input 
-									class="knob" 
-									data-width="75" 
-									data-height="85" 
-									data-cursor="true" 
-									data-fgcolor="#222222" 
-									data-thickness=".3" 
-									id="frequency_interference_knob" 
-									value="1360"
-									data-min="1360"
-									data-max="1460"
-									data-step="10">
+					</div>
+					<div class="row">
+						<div class="col-md-12 control-info">
+							<!-- radio controls -->
+							<h4 class="text-center">Interference Controls</span></h4>
+							<span id="radioControlsConfirmChanges">press ENTER to confirm changes</span>
+							<div class="line"></div>
+							<div class="row">	
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob power_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-min="0"
+											data-max="1000"
+											data-step="50">
+									</div>
+									<div class="knob-text power_x_knob_text">Power</div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob rxGain_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-step="1">
+									</div>
+									<div class="knob-text rxGain_x_knob_text">Rx Gain</div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob txGain_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-step="1">
+									</div>
+									<div class="knob-text txGain_x_knob_text">Tx Gain</div>
+								</div>
 							</div>
-							<div class="knob-text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
+							<div class="row">
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob normalFrequency_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-min="0"
+											data-max="1000"
+											data-step="10">
+									</div>
+									<div class="knob-text normalFrequency_x_knob_text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input 
+											class="knob sampleRate_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											value="0"
+											data-step="1">
+									</div>
+									<div class="knob-text sampleRate_x_knob_text">Sample Rate</div>
+								</div>
+								<div class="col-md-4 knob-holder control">
+									<div class="knob-container">
+										<input
+											class="knob frameSize_x_knob" 
+											data-width="75" 
+											data-height="85" 
+											data-cursor="true" 
+											data-fgcolor="#222222" 
+											data-thickness=".3" 
+											data-min="128"
+											data-max="2048"
+											data-step="64"
+											value="0"
+											stopper="true">
+									</div>
+									<div class="knob-text frameSize_x_knob_text">Frame Size</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 team_x">
+							<h4 class="text-center">Server Output</h4>
+							<div class="line"></div>
+							<p id="serverOutputGet" class="json">
+								
+							</p>
+							<div class="line"></div>
+							<p id="serverOutputPost" class="json">
+								
+							</p>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 grid-holder">
-					<!-- grid -->
-					<h3 class="text-center">Grid Nodes</h3>
-					<span id="gridConfirmation"></span>
-					<span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
-					<div id="gridLine" class="line"></div>
-					<div id="gridViewContainer">
-						<div class="canvas chart" id="gridView">
-							<canvas id="grid" width="400" height="450" style="padding-top: 50px;"></canvas>
-							<canvas id="animations" width="400" height="450" style="padding-top: 50px;"></canvas>
-							<canvas id="keyboard" width="400" height="450" style="padding-top: 50px;"></canvas>
-							<canvas id="interference" width="450" height="450" style="padding-top: 50px;"></canvas>
+				<div class="col-md-8 grid-holder">
+					<div class="row grid-holder">
+						<!-- grid -->
+						<h4 class="text-center">Grid Nodes</h4>
+						<span id="gridConfirmation"></span>
+						<span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
+						<div id="gridLine" class="line"></div>
+						<div id="gridViewContainer">
+							<div class="canvas chart" id="gridView">
+								<canvas id="grid" width="600" height="550" style="padding-top: 50px;"></canvas>
+								<canvas id="animations" width="600" height="550" style="padding-top: 50px;"></canvas>
+								<canvas id="keyboard" width="600" height="550" style="padding-top: 50px;"></canvas>
+								<canvas id="interference" width="650" height="550" style="padding-top: 50px;"></canvas>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-4 node-holder">
 					<div class="row score-info team_x">
 						<!-- score -->
-						<h3 class="text-center">Score</span></h3>
+						<h4 class="text-center">Score</span></h4>
 						<div class="line"></div>
 						<div id="missingscore">
 							<h5 class="text-center">Score Currently Unavailable</h5>
 						</div>
-						<div id="score" style="display: none;">
-							<canvas id="scoring_total" width="300" height="100"></canvas>
-							<canvas id="scoring" width="300" height="100"></canvas>
+						<div id="score" style="display: none; width: 100%; height: 170px;">
+							<div class="col-md-6">
+								<canvas id="scoring_total" width="300" height="100"></canvas>
+							</div>
+							<div class="col-md-6">
+								<canvas id="scoring" width="300" height="100"></canvas>
+							</div>
 						</div>
 						<div id="colors" style="display: none;">
 
-						</div>
-					</div>
-					<div class="row control-info team_x">
-						<!-- radio controls -->
-						<h3 class="text-center">Radio Controls</span></h3>
-						<span id="controlsConfirmChanges">press ENTER to confirm changes</span>
-						<div class="line"></div>
-						<div class="row">	
-							<div class="col-md-4 knob-holder control">
-								<div class="knob-container">
-									<input 
-										class="knob power_x_knob" 
-										data-width="75" 
-										data-height="85" 
-										data-cursor="true" 
-										data-fgcolor="#222222" 
-										data-thickness=".3" 
-										value="0"
-										data-min="0"
-										data-max="1000"
-										data-step="50">
-								</div>
-								<div class="knob-text power_x_knob_text">Power</div>
-							</div>
-							<div class="col-md-4 knob-holder control">
-								<div class="knob-container">
-									<input 
-										class="knob rxGain_x_knob" 
-										data-width="75" 
-										data-height="85" 
-										data-cursor="true" 
-										data-fgcolor="#222222" 
-										data-thickness=".3" 
-										value="0"
-										data-step="1">
-								</div>
-								<div class="knob-text rxGain_x_knob_text">Rx Gain</div>
-							</div>
-							<div class="col-md-4 knob-holder control">
-								<div class="knob-container">
-									<input 
-										class="knob txGain_x_knob" 
-										data-width="75" 
-										data-height="85" 
-										data-cursor="true" 
-										data-fgcolor="#222222" 
-										data-thickness=".3" 
-										value="0"
-										data-step="1">
-								</div>
-								<div class="knob-text txGain_x_knob_text">Tx Gain</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4 knob-holder control">
-								<div class="knob-container">
-									<input 
-										class="knob normalFrequency_x_knob" 
-										data-width="75" 
-										data-height="85" 
-										data-cursor="true" 
-										data-fgcolor="#222222" 
-										data-thickness=".3" 
-										value="0"
-										data-min="0"
-										data-max="1000"
-										data-step="10">
-								</div>
-								<div class="knob-text normalFrequency_x_knob_text">Frequency<img id="tenToSix" src="src/img/tenToSix.png"></div>
-							</div>
-							<div class="col-md-4 knob-holder control">
-								<div class="knob-container">
-									<input 
-										class="knob sampleRate_x_knob" 
-										data-width="75" 
-										data-height="85" 
-										data-cursor="true" 
-										data-fgcolor="#222222" 
-										data-thickness=".3" 
-										value="0"
-										data-step="1">
-								</div>
-								<div class="knob-text sampleRate_x_knob_text">Sample Rate</div>
-							</div>
-							<div class="col-md-4 knob-holder control">
-								<div class="knob-container">
-									<input
-										class="knob frameSize_x_knob" 
-										data-width="75" 
-										data-height="85" 
-										data-cursor="true" 
-										data-fgcolor="#222222" 
-										data-thickness=".3" 
-										data-min="128"
-										data-max="2048"
-										data-step="64"
-										value="0"
-										stopper="true">
-								</div>
-								<div class="knob-text frameSize_x_knob_text">Frame Size</div>
-							</div>
 						</div>
 					</div>
 				</div>
