@@ -121,8 +121,8 @@ function Score(){
 
 	this.processTeams = function(data){
 	/*
-		Takes the updated score data, append to Chart data object if necessary,
-		then updates the Chart data objects.
+		Takes the updated score data, appends to Chart data object, then updates
+		the Chart data objects help in the state.
 	*/
 		$('#missingscore').css('display','none');
 		$('#score').css('display','block');

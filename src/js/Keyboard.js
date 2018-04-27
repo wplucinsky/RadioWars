@@ -25,6 +25,7 @@ function Keyboard(){
 	this.setup = function(teams, id){
 		this.teams = teams
 		this.setElem(id)
+		console.log(id)
 		this.team = window._id;
 		this.currNodeReal = self.data.teams[window._id].radio._id.value;
 		this.currNode = this.nodes.getNodeLocation(self.data.teams[window._id].radio._id.value);

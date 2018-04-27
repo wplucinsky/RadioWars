@@ -26,8 +26,19 @@ function debouncer( func , timeout ) {
    }
 }
 
+function setViewerCanvasScale() {
+	s = ($(window).height() - 40)/550;
+	p = ($(window).height() - 40)/500^2 * 50.0 + 50;
+	$('.viewer > #grid').css({'transform': 'scale('+s+','+s+')', 'padding-top': p+'px'});
+	$('.viewer > #animations').css({'transform': 'scale('+s+','+s+')', 'padding-top': p+'px'});
+	$('.viewer > #keyboard').css({'transform': 'scale('+s+','+s+')', 'padding-top': p+'px'});
+	$('.viewer > #interference').css({'transform': 'scale('+s+','+s+')', 'padding-top': p+'px'});
+}
+
 // warning for small displays on resize
-$(window).resize(debouncer(function(e){
+$(window).resize(
+	debouncer(function(e){	
+	setViewerCanvasScale()
     if ($(window).width() < 768) {
 		$('#sizeWarning').toggleClass('hidden');
 		setTimeout(function(){
@@ -36,6 +47,8 @@ $(window).resize(debouncer(function(e){
 	}
 }));
 
+
+
 // warning for small displays on load
 if ($(window).width() < 768) {
 	$('#sizeWarning').toggleClass('hidden');
@@ -43,3 +56,5 @@ if ($(window).width() < 768) {
 		$('#sizeWarning').toggleClass('hidden');
 	}, 2000)
 }
+
+setViewerCanvasScale()

@@ -13,7 +13,7 @@
 		- call start of each graphs element in `var data` with relevant game mode
 */
 
-
+var api = new API();
 var TEST_MODE = window.location.hostname == "" ? true : false;
 if (!TEST_MODE){
 	var socket = io.connect('http://' + document.domain + ':' + location.port);
