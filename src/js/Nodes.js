@@ -1,22 +1,16 @@
 function Nodes(){
 /*
-	Old Javascript Formation
-		15 	0	5	10	18
-			1	6	11
-		16	2	7	12 	19
-		 	3 	8 	13
-		17	4	9	14	20
 	Javascript Formation
-		9 	0		5	12
-			1		6
-		10	2	4	7 	13
-		 	3 	 	8
-		11				14 	
+		11 	0		7	14
+			1	4	8
+		12	2	5	9 	15
+		 	3 	6	10
+		13				16 	
 
 	Actual Formation
 		10 	18		12	16
-			13		8
-		14	9		6 	17
+			13	4	8
+		14	9	3	6 	17
 		 	11 	50 	7
 		5				15 	
 */
@@ -39,70 +33,58 @@ function Nodes(){
 	this.getSurroundingNodes = function(node_id) {
 	/*
 		Gets the nodes around the inputted node in the form
-			[ U, UL, L, DL, D, DR, R, UP]
+			[ U, UL, L, DL, D, DR, R]
 	*/
-		if (node_id == 9) {	// yellow start
-			return [ -1, -1, -1, -1, 10, -1, 0, -1];
+		if (node_id == 11) {	// yellow start
+			return [ -1, -1, -1, -1, 12, 1, 0];
 		} 
-		if ( node_id == 10) {	// red start
-			return [ 9, -1, -1, -1, 11, -1, 2, -1];
+		if ( node_id == 12) {	// red start
+			return [ 11, 1, -1, -1, 13, -1, 2];
 		}
-		if ( node_id == 11) {	// green start
-			return [ 10, -1, -1, -1, -1, -1, 3, -1];
+		if ( node_id == 13) {	// green start
+			return [ 12, -1, -1, -1, -1, -1, 3];
 		}
-		if ( node_id == 12) {	// blue start
-			return [ -1, -1, 5, -1, 13, -1, -1, -1];
+		if ( node_id == 14) {	// blue start
+			return [ -1, -1, 7, 8, 15, -1, -1];
 		}
-		if ( node_id == 13) {	// purple start
-			return [ 12, -1, 7, -1, 14, -1, -1, -1];
+		if ( node_id == 15) {	// purple start
+			return [ 14, -1, 9, -1, 16, -1, -1];
 		}
-		if ( node_id == 14) {	// black start
-			return [ 13, -1, 8, -1, -1, -1, -1, -1];
+		if ( node_id == 16) {	// black start
+			return [ 15, -1, 10, -1, -1, -1, -1];
 		}
 		if ( node_id == 0 ){
-			return [ -1, -1, 9, -1, 1, 6, 5, -1];
+			return [ -1, -1, 11, -1, 1, 5, 7];
 		}
 		if ( node_id == 1 ){
-			return [ 0, -1, -1, -1, 2, 4, 6, 0];
+			return [ 0, 11, -1, 12, 2, 5, 4];
 		}
 		if ( node_id == 2 ){
-			return [ 1, -1, 10, -1, 3, 8, 4, 1];
+			return [ 1, -1, 12, -1, 3, 6, 5];
 		} 
 		if ( node_id == 3 ){
-			return [ 2, -1, 11, -1, -1, 8, 8, 2];
+			return [ 2, 12, 13, -1, -1, -1, 6];
 		} 
 		if ( node_id == 4 ){
-			return [ -1, 2, 2, 3, -1, 8, 7, -1];
+			return [ -1, 0, 1, 2, 5, 9, 8];
 		}
 		if ( node_id == 5 ){
-			return [ -1, -1, 0, 1, 6, 11, 12, -1];
+			return [ 4, 1, 2, 3, 6, 10, 9];
 		} 
 		if ( node_id == 6 ){
-			return [ 5, 0, 1, 2, 7, 12, -1, 5];
+			return [ 5, 2, 3, -1, -1, -1, 10];
 		}
 		if ( node_id == 7 ){
-			return [ 6, 1, 4, 3, 8, 13, 13, 6];
+			return [ -1, -1, 0, 4, 8, -1, 14];
 		}
 		if ( node_id == 8 ){
-			return [ 7, 2, 3, 4, -1, 14, 14, 7];
+			return [ 7, -1, 4, 5, 9, 15, -1];
 		} 
 		if ( node_id == 9 ){
-			return [ 8, 3, 4, -1, -1, -1, 14, 8];
+			return [ 8, 4, 5, 6, 10, -1, 15];
 		} 
 		if ( node_id == 10 ){
-			return [ -1, -1, 5, 6, 11, -1, 18, -1];
-		}
-		if ( node_id == 11 ){
-			return [ 10, 5, 6, 7, 12, -1, -1, 10];
-		}
-		if ( node_id == 12 ){
-			return [ 11, 6, 7, 8, 13, -1, 19, 11];
-		} 
-		if ( node_id == 13 ){
-			return [ 12, 7, 8, 9, 14, -1, -1, 12];
-		} 
-		if ( node_id == 14 ){
-			return [ 13, 8, 9, -1, -1, -1, 20, 13];
+			return [ 9, 5, 6, -1, -1, -1, 16];
 		}
 	}
 
@@ -110,15 +92,6 @@ function Nodes(){
 	/*
 		Goes from real grid node layout to Javascript grid layout.
 	*/
-		if ( node_id == 10 ){
-			return 9;
-		}
-		if ( node_id == 14 ){
-			return 10;
-		}
-		if ( node_id == 5 ){
-			return 11;
-		}
 		if ( node_id == 18 ){
 			return 0;
 		}
@@ -131,29 +104,44 @@ function Nodes(){
 		if ( node_id == 11 ){
 			return 3;
 		}
-		if ( node_id == 50 ){
+		if ( node_id == 4 ){
 			return 4;
 		}
-		if ( node_id == 12 ){
+		if ( node_id == 3 ){
 			return 5;
 		}
-		if ( node_id == 8 ){
+		if ( node_id == 50 ){
 			return 6;
 		}
-		if ( node_id == 6 ){
+		if ( node_id == 12 ){
 			return 7;
 		}
-		if ( node_id == 7 ){
+		if ( node_id == 8 ){
 			return 8;
 		}
-		if ( node_id == 16 ){
+		if ( node_id == 6 ){
+			return 9;
+		}
+		if ( node_id == 7 ){
+			return 10;
+		}
+		if ( node_id == 10 ){
+			return 11;
+		}
+		if ( node_id == 14 ){
 			return 12;
 		}
-		if ( node_id == 17 ){
+		if ( node_id == 5 ){
 			return 13;
 		}
-		if ( node_id == 15 ){
+		if ( node_id == 16 ){
 			return 14;
+		}
+		if ( node_id == 17 ){
+			return 15;
+		}
+		if ( node_id == 15 ){
+			return 16;
 		}
 	}
 
@@ -161,15 +149,6 @@ function Nodes(){
 	/*
 		Goes from Javascript node layout to real grid node layout.
 	*/
-		if ( node_id == 9 ){
-			return 10;
-		}
-		if ( node_id == 10 ){
-			return 14;
-		}
-		if ( node_id == 11 ){
-			return 5;
-		}
 		if ( node_id == 0 ){
 			return 18;
 		}
@@ -183,29 +162,76 @@ function Nodes(){
 			return 11;
 		}
 		if ( node_id == 4 ){
-			return 50;
+			return 4;
 		}
 		if ( node_id == 5 ){
-			return 12;
+			return 3;
 		}
 		if ( node_id == 6 ){
-			return 8;
+			return 50;
 		}
 		if ( node_id == 7 ){
-			return 6;
+			return 12;
 		}
 		if ( node_id == 8 ){
+			return 8;
+		}
+		if ( node_id == 9 ){
+			return 6;
+		}
+		if ( node_id == 10 ){
 			return 7;
 		}
+		if ( node_id == 11 ){
+			return 10;
+		}
 		if ( node_id == 12 ){
-			return 16;
+			return 14;
 		}
 		if ( node_id == 13 ){
-			return 17;
+			return 5;
 		}
 		if ( node_id == 14 ){
+			return 16;
+		}
+		if ( node_id == 15 ){
+			return 17;
+		}
+		if ( node_id == 16 ){
 			return 15;
 		}
+	}
+
+	this.getNodeColor = function(teamNode){
+		if(teamNode == 6) {
+			return this.colors.yellow
+		}
+		if(teamNode == 7) {
+			return this.colors.green
+		}
+		if(teamNode == 8) {
+			return this.colors.red
+		}
+		if(teamNode == 9) {
+			return this.colors.yellow
+		}
+		if(teamNode == 10) {
+			return this.colors.red
+		}
+		if(teamNode == 11) {
+			return this.colors.green
+		}
+		if(teamNode == 12) {
+			return this.colors.blue
+		}
+		if(teamNode == 13) {
+			return this.colors.purple
+		}
+		if(teamNode == 14) {
+			return this.colors.black
+		}
+
+		return this.colors.orange;
 	}
 
 	this.getNodeDirection = function(new_node, last_node){

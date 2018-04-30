@@ -1,55 +1,33 @@
-// var animations = new Animations();
-function Animations(){
-	// standard
-	this.canvas = null;
-	this.elem = null;
-	this.teams = null;
+class AnimationsCanvas extends React.Component {
+	constructor(props) {
+		super(props);
 
-	// specific
-	this.rects = [];
-	this.animData = null;
-	this.animCount = 0;
-	this.previousData = null;
-	this.previousUntouchedData = null;
-	this.timer = null;
-	this.sending = false;
-	this.gridDirty = false;
-	this.grid = new Grid();
-	this.api = new API();
-	this.nodes = new Nodes();
-	this.colors = {
-		red: 'rgb(255, 99, 132)',
-		orange: 'rgb(255, 159, 64)',
-		yellow: 'rgb(255, 205, 86)',
-		green: 'rgb(75, 192, 192)',
-		blue: 'rgb(54, 162, 235)',
-		purple: 'rgb(153, 102, 255)',
-		grey: 'rgb(201, 203, 207)',
-		black: 'rgb(52, 73, 94)'
+		this.grid = new Grid();
+		this.nodes = new Nodes();
+		this.api = new API();
+		this.currNode = null;
+		this.m = 0;
+		
+		
+		this.control = [];
+		this.apiCallGet = this.apiCallGet.bind(this);
 	}
 
-	// testing
-	this.m = 1;
-
-	this.setup = function(teams, id){
-		this.teams = teams
-		this.setElem(id)
-		this.grid.setup(teams,'grid');
-	}
-
-	this.start = function(mode){
-		this.rects = this.grid.getRectangles();
-		if (mode == 'interference') {
-			this.apiCallGet(true);
-		}
-	}
-
-	this.setElem = function(id){
-		this.canvas = document.getElementById(id);
+	componentDidMount(){
+		// setup
+		this.canvas = document.getElementById('animations');
 		this.elem = this.canvas.getContext('2d');
+		this.currNode = this.nodes.getNodeLocation(window._node);
+		this.grid.setup([], 'grid', undefined);
+		this.rects = this.grid.getRectangles();
+		this.apiCallGet(true);
 	}
 
-	this.apiCallGet = function(start){
+	componentWillReceiveProps(nextProps){
+		this.props = nextProps;
+	}
+
+	apiCallGet(start){
 	/*
 		If in test mode uses the API get(), if in production uses a SocketIO 
 		connection. Both call the Flask webserver to retrieve node information from 
@@ -58,30 +36,32 @@ function Animations(){
 	*/
 		if ( start ){
 			this.grid.clearNodeGraph()
-			this.stopTimer();
+			window.clearInterval(this.timer)
 		}
 		
 		var self = this;
 		if (TEST_MODE) {
-			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
+			var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
 
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
+				self.props.returnData(data);
 				self.processData(data, start)
 			});
 		} else {
 			var self = this
 			socket.on('gridNodes', function (msg) {
 				console.log('[grid]', msg)
+				self.props.returnData(JSON.parse(msg.data));
 				self.processData(JSON.parse(msg.data))
 			});
 		}
 		this.m++;
 	}
 
-	this.processData = function(data, start){
+	processData(data, start){
 	/*
 		Takes the MongoDB data and triggers a variety of animation functions to display 
 		this data to the user.
@@ -93,35 +73,36 @@ function Animations(){
 			- start animation
 			- update grid and radio information
 	*/
+		var self = this;
 		$('#serverOutputGet').text(JSON.stringify(data));
-		if ( data != null && data.length != 0 && self.data.graphs.animations.fn.getPreviousUntouchedData() != JSON.stringify(data)){
+		if ( data != null && data.length != 0 && self.getPreviousUntouchedData() != JSON.stringify(data)){
 			this.setPreviousUntouchedData(JSON.stringify(data));
 			var animationData = [],
 				k = 0,
 				count = this.getCount();
 			for ( let i in data ) {
 				animationData[i] = {}
-				old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
+				let old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
 				
 				for ( let j in data[i].packetsReceived) {
 					var from = data[i]._id.replace('node',''),
 						to = j.replace('node','');
 					if (this.checkPreviousData(i, j)) {
 						data[i].packetsReceived[j+'_altered'] = this.getNodeCount(data[i].packetsReceived[j]);
-						diff = this.getNodeCount(data[i].packetsReceived[j]);
+						var diff = this.getNodeCount(data[i].packetsReceived[j]);
 					} else {
 						// total received
 						data[i].packetsReceived[j+'_altered'] = this.previousData[i].packetsReceived[j+'_altered'];
 						data[i].packetsReceived[j+'_altered'] = data[i].packetsReceived[j+'_altered'] + this.getNodeCount(data[i].packetsReceived[j] - this.previousData[i].packetsReceived[j]);
 						// difference
-						diff = this.getNodeCount(data[i].packetsReceived[j] - this.previousData[i].packetsReceived[j]);
+						var diff = this.getNodeCount(data[i].packetsReceived[j] - this.previousData[i].packetsReceived[j]);
 					}
 					if (old || to == 0){
 						continue;
 					}
 					animationData[i][k] = this.getAnimationData(this.nodes.getNodeLocation(from), this.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
-					offset = this.getOffset(i,k); // how many packets have been sent so far
+					var offset = this.getOffset(i,k); // how many packets have been sent so far
 
 					if ( animationData[i][k][offset] != undefined ){
 						animationData[i][k][offset].wait = 0;
@@ -136,14 +117,14 @@ function Animations(){
 			}
 			if ( this.resetAnimData(animationData) ) {
 				this.setPreviousData(data);
-				if ( start || !self.data.graphs.animations.fn.sending ){
+				if ( start || !self.sending ){
 					this.sendPacket();
 				}
 			} 
 		}
 	}
 
-	this.getAnimationData = function(from, to, count, i, k, color) {
+	getAnimationData(from, to, count, i, k, color) {
 	/*
 		Adds x number of copies of node[from] to node[to] where
 		x in the total count of new packets received. In the form
@@ -158,9 +139,9 @@ function Animations(){
 		with each object containing the animation data necessary to make
 		sendPacket() work. It appends it to the global getData() and returns.
 	*/
-		animData = this.getData();
-		if ( animData === null || animData[i] === undefined  || animData[i][k] === undefined || animData[i][k] === undefined ) { 
-			offset = 0;
+		var animData = this.getData();
+		if ( animData == null || animData == undefined || animData[i] == undefined  || animData[i][k] == undefined ) { 
+			var offset = 0;
 			animData = {};
 		} else {
 			animData = animData[i][k];
@@ -190,36 +171,39 @@ function Animations(){
 		return animData;
 	}
 
-	this.sendPacket = function() {
+	sendPacket() {
 	/*
 		Called once at the beginning and continues to run on global data while 
 		the packets sent count is less than the total packets sent count. The 
 		next packet is sent when the preceding packet is a fourth of the way to 
 		it's destination.
 	*/
-		var elem 	= this.elem;
+		var elem 	= this.elem,
 			rects 	= this.rects,
 			w 		= this.canvas.width,
 			h 		= this.canvas.height,
 			stop 	= 0;
 
+		var self = this;
 		animate();
-		self.data.graphs.animations.fn.sending = false;
+		
+		
+		self.sending = false;
 		function animate(){
-			var data = self.data.graphs.animations.fn.getData(),
-				count = self.data.graphs.animations.fn.getCount();
-			self.data.graphs.animations.fn.sending = true;
+			var data = self.getData(),
+				count = self.getCount();
+			self.sending = true;
 			elem.clearRect(0, 0, w, h);
-			k1 = Object.keys(data);
+			var k1 = Object.keys(data);
 			for (let i_k = 0; i_k < k1.length; i_k++) {
 				if (document.body.className == 'hidden') { continue; }
-				i = k1[i_k]
-				k2 = Object.keys(data[i]);
+				var i = k1[i_k],
+					k2 = Object.keys(data[i]);
 				for (let j_k = 0; j_k < k2.length; j_k++) {
-					j = k2[j_k]
-					k3 = Object.keys(data[i][j]);
+					var j = k2[j_k],
+						k3 = Object.keys(data[i][j]);
 					for (let k_k = 0; k_k < k3.length; k_k++) {
-						k = k3[k_k];
+						var k = k3[k_k];
 						if (data[i][j][k].wait == 0) {
 							elem.beginPath();
 							elem.arc(data[i][j][k].x, data[i][j][k].y, 10, 0, 2 * Math.PI);
@@ -238,7 +222,7 @@ function Animations(){
 									data[i][j][k].y = rects[data[i][j][k].to].y + 18;
 
 									// change from 1 to some fraction for needed nodes to capture
-									self.data.graphs.grid.fn.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
+									self.grid.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
 								}
 
 
@@ -261,7 +245,7 @@ function Animations(){
 				}
 			}
 
-			self.data.graphs.animations.fn.setData(data);
+			self.setData(data);
 			if (stop < count) {
 				requestAnimationFrame(animate);
 			} else if (stop == count) {
@@ -269,49 +253,17 @@ function Animations(){
 				requestAnimationFrame(animate);
 			} else {
 				// every packets has finished sending
-				self.data.graphs.animations.fn.sending = false;
-				self.data.graphs.animations.fn.resetCount();
+				self.sending = false;
+				self.resetCount();
 			}
 		}
 	}
 
-	this.getNodeColor = function(teamNode){
-		if(teamNode == 6) {
-			return this.colors.yellow
-		}
-		if(teamNode == 7) {
-			return this.colors.green
-		}
-		if(teamNode == 8) {
-			return this.colors.red
-		}
-		if(teamNode == 9) {
-			return this.colors.yellow
-		}
-		if(teamNode == 10) {
-			return this.colors.red
-		}
-		if(teamNode == 11) {
-			return this.colors.green
-		}
-		if(teamNode == 12) {
-			return this.colors.blue
-		}
-		if(teamNode == 13) {
-			return this.colors.purple
-		}
-		if(teamNode == 14) {
-			return this.colors.black
-		}
-
-		return this.colors.orange;
-	}
-
-	this.getNodeCount = function(dif){
+	getNodeCount(dif){
 		return Math.min(dif, 8)
 	}
 
-	this.getDataDifference = function(from, to, count){
+	getDataDifference(from, to, count){
 	/*
 		This gets the packet count difference from the previous server
 		data to the new server data. 
@@ -332,13 +284,13 @@ function Animations(){
 		}
 	}
 
-	this.getOffset = function(i, k) {
+	getOffset(i, k) {
 	/*
 		This gets the spot to edit/insert the new packets in the global 
 		data object, can be though of as a difference function.
 	*/
-		animData = this.getData();
-		if ( animData === null || animData[i] === undefined || animData[i][k] == undefined ){
+		var animData = this.getData();
+		if ( animData == null || animData == undefined || animData[i] == undefined || animData[i][k] == undefined ){
 			return 0;
 		} else {
 			animData = animData[i][k];
@@ -352,7 +304,7 @@ function Animations(){
 		return Object.keys(animData).length
 	}
 
-	this.setNodeColor = function(data){
+	setNodeColor(data){
 	/*
 		Filters the incoming data and the previous data to determine 
 		whether a node needs to be colored. The grid on() method is called
@@ -376,34 +328,27 @@ function Animations(){
 		}
 	}
 
-	this.startTimer = function(){
+	startTimer(){
 	/*
 		Calls the API get() if no call has happened in the last 1500ms. Only
 		used when in TEST_MODE.
 	*/
-
+		var self = this;
 		this.timer = window.setInterval(function(){
-			self.data.graphs.animations.fn.apiCallGet();
+			self.apiCallGet();
 		}, 1500);
 	}
 
-	this.stopTimer = function(){
-	/*
-		Stops the API get() timer.
-	*/
-		window.clearInterval(this.timer)
-	}
-
-	this.resetAnimData = function(animData){
+	resetAnimData(animData){
 	/*
 		Removes entries in animation data that have already animated so the 
 		data structure doesn't get too large.
 	*/
-		k1 = Object.keys(animData);
+		var k1 = Object.keys(animData);
 		for (let i = 0; i < k1.length; i++) {
-			k2 = Object.keys(animData[k1[i]]);
+			var k2 = Object.keys(animData[k1[i]]);
 			for (let j = 0; j < k2.length; j++) {
-				k3 = Object.keys(animData[k1[i]][k2[j]]);
+				var k3 = Object.keys(animData[k1[i]][k2[j]]);
 				for (let k = 0; k < k3.length; k++) {
 					if (animData[k1[i]][k2[j]][k3[k]].stop == 1) {
 						delete animData[k1[i]][k2[j]][k3[k]];
@@ -415,7 +360,7 @@ function Animations(){
 		return true;
 	}
 
-	this.checkPreviousData = function(i, j){
+	checkPreviousData(i, j){
 	/*
 		TRUE: previous data is not set
 		FALSE: previous data was set
@@ -426,44 +371,50 @@ function Animations(){
 				|| this.previousData[i].packetsReceived[j+'_altered'] == undefined;
 	}
 
-	this.getData = function(){
+	getData(){
 		return this.animData;
 	}
 
-	this.setData = function(data){
+	setData(data){
 		this.animData = data;
 	}
 
-	this.getCount = function(){
+	getCount(){
 		return this.animCount;
 	}
 
-	this.resetCount = function(){
+	resetCount(){
 		this.animCount = 0;
 	}
 
-	this.setCount = function(data){
+	setCount(data){
 		this.animCount = data;
 	}
 
-	this.addToCount = function(amt){
+	addToCount(amt){
 		this.animCount = this.animCount + amt;
 		return this.animCount;
 	}
 
-	this.setPreviousData = function(data){
+	setPreviousData(data){
 		this.previousData = data;
 	}
 
-	this.getPreviousData = function(){
+	getPreviousData(){
 		return this.previousData;
 	}
 
-	this.setPreviousUntouchedData = function(data){
+	setPreviousUntouchedData(data){
 		this.previousUntouchedData = data;
 	}
 
-	this.getPreviousUntouchedData = function(){
+	getPreviousUntouchedData(){
 		return this.previousUntouchedData;
+	}
+	
+	render() { 
+		return (
+			<canvas id="animations" width="600" height="550"></canvas>
+		);
 	}
 }

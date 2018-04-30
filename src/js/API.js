@@ -1,5 +1,3 @@
-var api = new API();
-
 function API(){
 	this.get = function(url, callbackFunc) {
 		$.ajax({

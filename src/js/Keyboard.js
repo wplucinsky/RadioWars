@@ -25,6 +25,7 @@ function Keyboard(){
 	this.setup = function(teams, id){
 		this.teams = teams
 		this.setElem(id)
+		console.log(id)
 		this.team = window._id;
 		this.currNodeReal = self.data.teams[window._id].radio._id.value;
 		this.currNode = this.nodes.getNodeLocation(self.data.teams[window._id].radio._id.value);
@@ -287,8 +288,13 @@ function Keyboard(){
 
 	$(".knob").knob({
 	    release : function (value) {
-	    	$('#controlsConfirmChanges').css('display', 'block')
-	        // console.log(this.$.attr('id'),':',value);
+	    	// console.log(this.$.attr('id'),':',value);
+
+	    	if (this.$.attr('id').indexOf('interference_') !== -1 ) {
+	    		$('#interferenceControlsConfirmChanges').css('display', 'block')
+	    	} else {
+	    		$('#radioControlsConfirmChanges').css('display', 'block')
+	    	}
 	    }
 	});
 }

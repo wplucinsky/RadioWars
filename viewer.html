@@ -21,22 +21,24 @@
 		<div class="container" style="width: 95%;">
 			<div class="row top-pad">
 				<div class="col-md-12 grid-holder">
-					<h1 class="text-center">Radio Wars</h1>
-					<span id="gridConfirmation"></span>
-					<div id="gridLine" class="line"></div>
-					<div id="gridViewContainer">
-						<div class="canvas chart viewerContainer" id="gridView">
-							<canvas id="grid" class="viewer" width="400" height="450" style="padding-top: 50px;"></canvas>
-							<canvas id="animations" class="viewer" width="400" height="450" style="padding-top: 50px;"></canvas>
-							<canvas id="keyboard" class="viewer" width="400" height="450" style="padding-top: 50px;"></canvas>
-							<canvas id="interference" class="viewer" width="450" height="450" style="padding-top: 50px;"></canvas>
-						</div>
-					</div>
-				</div>
+                    <h4 class="text-center">Grid Nodes</h4>
+                    <span id="gridConfirmation"></span>
+                    <span id="gridConfirmChanges">use WASD and ENTER keys to capture a node</span>
+                    <div id="gridLine" class="line"></div>
+                    <div id="gridViewContainer">
+                        <div class="canvas chart viewer" id="gridView">
+                            <canvas id="grid" width="600" height="550" style="padding-top: 50px;"></canvas>
+                            <canvas id="animations" width="600" height="550" style="padding-top: 50px;"></canvas>
+                            <canvas id="keyboard" width="600" height="550" style="padding-top: 50px;"></canvas>
+                            <canvas id="interference" width="650" height="550" style="padding-top: 50px;"></canvas>
+                        </div>
+                    </div>
+                </div>
 			</div>
 		</div>
 
 	<script src="src/js/plugins/onPage.js"></script>
+	<script src="src/js/plugins/menu.js"></script>
 	<script src="src/js/modes/viewer.js"></script>
 	<script src="src/js/API.js"></script>
 	<script src="src/js/Team.js"></script>

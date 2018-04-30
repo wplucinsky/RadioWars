@@ -121,8 +121,8 @@ function Score(){
 
 	this.processTeams = function(data){
 	/*
-		Takes the updated score data, append to Chart data object if necessary,
-		then updates the Chart data objects.
+		Takes the updated score data, appends to Chart data object, then updates
+		the Chart data objects help in the state.
 	*/
 		$('#missingscore').css('display','none');
 		$('#score').css('display','block');
@@ -147,7 +147,7 @@ function Score(){
 					fill: false,
 				});
 
-				$('#colors').css('width', parseInt($('#colors').css('width'), 10) + 58 + 'px')
+				$('#colors').css('width', parseInt($('#colors').css('width'), 10) + 62 + 'px')
 				$('#colors').append("<div class='color-div'><div style='background-color: "+nm+"'></div><span id='"+nm+"_score'>0</span></div>")
 			}
 		}

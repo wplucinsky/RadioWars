@@ -1,3 +1,6 @@
+.hidden {
+	display: none;
+}
 .nav-header{
 	padding: 10px 5px; cursor: pointer;
 }
@@ -25,17 +28,8 @@
 .chart{
 	width: 400px; margin: auto;
 }
-.viewer{
-	width: 50%;
-}
-.viewerContainer{
-	width: calc(50% - 50px);
-}
-.viewerContainer > canvas {
-	padding-top: 100px !important;
-}
 .logo{
-	width: 100px; display: block; margin: auto;
+	width: 100px; height: 100px; display: block; margin: auto;
 }
 .no-select{
 	-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; -o-user-select: none; user-select: none; 
@@ -53,11 +47,18 @@
 }
 
 .grid-holder{
-	height: 400px;
+	height: 550px;
+}
+#gridViewContainer {
+	width: 100%;
+	height: 100%;
 }
 #gridView{
-	/*margin-left: 25px;*/
+	width: 512px;
+	height: 100%;
+	margin: auto;
 }
+
 #charts{
 	margin-bottom: 100px;
 }
@@ -154,7 +155,11 @@ button:disabled {
 	cursor: not-allowed;
 	color: lightgray;
 }
-#grid, #animations, #keyboard, #interference{
+.viewer > #grid, .viewer > #animations, .viewer > #keyboard, .viewer > #interference {
+	/*transform: scale(2,2);*/
+	/*padding-top: 250px !important;*/
+}
+#grid, #animations, #keyboard, #interference, #clickCanvas{
 	position: absolute;
 	top: 20px;
 }
@@ -250,7 +255,7 @@ button:disabled {
 	color: green;
 	display: none;
 }
-#gridConfirmChanges, #controlsConfirmChanges{
+#gridConfirmChanges, #radioControlsConfirmChanges, #interferenceControlsConfirmChanges{
 	position: absolute;
 	top: 43px;
 	font-size: 9px;
@@ -277,9 +282,20 @@ button:disabled {
 	background-color: #e74c3c;
 	display: inline-block;
 	line-height: 35px;
-	z-index: 5;
+	z-index: 10;
 	display: none;
 	overflow: hidden;
+}
+#sizeWarning{
+	width: 100%;
+	height: 35px;
+	position: absolute;
+	background-color: #fdcb6e;
+	display: inline-block;
+	line-height: 35px;
+	z-index: 5;
+	overflow: hidden;
+	text-align: center;
 }
 .title{
 	width: 100%;
@@ -322,7 +338,13 @@ button:disabled {
 	padding: 2px;
 }
 
-@media (max-width: 1240px){
+@media (max-width: 1130px){
+	.flip {
+		float: right;
+	}
+	.col-md-8 {
+		width: 100%;
+	}
 	.col-md-4 {
 		width: 100%;
 	}
@@ -349,17 +371,16 @@ button:disabled {
 	}
 	.control-info {
 		width: 65%;
+		float: inherit;
+		margin: auto;
 	}
 	.control.knob-holder{
 		width: 33% !important;
 	}
 }
 @media (max-width: 991px){
-	.team_data {
-		width: 100%;
-	}
-	.node-info {
-		width: 100%;
+	#score {
+		height: 410px !important;
 	}
 	.control-info {
 		width: 100%;
@@ -367,6 +388,14 @@ button:disabled {
 	.control.knob-holder{
 		width: 33% !important;
 		float: left;
+	}
+}
+@media (max-width: 768px){
+	#gridView, #grid, #animations, #keyboard, #clickCanvas {
+		width: 100%;
+	}
+	#interference, .interference-canvas {
+		width: calc(100% + 80px)
 	}
 }
 
@@ -396,9 +425,13 @@ button:disabled {
 	opacity: 1;
 	background: #CCC;
 }
+.flip {
+	float: right;
+}
 #colors {
 	width: 0px;
 	margin: auto;
+	height: 30px;
 }
 .color-div {
 	width: 58px;
@@ -419,4 +452,61 @@ button:disabled {
 }
 .color-div span{
 	margin-left: 4px;
+}
+.pointer {
+	cursor: pointer;
+}
+#score {
+	display: none; width: 100%; height: 170px;
+}
+#colors {
+	display: none;
+}
+#react_grid #grid, 
+#react_grid #animations,
+#react_grid #clickCanvas,
+#react_grid #keyboard,
+#react_grid #interference {
+	padding-top: 50px;
+}
+.control_btn {
+	width: 70px;
+	height: 70px;
+}
+
+.control_btn_text {
+	color: white;
+	font-size: 10px;
+	position: relative;
+	padding-top: 28px;
+	text-align: center;
+	top: 0%;
+	margin-top: 0px;
+}
+.dpad-absolute-container{
+	width: 100%;
+	height: 175px;
+	float: left;
+}
+.dpad-arrow {
+	width: 62%;
+    height: 175px;
+}
+.dpad-absolute {
+	height: 100%;
+}
+.dpad-absolute .dpad-arrow-active {
+	background-size: 175px auto;
+}
+.dpad-div {
+	float: left; width: 60%;
+}
+.btn-div {
+	float: right; width: 40%;
+}
+.pattern {
+	width: 50%; margin: auto;
+}
+.pattern img {
+	width: 100%;
 }
