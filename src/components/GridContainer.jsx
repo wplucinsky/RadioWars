@@ -9,7 +9,7 @@ class GridContainer extends React.Component {
 			currNode: window._node,
 			draw: {
 				color: 'black',
-				id: 0,
+				id: window._node,
 				options: null,
 			}
 		}
@@ -21,13 +21,15 @@ class GridContainer extends React.Component {
 	}
 
 	componentDidMount(){
-		this.setState({
-			draw: { 
-				id: this.state.currNode, 
-				color: 'black', 
-				options: null
-			}
-		});
+		if (this.props.draw == 1){
+			this.setState({
+				draw: { 
+					id: this.state.currNode, 
+					color: 'black', 
+					options: null
+				}
+			});
+		}
 
 		this.grid.setup([], 'grid', undefined)
 		this.rectangles = this.grid.getRectangles();
@@ -86,7 +88,6 @@ class GridContainer extends React.Component {
 		else if ( ctrl.capture.id == 3 && this.props.keyboard.select == 1) {
 			$('#gridConfirmChanges').css('display', 'none');
 			data.draw = { id: ctrl.capture.node, color: 'black', options: {capture: 1, node1: ctrl.capture.node, node2: ctrl.currNode}};
-			
 			data.currNode = ctrl.capture.node;
 			ctrl.capture.id = 0;
 			ctrl.capture.node = -1;
@@ -173,8 +174,6 @@ class GridContainer extends React.Component {
 			if (y > element.y && y < element.y + element.height && x > element.x && x < element.x + element.width) {
 				element.index = index;
 				return element;
-			} else {
-				console.log('no elem')
 			}
 		})[0];
 
@@ -218,8 +217,8 @@ class GridContainer extends React.Component {
 						<div className="canvas chart" id="gridView">
 							<GridCanvas currNode={this.state.currNode} draw={this.state.draw} capture={this.state.capture} />
 							<AnimationsCanvas currNode={this.state.currNode} draw={this.state.draw} returnData={this.props.returnData} />
-							<KeyboardCanvas currNode={this.state.currNode} draw={this.state.draw} />
-							<InterferenceCanvas currNode={this.state.currNode} draw={this.state.draw} update={this.props.update} />
+							<KeyboardCanvas currNode={this.state.currNode} draw={this.state.draw} keyboardUpdate={this.props.keyboardUpdate} />
+							<InterferenceCanvas currNode={this.state.currNode} draw={this.state.draw} keyboardUpdate={this.props.keyboardUpdate} />
 							<ClickCanvas />
 						</div>
 					</div>

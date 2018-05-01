@@ -3,7 +3,7 @@ Drexel Wireless System Labs ([DWSL](https://wireless.ece.drexel.edu//))
 
 Radio Wars: Competition Based Education for Wireless Network Security Using Software Defined Radios
 
-Authors: Will Plucinsky, Logan Henderson, Ryan Pepito with guidance from Dr. Kapil Dandekar, Dr. Geoffrey Mainland, and Dr. Stefan Rank
+By Will Plucinsky, Logan Henderson, Ryan Pepito with guidance from Dr. Kapil Dandekar, Dr. Geoffrey Mainland, and Dr. Stefan Rank
 
 The goal of this repository is provide a user interface to the students taking part in the Radio Wars Senior Design sequence. It allows users to control all the software defined radios within the Drexel Wireless Systems Lab using simple knobs and switches, and to see the effects of those changes in each game mode. Game modes include:
 

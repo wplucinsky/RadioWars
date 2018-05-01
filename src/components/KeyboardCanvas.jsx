@@ -1,7 +1,7 @@
 class KeyboardCanvas extends React.Component {
 	constructor(props) {
 		super(props);
-		this.currNode = 0;
+		this.currNode = window._node;
 
 		this.eventListeners = null;
 		this.grid = new Grid();
@@ -22,12 +22,13 @@ class KeyboardCanvas extends React.Component {
 		this.grid.setup([], 'keyboard', false);
 
 		this.rects = this.grid.getRectangles();
-		// this.draw(this.currNode, 'black')
+
+		this.draw(this.props.draw.id, this.props.draw.color, this.props.draw.options)
 	}
 
 	componentWillReceiveProps(nextProps){
 		this.props = nextProps;
-		if (this.props.draw != null) {
+		if (this.props.draw != null && this.props.keyboardUpdate) {
 			this.draw(this.props.draw.id, this.props.draw.color, this.props.draw.options)
 		}
 	}
@@ -106,12 +107,13 @@ class KeyboardCanvas extends React.Component {
 			$('#gridConfirmation').css('display', 'block');
 			setTimeout((function(){$('#gridConfirmation').text(''); $('#gridConfirmation').css('display', 'none');}), 2000);
 			
+			this.draw(this.props.draw.id, 'black', {})
 			return true;
 			// add check for valid data
 			// $('#serverOutputPost').text(JSON.stringify(data));
 			// i.scroll(node, time)
 			// i.startTimer(i.nodes.getNodeLocation(node), time)
-		}));
+		}));	
 	}
 
 	updateRadio(node){

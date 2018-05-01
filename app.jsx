@@ -163,14 +163,27 @@ const comment = {
 	],
 };
 
-ReactDOM.render(
-	<App 
-		data={comment} 
-	/>,
-	document.getElementById('root')
-);
-$('#loading-blocker').toggleClass('hidden');
-$('.line').css('background-color', 'rgb(54, 162, 235)');
+if(document.getElementById('root') != null){
+	ReactDOM.render(
+		<App 
+			data={comment} 
+		/>,
+		document.getElementById('root')
+	);
+	$('#loading-blocker').toggleClass('hidden');
+	$('.line').css('background-color', 'rgb(54, 162, 235)');
+} else if(document.getElementById('viewer') != null){
+	ReactDOM.render(
+		<App 
+			data={comment}
+			mode='viewer'
+		/>,
+		document.getElementById('viewer')
+	);
+	$('#loading-blocker').toggleClass('hidden');
+	$('.line').css('background-color', 'rgb(54, 162, 235)');
+}
+
 
 // collapsing sidebar
 $('#sidebarCollapse').on('click', function () {

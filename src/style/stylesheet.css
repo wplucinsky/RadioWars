@@ -155,10 +155,6 @@ button:disabled {
 	cursor: not-allowed;
 	color: lightgray;
 }
-.viewer > #grid, .viewer > #animations, .viewer > #keyboard, .viewer > #interference {
-	/*transform: scale(2,2);*/
-	/*padding-top: 250px !important;*/
-}
 #grid, #animations, #keyboard, #interference, #clickCanvas{
 	position: absolute;
 	top: 20px;
@@ -509,4 +505,7 @@ button:disabled {
 }
 .pattern img {
 	width: 100%;
+}
+.viewer-grid{
+	padding-bottom: 25px;
 }

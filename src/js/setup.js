@@ -14,7 +14,7 @@
 */
 
 var api = new API();
-var TEST_MODE = window.location.hostname == "" ? true : false;
+var TEST_MODE = (window.location.hostname == "" || window.location.hostname == "localhost") ? true : false;
 if (!TEST_MODE){
 	var socket = io.connect('http://' + document.domain + ':' + location.port);
 	socket.on('connect', function() {

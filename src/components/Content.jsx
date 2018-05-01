@@ -159,7 +159,8 @@ class Content extends React.Component {
 						<div className="row team_x">
 							<div className="col-md-8 flip">
 								<GridContainer 
-									returnData={this.returnData} 
+									returnData={this.returnData}
+									draw="1"
 
 									returnKeyboard={this.returnKeyboard}
 									keyboard={this.state.keyboard} 

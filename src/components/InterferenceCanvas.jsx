@@ -32,7 +32,7 @@ class InterferenceCanvas extends React.Component {
 		this.props = nextProps;
 
 		// yellow node outline is drawn in the KeyboardCanvas component
-		if (this.props.update && this.props.draw != undefined && this.props.draw.options != undefined) {
+		if (this.props.keyboardUpdate && this.props.draw != undefined && this.props.draw.options != undefined) {
 			var o = processOptions(this.props.draw.options);
 			if (o.interference == 1) {
 				this.startInterference(this.nodes.getNodeLocationReal(this.props.currNode))

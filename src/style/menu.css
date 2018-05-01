@@ -90,6 +90,10 @@ a, a:hover, a:focus {
     font-size: 1.1em;
     display: block;
 }
+#sidebar ul li .active:hover {
+    color: #7386D5;
+    background: #cccccc;
+}
 #sidebar ul li a:hover {
     color: #7386D5;
     background: #fff;

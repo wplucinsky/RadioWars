@@ -41,9 +41,9 @@ class AnimationsCanvas extends React.Component {
 		
 		var self = this;
 		if (TEST_MODE) {
-			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-			var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
+			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
 
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
