@@ -3,6 +3,8 @@ Drexel Wireless System Labs ([DWSL](https://wireless.ece.drexel.edu//))
 
 Radio Wars: Competition Based Education for Wireless Network Security Using Software Defined Radios
 
+Authors: Will Plucinsky, Logan Henderson, Ryan Pepito with guidance from Dr. Kapil Dandekar, Dr. Geoffrey Mainland, and Dr. Stefan Rank
+
 The goal of this repository is provide a user interface to the students taking part in the Radio Wars Senior Design sequence. It allows users to control all the software defined radios within the Drexel Wireless Systems Lab using simple knobs and switches, and to see the effects of those changes in each game mode. Game modes include:
 
 1) Interference and Power Management
@@ -54,7 +56,7 @@ The goal of this repository is provide a user interface to the students taking p
 - pass the necessary data in from GridContainer, or back to GridContainer by creating a function in GridContainer and passing that function to the component
 - once the component is saved, it should be included in `index.html` and/or `viewer.html`
 
-### React Layout
+## React Layout
 ![ReactLayout](https://github.com/wplucinsky/RadioWars/blob/master/src/img/ReactLayout.png)
 
 > update `/src/img/ReactLayout.xcf` when new components are added
