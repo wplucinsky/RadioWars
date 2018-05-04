@@ -28,7 +28,8 @@ class KeyboardCanvas extends React.Component {
 
 	componentWillReceiveProps(nextProps){
 		this.props = nextProps;
-		if (this.props.draw != null && this.props.keyboardUpdate) {
+		
+		if (this.props.draw != null && (this.props.keyboardUpdate || this.props.clickUpdate)) {
 			this.draw(this.props.draw.id, this.props.draw.color, this.props.draw.options)
 		}
 	}
