@@ -23,12 +23,14 @@ class KeyboardCanvas extends React.Component {
 
 		this.rects = this.grid.getRectangles();
 
-		this.draw(this.props.draw.id, this.props.draw.color, this.props.draw.options)
+		if (this.props.viewer == undefined || this.props.viewer == 0) {
+			this.draw(this.props.draw.id, this.props.draw.color, this.props.draw.options)
+		}
 	}
 
 	componentWillReceiveProps(nextProps){
 		this.props = nextProps;
-		
+
 		if (this.props.draw != null && (this.props.keyboardUpdate || this.props.clickUpdate)) {
 			this.draw(this.props.draw.id, this.props.draw.color, this.props.draw.options)
 		}

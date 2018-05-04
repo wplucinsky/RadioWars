@@ -135,7 +135,11 @@ class Content extends React.Component {
 		this.click = click;
 	}
 
-	render() { 
+	render() {
+		// conditional rendering for different game modes
+		const interference = this.props.data.interference_controls === undefined ? ( null ) : ( <Controls type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} /> );
+		
+
 		return (
 			<div id="content">
 				<nav className="navbar navbar-default">
@@ -160,7 +164,7 @@ class Content extends React.Component {
 							<div className="col-md-8 flip">
 								<GridContainer 
 									returnData={this.returnData}
-									draw="1"
+									viewer="0"
 
 									returnKeyboard={this.returnKeyboard}
 									keyboard={this.state.keyboard} 
@@ -176,7 +180,7 @@ class Content extends React.Component {
 							<div className="col-md-4">
 								<Controls type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />
 								<Antenna direction="omni" data={this.state.data} />
-								<Controls type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} />
+								{interference}
 								<ServerOutput />
 							</div>
 

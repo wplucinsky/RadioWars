@@ -34,7 +34,7 @@ class Viewer extends React.Component {
 								<GridContainer 
 									style={c}
 									returnData={this.returnData}
-									draw="0" 
+									viewer="1" 
 
 									returnKeyboard={this.returnKeyboard}
 									keyboard={this.state.keyboard} 

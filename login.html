@@ -10,7 +10,6 @@
 		<script type="text/javascript">
 			function login(){
 				var api = new API(),
-					// url = 'http://www.craigslistadsaver.com/cgi-bin/mockdata.php?login=1';
 					url = 'http://dwslgrid.ece.drexel.edu:5000/login';
 				if ( $('#username').val() == '' || $('#password').val() == '') {
 					$('#errorMsg').text('Username and Password Required').css('display', 'block');
@@ -27,11 +26,15 @@
 					} else {
 						api.setCookie('_id', data.cookie, 7)
 						api.setCookie('team_id', data.team_id, 7)
-						window.location.href = data.location;
+						window.location.href = '/';
 					}
 				}));
 				$( document ).ajaxError(function( event, request, settings ) {
-					$('#errorMsg').text('Server issue, please try again.').css('display', 'block');
+					if ((window.location.hostname == "" || window.location.hostname == "localhost")) { 
+						window.location.href = '/'; 
+					} else {
+						$('#errorMsg').text('Server issue, please try again.').css('display', 'block');
+					}
 				});
 			}
 		</script>
@@ -41,7 +44,7 @@
 		<div class="container">
 			<div id="login-form">
 				<img id="logo" src="src/img/drexel.jpg">
-				<h3>Login</h3>
+				<h3>Radio Wars - Login</h3>
 				<fieldset id="container">
 					<form action="javascript:login();">
 						<input id="username" name="username" type="username" placeholder="Username" autofocus="">

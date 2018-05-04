@@ -21,7 +21,7 @@ class GridContainer extends React.Component {
 	}
 
 	componentDidMount(){
-		if (this.props.draw == 1){
+		if (this.props.viewer == 0){
 			this.setState({
 				draw: { 
 					id: this.state.currNode, 
@@ -217,7 +217,7 @@ class GridContainer extends React.Component {
 						<div className="canvas chart" id="gridView">
 							<GridCanvas currNode={this.state.currNode} draw={this.state.draw} capture={this.state.capture} />
 							<AnimationsCanvas currNode={this.state.currNode} draw={this.state.draw} returnData={this.props.returnData} />
-							<KeyboardCanvas currNode={this.state.currNode} draw={this.state.draw} keyboardUpdate={this.props.keyboardUpdate} clickUpdate={this.props.clickUpdate} />
+							<KeyboardCanvas currNode={this.state.currNode} draw={this.state.draw} keyboardUpdate={this.props.keyboardUpdate} clickUpdate={this.props.clickUpdate} viewer={this.props.viewer}/>
 							<InterferenceCanvas currNode={this.state.currNode} draw={this.state.draw} keyboardUpdate={this.props.keyboardUpdate} />
 							<ClickCanvas />
 						</div>
