@@ -105,17 +105,12 @@ class KeyboardCanvas extends React.Component {
 			'nodeToCapture': String(node2)
 		}, (function(data){
 			$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
-			
-			console.log('sup')
 			$('#gridConfirmation').css('display', 'block');
 			setTimeout((function(){$('#gridConfirmation').text(''); $('#gridConfirmation').css('display', 'none');}), 2000);
 			
-			this.draw(this.props.draw.id, 'black', {})
+			self.props.draw.options = {};
+			self.draw(self.props.draw.id, 'black', {});
 			return true;
-			// add check for valid data
-			// $('#serverOutputPost').text(JSON.stringify(data));
-			// i.scroll(node, time)
-			// i.startTimer(i.nodes.getNodeLocation(node), time)
 		}));	
 	}
 

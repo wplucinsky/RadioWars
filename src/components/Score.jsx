@@ -19,7 +19,6 @@ class Score extends React.Component {
 		} else {
 			var self = this
 			socket.on('teams', function (msg) {
-				console.log('[teams]', msg)
 				self.processData(JSON.parse(msg.data))
 			});
 		}

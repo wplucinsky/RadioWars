@@ -145,7 +145,7 @@ function Grid(){
 	}
 
 	this.on = function(node, color, alpha){
-		if ( this.stopFlag === 1) {
+		if ( this.stopFlag === 1 || this.rects[node] === undefined) {
 			return;
 		}
 
@@ -167,7 +167,7 @@ function Grid(){
 	}
 
 	this.off = function(node){
-		if ( this.stopFlag === 1) {
+		if ( this.stopFlag === 1 || this.rects[node] === undefined) {
 			return;
 		}
 

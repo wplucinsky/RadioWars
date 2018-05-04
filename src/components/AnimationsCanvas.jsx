@@ -53,7 +53,6 @@ class AnimationsCanvas extends React.Component {
 		} else {
 			var self = this
 			socket.on('gridNodes', function (msg) {
-				console.log('[grid]', msg)
 				self.props.returnData(JSON.parse(msg.data));
 				self.processData(JSON.parse(msg.data))
 			});

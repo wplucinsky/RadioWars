@@ -10,7 +10,6 @@ class Content extends React.Component {
 				controls: 	  0,
 				cdirection:   0,
 				cselect: 	  0,
-				help: 		  0,
 				esc: 		  0,
 				id: 		  0,
 				old_id: 	  0,
@@ -45,14 +44,13 @@ class Content extends React.Component {
 				c = 0, 	 // controls
 				rs = 0,  // controls selector
 				d = 0, 	 // control direction
-				h = 0,	 // help
 				esc = 0, // escape
 				id = 0,  // node capture
 				j = -1,  // move directon
 				old_id = self.state.keyboard.id;
 
 			// help modal
-			if (event.key == 'h') { h=1; }
+			if (event.key == 'h') { $('#helpModal').modal(); self.keyboard = 1; }
 			// move around game board
 			if (event.key == 'w') { j=0; m=1; if(old_id==1){id = 2;}}
 			if (event.key == 'a') { j=2; m=1; if(old_id==1){id = 2;}}
@@ -87,7 +85,6 @@ class Content extends React.Component {
 					controls: 	  c,
 					cdirection:   d,
 					cselect: 	  rs,
-					help: 		  h,
 					esc: 		  esc,
 					id: 		  id,
 					old_id: 	  old_id,
