@@ -20,7 +20,7 @@ class Score extends React.Component {
 			var self = this
 			socket.on('teams', function (msg) {
 				console.log('[teams]', msg)
-				self.processTeams(JSON.parse(msg.data))
+				self.processData(JSON.parse(msg.data))
 			});
 		}
 	}

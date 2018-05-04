@@ -171,6 +171,7 @@ class Content extends React.Component {
 									clickUpdate={this.click == -1}
 								/>
 								<Score />
+								<Waterfall />
 							</div>
 							<div className="col-md-4">
 								<Controls type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />
