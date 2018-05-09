@@ -2,8 +2,8 @@ class Score extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			zoom: {...zoom_chart},
-			lifetime:  {...lifetime_chart},
+			zoom: zoom_chart,
+			lifetime:  lifetime_chart,
 			display: [],
 		}
 

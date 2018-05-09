@@ -74,7 +74,7 @@ class AnimationsCanvas extends React.Component {
 	*/
 		var self = this;
 		$('#serverOutputGet').text(JSON.stringify(data));
-		if ( data != null && data.length != 0 && self.getPreviousUntouchedData() != JSON.stringify(data)){
+		if ( data != null && self.getPreviousUntouchedData() != JSON.stringify(data)){
 			this.setPreviousUntouchedData(JSON.stringify(data));
 			var animationData = [],
 				k = 0,
