@@ -304,6 +304,9 @@ button:disabled {
 .title > .text-center{
 	margin: 0px;
 }
+.text-center{
+	height: 20px;
+}
 #scroll{
 	position: absolute;
 	color: white;
@@ -508,4 +511,23 @@ button:disabled {
 }
 .viewer-grid{
 	padding-bottom: 25px;
+}
+#throughput_graphs_container button {
+	margin: auto;
+	display: block;
+}
+.remove-btn {
+	position: absolute;
+	right: 15px;
+	top: 6px;
+	width: 30px !important;
+	height: 30px !important;
+}
+.node-sel-l {
+	width: 25%;
+	float: left;
+}
+.node-sel-r {
+	width: 75%;
+	float: right;
 }

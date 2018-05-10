@@ -15,6 +15,7 @@ class Content extends React.Component {
 				old_id: 	  0,
 			},
 			data: null,
+			currNode: window._node,
 		}
 
 		this.returnKeyboard = this.returnKeyboard.bind(this);
@@ -122,6 +123,7 @@ class Content extends React.Component {
 		keyboard command and an old keyboard command.
 	*/
 		this.keyboard = currNode;
+		this.state.currNode = currNode;
 	}
 
 	returnClick(click){
@@ -135,7 +137,6 @@ class Content extends React.Component {
 	render() {
 		// conditional rendering for different game modes
 		const interference = this.props.data.interference_controls === undefined ? ( null ) : ( <Controls type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} /> );
-		
 
 		return (
 			<div id="content">
@@ -158,7 +159,7 @@ class Content extends React.Component {
 						</div>
 
 						<div className="row team_x">
-							<div className="col-md-8 flip">
+							<div className="col-md-8 col-sm-12 col-xs-12 flip">
 								<GridContainer 
 									returnData={this.returnData}
 									viewer="0"
@@ -173,8 +174,9 @@ class Content extends React.Component {
 								/>
 								<Score />
 								<Waterfall />
+								<ThroughputContainer data={this.state.data} startNode={window._node}/>
 							</div>
-							<div className="col-md-4">
+							<div className="col-md-4 col-sm-12 col-xs-12">
 								<Controls type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />
 								<Antenna direction="omni" data={this.state.data} />
 								{interference}

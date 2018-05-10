@@ -163,31 +163,27 @@ const config = {
 	modules: [
 		{
 			name: 'Radio Controls',
-			team: 1,
 			active: 1,
 		},{
 			name: 'Antenna Controls',
-			team: 2,
 			active: 1,
 		},{
 			name: 'Interference Controls',
-			team: 2,
+			active: 1,
+		},{
+			name: 'Throughput Graphs',
 			active: 1,
 		},{
 			name: 'Server Output',
-			team: 3,
 			active: 1,
 		},{
 			name: 'Node Graph',
-			team: 4,
 			active: 1,
 		},{
 			name: 'Score Graph',
-			team: 5,
 			active: 1,
 		},{
 			name: 'Waterfall',
-			team: 6,
 			active: 1,
 		}
 	],

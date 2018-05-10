@@ -145,6 +145,10 @@ function Nodes(){
 		}
 	}
 
+	this.getRealLocations = function() {
+		return [18, 13, 9, 11, 4, 3, 50, 12, 8, 6, 7, 10, 14, 5, 16, 17, 15];
+	}
+
 	this.getNodeLocationReal = function(node_id){
 	/*
 		Goes from Javascript node layout to real grid node layout.
