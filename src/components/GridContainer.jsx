@@ -5,6 +5,8 @@ class GridContainer extends React.Component {
 			capture: {
 				id: 0,
 				node: -1,
+				m_id: 0,
+				m_node: -1,
 			},
 			currNode: window._node,
 			draw: {
@@ -21,6 +23,7 @@ class GridContainer extends React.Component {
 	}
 
 	componentDidMount(){
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
 		if (this.props.viewer == 0){
 			this.setState({
 				draw: { 
@@ -57,7 +60,9 @@ class GridContainer extends React.Component {
 				draw: null,
 				capture: {
 					id: 0,
+					m_id: 0,
 					node: -1,
+					m_node: -1,
 				},
 				currNode: 0,
 			};
@@ -69,7 +74,13 @@ class GridContainer extends React.Component {
 				data.currNode = ctrl.capture.node;
 				$('#gridConfirmChanges').css('display', 'none');
 				data.draw = { id: ctrl.capture.node, color: 'black', options: null};
+			} else if ( ctrl.capture.m_id > 0 ){
+				ctrl.capture.m_id = 0;
+				data.currNode = ctrl.capture.m_node;
+				$('#gridConfirmChanges').css('display', 'none');
+				data.draw = { id: ctrl.capture.m_node, color: 'black', options: null};
 			} else {
+				data.currNode = ctrl.currNode;
 				data.draw = { id: ctrl.currNode, color: 'black', options: null};
 			}
 		} 
@@ -79,6 +90,18 @@ class GridContainer extends React.Component {
 			data.capture.id = 2;
 			data.capture.node = ctrl.currNode;
 			data.currNode = ctrl.currNode;
+			$('#gridConfirmChanges').text('use WASD and ENTER keys to capture a node');
+			$('#gridConfirmChanges').css('display', 'block');
+
+			data.draw = { id: ctrl.currNode, color: 'green', options: {dash: 1}};
+		} 
+
+		// mgen (part 1): start
+		else if ( this.props.keyboard.m_id == 1) {
+			data.capture.m_id = 2;
+			data.capture.m_node = ctrl.currNode;
+			data.currNode = ctrl.currNode;
+			$('#gridConfirmChanges').text('use WASD and ENTER keys to start mgen between node');
 			$('#gridConfirmChanges').css('display', 'block');
 
 			data.draw = { id: ctrl.currNode, color: 'green', options: {dash: 1}};
@@ -93,6 +116,17 @@ class GridContainer extends React.Component {
 			ctrl.capture.node = -1;
 			data.capture.id = 0;
 			data.capture.node == -1;
+		} 
+
+		// megen (part 3): finish
+		else if ( ctrl.capture.m_id == 3 && this.props.keyboard.select == 1) {
+			$('#gridConfirmChanges').css('display', 'none');
+			data.draw = { id: ctrl.capture.m_node, color: 'black', options: {capture: 2, node1: ctrl.capture.m_node, node2: ctrl.currNode}};
+			data.currNode = ctrl.capture.m_node;
+			ctrl.capture.m_id = 0;
+			ctrl.capture.m_node = -1;
+			data.capture.m_id = 0;
+			data.capture.m_node == -1;
 		} 
 
 		// capture (part 2) move
@@ -112,6 +146,26 @@ class GridContainer extends React.Component {
 				data.currNode = ctrl.currNode;
 
 				data.draw = { id: ctrl.currNode, color: 'red', options: {redraw: ctrl.capture.node, dash: 1}};
+			}
+		}
+
+		// mgen (part 2) move
+		else if ( ctrl.capture.m_id >= 2) {
+			if ( this.props.keyboard.mdirection != -1 && 
+				nearby[this.props.keyboard.mdirection] != -1 && 
+				nearby[this.props.keyboard.mdirection] != ctrl.capture.m_node
+			) {
+				data.capture.m_id = 3;
+				data.capture.m_node = ctrl.capture.m_node;
+				data.currNode = nearby[this.props.keyboard.mdirection];
+
+				data.draw = { id: data.currNode, color: 'black', options: {redraw: ctrl.capture.m_node, dash: 1}};
+			} else {
+				data.capture.m_id = 2;
+				data.capture.m_node = ctrl.capture.m_node
+				data.currNode = ctrl.currNode;
+
+				data.draw = { id: ctrl.currNode, color: 'red', options: {redraw: ctrl.capture.m_node, dash: 1}};
 			}
 		}  
 
@@ -149,7 +203,7 @@ class GridContainer extends React.Component {
 
 		// update the state
 		ctrl.draw = data.draw;
-		ctrl.capture = (data.capture.id == 0 && data.capture.node == -1) ? ctrl.capture : data.capture;
+		ctrl.capture = (data.capture.id == 0 && data.capture.node == -1) && (data.capture.m_id == 0 && data.capture.m_node == -1) ? ctrl.capture : data.capture;
 		ctrl.currNode = data.currNode;
 		this.props.returnKeyboard(data.currNode)
 	}
@@ -191,6 +245,20 @@ class GridContainer extends React.Component {
 					data.currNode = ctrl.currNode;
 
 					data.draw = { id: ctrl.currNode, color: 'red', options: {redraw: ctrl.capture.node, dash: 1}};
+				}
+			} else if ( ctrl.capture.m_id >= 2) {
+				if (rect.index != ctrl.capture.m_node) {
+					data.capture.m_id = 3;
+					data.capture.m_node = ctrl.capture.m_node;
+					data.currNode = rect.index;
+
+					data.draw = { id: data.currNode, color: 'black', options: {redraw: ctrl.capture.m_node, dash: 1}};
+				} else {
+					data.capture.m_id = 2;
+					data.capture.m_node = ctrl.capture.m_node
+					data.currNode = ctrl.currNode;
+
+					data.draw = { id: ctrl.currNode, color: 'red', options: {redraw: ctrl.capture.m_node, dash: 1}};
 				}
 			} else {
 				data.currNode = rect.index;

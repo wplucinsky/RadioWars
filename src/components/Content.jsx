@@ -12,6 +12,7 @@ class Content extends React.Component {
 				cselect: 	  0,
 				esc: 		  0,
 				id: 		  0,
+				m_id: 		  0,
 				old_id: 	  0,
 			},
 			data: null,
@@ -47,16 +48,18 @@ class Content extends React.Component {
 				d = 0, 	 // control direction
 				esc = 0, // escape
 				id = 0,  // node capture
+				m_id = 0,// mgen
 				j = -1,  // move directon
-				old_id = self.state.keyboard.id;
+				old_id   = self.state.keyboard.id,
+				old_m_id = self.state.keyboard.m_id;
 
 			// help modal
 			if (event.key == 'h') { $('#helpModal').modal(); self.keyboard = 1; }
 			// move around game board
-			if (event.key == 'w') { j=0; m=1; if(old_id==1){id = 2;}}
-			if (event.key == 'a') { j=2; m=1; if(old_id==1){id = 2;}}
-			if (event.key == 's') { j=4; m=1; if(old_id==1){id = 2;}}
-			if (event.key == 'd') { j=6; m=1; if(old_id==1){id = 2;}}
+			if (event.key == 'w') { j=0; m=1; if(old_id==1){id = 2;} if(old_m_id==1){m_id = 2;}}
+			if (event.key == 'a') { j=2; m=1; if(old_id==1){id = 2;} if(old_m_id==1){m_id = 2;}}
+			if (event.key == 's') { j=4; m=1; if(old_id==1){id = 2;} if(old_m_id==1){m_id = 2;}}
+			if (event.key == 'd') { j=6; m=1; if(old_id==1){id = 2;} if(old_m_id==1){m_id = 2;}}
 			// start interference
 			if (event.key == 'i') { i=1; }
 			// select one of the radio controls
@@ -70,6 +73,8 @@ class Content extends React.Component {
 			if (event.key == 'ArrowRight') { rs=-2; }
 			// start node capture
 			if (self.state.keyboard.id == 0){ if (event.key == 'c') { id = 1; } }
+			// start mgen
+			if (self.state.keyboard.m_id == 0){ if (event.key == 'm') { m_id = 1; } }
 			// controls the radio controls
 			if (event.key == 'ArrowUp') { c=1; d=1; }
 			if (event.key == 'ArrowDown') { c=1; d=2; }
@@ -88,7 +93,9 @@ class Content extends React.Component {
 					cselect: 	  rs,
 					esc: 		  esc,
 					id: 		  id,
+					m_id: 		  m_id,
 					old_id: 	  old_id,
+					old_m_id: 	  old_m_id,
 				}
 			});
 		});
@@ -136,7 +143,11 @@ class Content extends React.Component {
 
 	render() {
 		// conditional rendering for different game modes
-		const interference = this.props.data.interference_controls === undefined ? ( null ) : ( <Controls type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} /> );
+		const activeModules = this.props.data.modules.map(function(item){
+			if (item.active == 1){
+				return item.name;
+			}
+		});
 
 		return (
 			<div id="content">
@@ -160,27 +171,44 @@ class Content extends React.Component {
 
 						<div className="row team_x">
 							<div className="col-md-8 col-sm-12 col-xs-12 flip">
-								<GridContainer 
-									returnData={this.returnData}
-									viewer="0"
+								{activeModules.indexOf('Node Graph') != -1 ? 
+									(<GridContainer 
+										returnData={this.returnData}
+										viewer="0"
 
-									returnKeyboard={this.returnKeyboard}
-									keyboard={this.state.keyboard} 
-									keyboardUpdate={this.keyboard == -1}
+										returnKeyboard={this.returnKeyboard}
+										keyboard={this.state.keyboard} 
+										keyboardUpdate={this.keyboard == -1}
 
-									returnClick={this.returnClick}
-									click={this.state.click}
-									clickUpdate={this.click == -1}
-								/>
-								<Score />
-								<Waterfall />
-								<ThroughputContainer data={this.state.data} startNode={window._node}/>
+										returnClick={this.returnClick}
+										click={this.state.click}
+										clickUpdate={this.click == -1}
+									/>) : ''
+								}
+								{activeModules.indexOf('Score Graph') != -1 ?
+									(<Score />) : ''
+								}
+								{activeModules.indexOf('Waterfall') != -1 ? 
+									(<Waterfall />) : ''
+								}
+								{activeModules.indexOf('Radio Characteristics') != -1 ? 
+									(<ThroughputContainer data={this.state.data} startNode={window._node}/>) : ''
+								}
 							</div>
 							<div className="col-md-4 col-sm-12 col-xs-12">
-								<Controls type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />
-								<Antenna direction="omni" data={this.state.data} />
-								{interference}
-								<ServerOutput />
+								{activeModules.indexOf('Radio Controls') != -1 ? 
+									(<Controls type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />) : ''
+								}	
+
+								{activeModules.indexOf('Antenna Controls') != -1 ? 
+									(<Antenna direction="omni" data={this.state.data} />) : ''
+								}
+								{activeModules.indexOf('Interference Controls') != -1 ? 
+									(<Controls type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} />) : ''
+								}
+								{activeModules.indexOf('Server Output') != -1 ? 
+									(<ServerOutput />) : ''
+								}
 							</div>
 
 						</div>

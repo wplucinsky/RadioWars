@@ -13,7 +13,7 @@ class ThroughputContainer extends React.Component {
 	}
 
 	componentDidMount(){
-
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
 	}
 
 
@@ -22,26 +22,37 @@ class ThroughputContainer extends React.Component {
 	}
 
 	handleClick(event){
-		let i = this.state.cnt[this.state.cnt.length - 1];
-		this.state.cnt.push( (i === undefined) ? 1 : i + 1 );
-		console.log(this.state.cnt)
+		var cnt = this.state.cnt;
+		let i = cnt[cnt.length - 1];
+		cnt.push( (i === undefined) ? 1 : i + 1 );
+
+		this.setState({
+			cnt: cnt
+		});
 	}
 
 	remove(id){
-		console.log(this.state)
-		this.state.cnt.splice(this.state.cnt.indexOf(id), 1);
+		var cnt = this.state.cnt;
+		cnt.splice(cnt.indexOf(id), 1);
+
+		this.setState({
+			cnt: cnt
+		});
 	}
 	
 
 	render() { 
 		return (
-			<div className="row" id="throughput_graphs_container">
+			<div className="row" id="radio_characteristics_container">
 				<div className="col-md-12 team_x">
-					<h4 className="text-center">Throughput Graphs</h4>
+					<h4 className="text-center">Radio Characteristics</h4>
 					<div className="line"></div>
-						<button className="btn btn-primary" onClick={this.handleClick} >Add Throughput Graph</button>
+						<div className="row">
+							<div className="col-md-12 center">
+								<button className="btn btn-primary" onClick={this.handleClick} >Add Graph</button>
+							</div>
+						</div>
 						{this.state.cnt.map((item, i) => {
-							console.log(item, i)
 							return <Throughput 
 								remove={this.remove} 
 								data={this.props.data} 

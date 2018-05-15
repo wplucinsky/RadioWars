@@ -4,12 +4,18 @@ class Waterfall extends React.Component {
 		this.state = {
 			src: '/src/img/waterfall/Waterfall_Plot.png?' + new Date().getTime(),
 		}
+		this.timer = null;
 
 		this.startTimer = this.startTimer.bind(this);
 	}
 
 	componentDidMount(){
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
 		this.startTimer();
+	}
+
+	componentWillUnmount(){
+		clearTimeout(this.timer);
 	}
 
 	startTimer() {

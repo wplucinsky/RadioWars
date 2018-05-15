@@ -7,6 +7,8 @@ class AnimationsCanvas extends React.Component {
 		this.api = new API();
 		this.currNode = null;
 		this.m = 0;
+		this.animCount = 0;
+		this.timer = null;
 		
 		
 		this.control = [];
@@ -21,6 +23,10 @@ class AnimationsCanvas extends React.Component {
 		this.grid.setup([], 'grid', undefined);
 		this.rects = this.grid.getRectangles();
 		this.apiCallGet(true);
+	}
+
+	componentWillUnmount(){
+		clearTimeout(this.timer);
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -40,10 +46,11 @@ class AnimationsCanvas extends React.Component {
 		}
 		
 		var self = this;
+
 		if (TEST_MODE) {
-			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
+			var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
 
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
@@ -102,7 +109,7 @@ class AnimationsCanvas extends React.Component {
 					animationData[i][k] = this.getAnimationData(this.nodes.getNodeLocation(from), this.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
 					var offset = this.getOffset(i,k); // how many packets have been sent so far
-
+					
 					if ( animationData[i][k][offset] != undefined ){
 						animationData[i][k][offset].wait = 0;
 						count = this.addToCount(diff)
@@ -221,7 +228,7 @@ class AnimationsCanvas extends React.Component {
 									data[i][j][k].y = rects[data[i][j][k].to].y + 18;
 
 									// change from 1 to some fraction for needed nodes to capture
-									self.grid.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
+									// self.grid.nodeCapture(1, data[i][j][k].color, null, data[i][j][k].to, true)
 								}
 
 

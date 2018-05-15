@@ -8,12 +8,15 @@ class Score extends React.Component {
 		}
 
 		this.teams = [];
+		this.timer = null;
 
 		this.processData = this.processData.bind(this);
 		this.startTimer = this.startTimer.bind(this);
 	}
 
 	componentDidMount(){
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
+		
 		if (TEST_MODE){
 			this.startTimer()
 		} else {
@@ -22,6 +25,10 @@ class Score extends React.Component {
 				self.processData(JSON.parse(msg.data))
 			});
 		}
+	}
+
+	componentWillUnmount(){
+		clearTimeout(this.timer);
 	}
 
 	append(state, place, data){
@@ -47,6 +54,10 @@ class Score extends React.Component {
 		Takes the updated score data, updates the necessary state objects, which ScoreCanvas
 		uses to update the Chart canvas objects.
 	*/
+		if ($('#score_graph_container').css('display') == 'none') {
+			return;
+		}
+
 		$('#missingscore').css('display','none');
 		$('#score').css('display','block');
 		$('#colors').css('display','block');
@@ -105,6 +116,11 @@ class Score extends React.Component {
 				if (zoom.data.datasets[j].data.length >= 16) {
 					zoom.data.datasets[j].data.shift();
 					zoom.data.labels = Array.apply(null, Array(zoom.data.datasets[j].data.length)).map(Number.prototype.valueOf,1)
+				}
+
+				if (lifetime.data.datasets[j].data.length >= 50) {
+					lifetime.data.datasets[j].data.shift();
+					lifetime.data.labels = Array.apply(null, Array(lifetime.data.datasets[j].data.length)).map(Number.prototype.valueOf,1)
 				}
 				zoom.options.title.text = 'Last '+zoom.data.datasets[j].data.length+' Seconds'
 			}

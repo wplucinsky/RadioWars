@@ -11,7 +11,7 @@ function Nav(props) {
 			<ul className="list-unstyled components">
 				<p>Modules</p>
 				{props.modules.map((item, key) => {
-					return <NavModule key={key} item={item}/>
+					return <NavModule key={key} item={item} returnProps={props.returnProps}/>
 				})}
 			</ul>
 			<ul className="list-unstyled CTAs">

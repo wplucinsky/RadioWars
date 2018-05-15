@@ -11,6 +11,7 @@ class Antenna extends React.Component {
 	}
 
 	componentDidMount(){
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
 		this.startListeners();
 	}
 
@@ -93,7 +94,7 @@ class Antenna extends React.Component {
 			'_id': 		'node'+this.node,
 			'state': 	this.getDirFromState(this.node, this.state.direction),
 		}, (function(data){
-			console.log(data)
+			
 		}));
 	}
 

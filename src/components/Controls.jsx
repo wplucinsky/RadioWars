@@ -11,6 +11,17 @@ class Controls extends React.Component {
 	}
 
 	componentDidMount(){
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
+		$(".knob").knob({
+			release : function (value) {
+				if (this.$.attr('id').indexOf('interference_') !== -1 ) {
+					$('#interferenceControlsConfirmChanges').css('display', 'block')
+				} else {
+					$('#radioControlsConfirmChanges').css('display', 'block')
+				}
+			}
+		});
+
 		if (this.props.type == 'radio'){
 			this.outline()
 		}

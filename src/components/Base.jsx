@@ -4,6 +4,7 @@ class Base extends React.Component {
 	}
 
 	componentDidMount(){
+		$('.line').css('background-color', 'rgb(54, 162, 235)');
 		// set state or start an intervalled HTTP request / Socket connection
 	}
 

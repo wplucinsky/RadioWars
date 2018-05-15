@@ -68,14 +68,11 @@ class KeyboardCanvas extends React.Component {
 		if (o.select == 1) {
 			$('#radioControlsConfirmChanges').css('display', 'none');
 			this.updateRadio(this.nodes.getNodeLocationReal(node));
-		} 
-		// if (o.interference == 1) {
-		// 	this.interference.startInterference(this.currNodeReal)
-		// }
-		if (o.capture == 1) {
+		}
+		if (o.capture >= 1) {
 			this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			$('#gridConfirmChanges').css('display', 'none');
-			this.startNodeControl(this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
+			this.startNodeControl(o.capture, this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
 		}
 		if (o.redraw != -1) {
 			this.draw(o.redraw, 'green', {dash: 1, clear: 0})
@@ -83,17 +80,21 @@ class KeyboardCanvas extends React.Component {
 		return true;
 	}
 
-	startNodeControl(node1, node2){
+	startNodeControl(type, node1, node2){
 	/*
 		Sends a request to the Flask server to start the node capture
 		process. Node1 is capturing Node2. 
+
+		Type
+			1: node capture
+			2: mgen
 	*/
 		var self = this, time = 10;
 		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&c=1"; // used for testing
 		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
 		this.api.post(url, {
 			'_id': 		 'node'+node1,
-			'type': 	 'capture',
+			'type': 	 (type == 1) ? 'capture' : 'mgen',
 			'completed': String(false),
 			'date': 	 new Date().toISOString(),
 			'time': 	 String(time),
@@ -104,7 +105,11 @@ class KeyboardCanvas extends React.Component {
 			'freq': 	 $('#frequency_'+window._id+'_radio_knob').val(),
 			'nodeToCapture': String(node2)
 		}, (function(data){
-			$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
+			if (type == 1){
+				$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
+			} else {
+				$('#gridConfirmation').text('MGEN started from Node #'+node1+' to Node #'+node2);
+			}
 			$('#gridConfirmation').css('display', 'block');
 			setTimeout((function(){$('#gridConfirmation').text(''); $('#gridConfirmation').css('display', 'none');}), 2000);
 			

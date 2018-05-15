@@ -4,6 +4,7 @@ class Throughput extends React.Component {
 		this.timer = null;
 		this.state = {
 			selectedNode: this.props.startNodeReal,
+			type: 'throughput',
 			chart_data: {
 				type: 'line',
 				data: {
@@ -32,7 +33,7 @@ class Throughput extends React.Component {
 							display: false,
 							scaleLabel: {
 								display: false,
-								labelString: 'Month'
+								labelString: 'Time'
 							}
 						}],
 						yAxes: [{
@@ -40,7 +41,7 @@ class Throughput extends React.Component {
 							stacked: false,
 							scaleLabel: {
 								display: true,
-								labelString: 'Value'
+								labelString: 'bytes/sec'
 							}
 						}]
 					}
@@ -49,6 +50,7 @@ class Throughput extends React.Component {
 		};
 
 		this.handleChange = this.handleChange.bind(this);
+		this.handleTypeChange = this.handleTypeChange.bind(this);
 		this.processData = this.processData.bind(this);
 		this.handleRemoveClick = this.handleRemoveClick.bind(this);
 	}
@@ -57,6 +59,9 @@ class Throughput extends React.Component {
 		this.startTimer();
 	}
 
+	componentWillUnmount(){
+		clearTimeout(this.timer);
+	}
 
 	componentWillReceiveProps(nextProps){
 		this.props = nextProps;
@@ -68,7 +73,7 @@ class Throughput extends React.Component {
 		chart title, and remove all data from the chart in the state.
 	*/
 		let chart_data = this.state.chart_data;
-		chart_data.options.title.text = 'Throughput Plot - Node '+event.target.value;
+		chart_data.options.title.text = capitalize(this.state.type)+' Plot - Node '+event.target.value;
 		chart_data.data.labels = [];
 		chart_data.data.datasets = [];
 
@@ -78,9 +83,48 @@ class Throughput extends React.Component {
 		});
 	}
 
+	handleTypeChange(event){
+		let chart_data = this.state.chart_data;
+		chart_data.options.title.text = capitalize(event.target.value)+' Plot - Node '+this.state.selectedNode;
+		chart_data.options.scales.yAxes[0].scaleLabel.labelString = (event.target.value == 'throughput') ? 'bytes/sec' : 'dB';
+		chart_data.data.labels = [];
+		chart_data.data.datasets = [];
+
+		this.setState({
+			chart_data: chart_data,
+			type: event.target.value
+		});
+	}
+
 	processData(data){
-		// TODO
-		console.log(data);
+		if ( data == null || data == undefined || $('#radio_characteristics_container').css('display') == 'none' ){ return; } 
+		
+		let chart_data = this.state.chart_data;
+		for (let i = 0; i < data.length; i++){
+			if (data[i]._id == ('node'+this.state.selectedNode) && data[i][this.state.type] != undefined ){
+				
+				if (chart_data.data.datasets.length == 0) {
+					chart_data.data.datasets.push({
+						label: 'Node '+ this.state.selectedNode,
+						borderColor: 'black',
+						data: [],
+						fill: false,
+					});
+				}
+
+				chart_data.data.datasets[0].data.push(parseFloat(data[i][this.state.type]));
+				chart_data.data.labels.push(1);
+
+				if (chart_data.data.datasets[0].data.length >= 16) {
+					chart_data.data.datasets[0].data.shift();
+					chart_data.data.labels = Array.apply(null, Array(chart_data.data.datasets[0].data.length)).map(Number.prototype.valueOf,1)
+				}
+			}
+		}
+
+		this.setState({
+			chart_data: chart_data
+		});
 	}
 
 	startTimer() {	
@@ -122,6 +166,11 @@ class Throughput extends React.Component {
 							{this.props.availableNodes.map((item, key) => {
 								return <option key={key} value={item}>{item}</option>;
 							})}
+						</select>
+						<select name="type" className="form-control node-sel-t" value={this.state.type} onChange={this.handleTypeChange}>	
+							<option value='throughput'>Throughput</option>
+							<option value='rssi'>RSSI</option>
+							<option value='evm'>EVM</option>
 						</select>
 					</div>
 					<ThroughputPlot data={this.state.chart_data} node={this.state.selectedNode} cnt={this.props.cnt}/>

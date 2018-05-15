@@ -163,16 +163,13 @@ const config = {
 	modules: [
 		{
 			name: 'Radio Controls',
-			active: 1,
+			active: 0,
 		},{
 			name: 'Antenna Controls',
-			active: 1,
+			active: 0,
 		},{
 			name: 'Interference Controls',
-			active: 1,
-		},{
-			name: 'Throughput Graphs',
-			active: 1,
+			active: 0,
 		},{
 			name: 'Server Output',
 			active: 1,
@@ -181,10 +178,13 @@ const config = {
 			active: 1,
 		},{
 			name: 'Score Graph',
-			active: 1,
+			active: 0,
 		},{
 			name: 'Waterfall',
+			active: 0,
+		},{
+			name: 'Radio Characteristics',
 			active: 1,
-		}
+		},
 	],
 };
