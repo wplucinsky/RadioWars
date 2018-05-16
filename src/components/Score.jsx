@@ -29,6 +29,11 @@ class Score extends React.Component {
 
 	componentWillUnmount(){
 		clearTimeout(this.timer);
+		zoom_chart.data.labels = [];
+		zoom_chart.data.datasets = [];
+
+		lifetime_chart.data.labels = [];
+		lifetime_chart.data.datasets = [];
 	}
 
 	append(state, place, data){
