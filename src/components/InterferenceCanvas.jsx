@@ -11,6 +11,7 @@ class InterferenceCanvas extends React.Component {
 		this.control = [];
 		this.scroll = this.scroll.bind(this);
 		this.startInterference = this.startInterference.bind(this);
+		this.processControl = this.processControl.bind(this);
 	}
 
 	componentDidMount(){
@@ -22,6 +23,13 @@ class InterferenceCanvas extends React.Component {
 
 		this.rects = this.grid.getRectangles();
 		this.scroll();
+
+		if (!TEST_MODE){
+			var self = this
+			socket.on('control', function (msg) {
+				self.processControl(JSON.parse(msg.data))
+			});
+		}
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -75,22 +83,38 @@ class InterferenceCanvas extends React.Component {
 				'freq': 	 $('#frequency_'+window._id+'_interference_knob').val(),
 				'nodeToCapture': String(node)
 			}, (function(data){
-				// add check for valid data
+				// subscribe to control processes data
 				$('#serverOutputPost').text(JSON.stringify(data));
-				
-				// won't be necessary b/c of subscribeToControl()
-				let n = this.nodes.getNodeLocation(node)
-				if (this.control[n] == undefined || this.control[n] == null) {
-					this.control[n] = {}
-					this.control[n].fn = new InterferenceAnimation();
-
-					var self = this;
-					this.control[n].fn.startInterference(n, time, this.rects).then(function(){
-						self.control[n] = null;
-					});
-
-				}
 			}));
+		}
+	}
+
+	processControl(data){
+	/*
+		This function takes the MongoDB data, checks if the user is currently 
+		viewing the screen and not on another tab/window then calls
+		InterferenceAnimation->startInterference() to display the pulsating 
+		interference ring.
+	*/
+		var self = this;
+		for (let i in data){
+			if (document.body.className == 'hidden') { continue; }
+			var t = new Date(); t.setSeconds(t.getSeconds() - data[i].time); // check if interference hasn't elapsed
+			var a = new Date(data[i].date); var time = (a-t)/1000; // get time remaining
+			if (data[i].date >= t.toISOString()) {
+				if (data[i].type.toLowerCase() == 'jammer' ) {
+					let n = self.nodes.getNodeLocation(data[i]._id.replace('node', ''))
+					
+					// display interference
+					if (self.control[n] == undefined || self.control[n] == null) {
+						self.control[n] = {}
+						self.control[n].fn = new InterferenceAnimation();
+						self.control[n].fn.startInterference(n, time, self.rects).then(function(){
+							self.control[n] = null;
+						});
+					}
+				}
+			}
 		}
 	}
 
@@ -135,14 +159,15 @@ function InterferenceAnimation() {
 	this.startInterference = function(node, time, rects){
 	/*
 		Creates a new canvas element in order to animate each node's 
-		interference. Will use the previously created canvas if interference
-		has already run on that node. Returns a promise that's resolved once
-		the animation is complete.
+		interference. Must be 'below' the clickCanvas. Will use the 
+		previously created canvas if interference has already run on 
+		that node. Returns a promise that's resolved once the animation
+		is complete.
 	*/
 		this.rects = rects;
 		let id = 'interference_'+node;
 		if (!$('#'+id).length){
-			$('#gridView').append('<canvas id="'+id+'" class="interference-canvas" width="650" height="650" style="padding-top: 50px;"></canvas>')
+			$('#interference').after('<canvas id="'+id+'" class="interference-canvas" width="650" height="650" style="padding-top: 50px;"></canvas>')
 		}
 		this.canvas = document.getElementById(id);
 		this.elem = this.canvas.getContext('2d');
