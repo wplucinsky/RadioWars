@@ -47,8 +47,7 @@ class InterferenceCanvas extends React.Component {
 		time specified. When finished the index in this.control is set to null.
 	*/
 		var time = 6;
-		var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&i=1"; // used for testing
-		// var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
 		$('#interferenceControlsConfirmChanges').css('display', 'none')
 
 		if (TEST_MODE) {
