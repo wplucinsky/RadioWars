@@ -98,6 +98,8 @@ class Content extends React.Component {
 					old_m_id: 	  old_m_id,
 				}
 			});
+
+			event.preventDefault();
 		});
 
 		var elem = document.getElementById('clickCanvas');
@@ -197,14 +199,14 @@ class Content extends React.Component {
 							</div>
 							<div className="col-md-4 col-sm-12 col-xs-12">
 								{activeModules.indexOf('Radio Controls') != -1 ? 
-									(<Controls type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />) : ''
+									(<Controls keyboardUpdate={this.keyboard == -1} type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />) : ''
 								}	
 
 								{activeModules.indexOf('Antenna Controls') != -1 ? 
 									(<Antenna direction="omni" data={this.state.data} />) : ''
 								}
 								{activeModules.indexOf('Interference Controls') != -1 ? 
-									(<Controls type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} />) : ''
+									(<Controls keyboardUpdate={this.keyboard == -1} type={'interference'} control={this.props.data.interference_controls} keyboard={this.state.keyboard} />) : ''
 								}
 								{activeModules.indexOf('Server Output') != -1 ? 
 									(<ServerOutput />) : ''
