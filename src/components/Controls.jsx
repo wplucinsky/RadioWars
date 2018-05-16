@@ -27,18 +27,22 @@ class Controls extends React.Component {
 		}
 	}
 
-	componentDidUpdate() {
-		if ( this.props.keyboard.cselect != 0 && this.props.type == 'radio' ) {
-			if (this.props.keyboard.cselect == -1 ){
-				this.control = (this.control == 0) ? 5 : this.control-1;
-			} else if (this.props.keyboard.cselect == -2 ) {
-				this.control = (this.control == 5) ? 0 : this.control+1;
-			} else if ( this.props.keyboard.cselect != 0 ) {
-				this.control = this.props.keyboard.cselect - 1;
-			}
+	componentWillReceiveProps(nextProps) {
+		this.props = nextProps;
 
-			this.outline()
-			if ( this.props.keyboard.cdirection != 0 ){
+		if(this.props.keyboardUpdate){
+			if ( this.props.keyboard.cselect != 0 && this.props.type == 'radio' ) {
+				if (this.props.keyboard.cselect == -1 ){
+					this.control = (this.control == 0) ? 5 : this.control-1;
+				} else if (this.props.keyboard.cselect == -2 ) {
+					this.control = (this.control == 5) ? 0 : this.control+1;
+				} else if ( this.props.keyboard.cselect != 0 ) {
+					this.control = this.props.keyboard.cselect - 1;
+				}
+
+				this.outline();
+			}
+			if (this.props.keyboard.cdirection != 0) {
 				this.controls(this.props.keyboard.cdirection);
 			}
 		}
@@ -56,11 +60,22 @@ class Controls extends React.Component {
 
 	controls(d){
 		var step = parseInt($('#'+this.props.control[this.control].name+'_1_'+this.props.type+'_knob').attr('data-step')),
+			min = parseInt($('#'+this.props.control[this.control].name+'_1_'+this.props.type+'_knob').attr('data-min')),
+			max = parseInt($('#'+this.props.control[this.control].name+'_1_'+this.props.type+'_knob').attr('data-max')),
 			ctrl = this.state.values;
+
 		if ( d == 1) {
-			ctrl[this.control] =  (parseInt(ctrl[this.control]) + step);
+			if ((parseInt(ctrl[this.control]) + step) > max ) {
+				ctrl[this.control] = max;
+			} else {
+				ctrl[this.control] = (parseInt(ctrl[this.control]) + step);
+			}
 		} else {
-			ctrl[this.control] =  (parseInt(ctrl[this.control]) - step);
+			if ((parseInt(ctrl[this.control]) - step) < min ) {
+				ctrl[this.control] = min;
+			} else {
+				ctrl[this.control] = (parseInt(ctrl[this.control]) - step);
+			}
 		}
 
 		$('#'+this.props.control[this.control].name+'_1_'+this.props.type+'_knob').val(ctrl[this.control]).trigger('change');
