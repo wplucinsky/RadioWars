@@ -284,6 +284,10 @@ class GridContainer extends React.Component {
 		Returns a boolean and displays an error message to the user if no 
 		one owns the node, or if someone else owns the node.
 	*/
+		if (!PERMISSIONS){
+			return true;
+		}
+
 		var ownedNodes = window._nodes.getTakenNodes();
 		if ( ownedNodes[node] == null || ownedNodes[node] != window._teamColor ){
 			$('#gridConfirmChanges').text('you don\'t own this node');

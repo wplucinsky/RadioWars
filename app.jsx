@@ -1,4 +1,5 @@
 var TEST_MODE = (window.location.hostname == "" || window.location.hostname == "localhost") ? true : false,
+	PERMISSIONS = (TEST_MODE) ? false : true,
 	socket = null;
 function capitalize(string) { return string.charAt(0).toUpperCase() + string.slice(1); }
 function formatDate(date) { return date.toLocaleDateString(); }

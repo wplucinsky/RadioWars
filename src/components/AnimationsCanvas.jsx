@@ -5,7 +5,7 @@ class AnimationsCanvas extends React.Component {
 		this.grid = new Grid();
 		this.api = new API();
 		this.currNode = null;
-		this.m = 18;
+		this.m = 0;
 		this.animCount = 0;
 		this.timer = null;
 		
