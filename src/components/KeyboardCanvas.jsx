@@ -102,7 +102,8 @@ class KeyboardCanvas extends React.Component {
 			this.draw(this.props.draw.id, 'black', {});
 			return true;
 		} else {
-			var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+			var url = 'http://'+document.domain+':'+location.port+'/radioControl';
+
 			this.api.post(url, {
 				'_id': 		 'node'+node1,
 				'type': 	 (type == 1) ? 'capture' : 'mgen',
@@ -139,7 +140,7 @@ class KeyboardCanvas extends React.Component {
 		if (!TEST_MODE){
 			var self = this
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
-			var url = "http://dwslgrid.ece.drexel.edu:5000/radio/"+node;
+			var url = 'http://'+document.domain+':'+location.port+'/radio/'+node;
 			this.api.post(url, {
 				'_id': 		 		{value: node},
 				'rxGain': 	 		{value: $('#rxGain_'+window._id+'_radio_knob').val()},

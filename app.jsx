@@ -42,7 +42,7 @@ $(function() {
 		});
 
 		var mode = 'interference';
-		api.get('http://dwslgrid.ece.drexel.edu:5000/config/'+mode, function(config){
+		api.get('http://'+document.domain+':'+location.port+'/config/'+mode, function(config){
 			if(document.getElementById('root') != null){
 				ReactDOM.render(
 					<App 

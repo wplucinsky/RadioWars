@@ -68,7 +68,7 @@ class InterferenceCanvas extends React.Component {
 				});
 			}
 		} else {
-			var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+			var url = 'http://'+document.domain+':'+location.port+'/radioControl';
 			this.api.post(url, {
 				'_id': 		 'node'+node,
 				'type': 	 'jammer',

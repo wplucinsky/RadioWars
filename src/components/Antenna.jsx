@@ -88,7 +88,7 @@ class Antenna extends React.Component {
 
 	callAPI(){
 		if (!TEST_MODE) {
-			var url = "http://dwslgrid.ece.drexel.edu:5000/radioAntennaState",
+			var url = 'http://'+document.domain+':'+location.port+'/radioAntennaState',
 				self = this;
 			
 			this.api.post(url, {
