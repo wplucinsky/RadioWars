@@ -54,8 +54,7 @@ class InterferenceCanvas extends React.Component {
 		if the response is successful then an interference animation is drawn for the 
 		time specified. When finished the index in this.control is set to null.
 	*/
-		var time = 6;
-		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+		var time = 3;
 		$('#interferenceControlsConfirmChanges').css('display', 'none')
 
 		if (TEST_MODE) {
@@ -70,6 +69,7 @@ class InterferenceCanvas extends React.Component {
 				});
 			}
 		} else {
+			var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
 			this.api.post(url, {
 				'_id': 		 'node'+node,
 				'type': 	 'jammer',

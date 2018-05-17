@@ -90,21 +90,7 @@ class KeyboardCanvas extends React.Component {
 			2: mgen
 	*/
 		var self = this, time = 10;
-		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1&c=1"; // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
-		this.api.post(url, {
-			'_id': 		 'node'+node1,
-			'type': 	 (type == 1) ? 'capture' : 'mgen',
-			'completed': String(false),
-			'date': 	 new Date().toISOString(),
-			'time': 	 String(time),
-			'direction': String(1),
-			'rxGain': 	 $('#rxGain_'+window._id+'_radio_knob').val(),
-			'txGain': 	 $('#txGain_'+window._id+'_radio_knob').val(),
-			'power': 	 $('#power_'+window._id+'_radio_knob').val(),
-			'freq': 	 $('#frequency_'+window._id+'_radio_knob').val(),
-			'nodeToCapture': String(node2)
-		}, (function(data){
+		if (TEST_MODE){
 			if (type == 1){
 				$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
 			} else {
@@ -112,11 +98,38 @@ class KeyboardCanvas extends React.Component {
 			}
 			$('#gridConfirmation').css('display', 'block');
 			setTimeout((function(){$('#gridConfirmation').text(''); $('#gridConfirmation').css('display', 'none');}), 2000);
-			
-			self.props.draw.options = {};
-			self.draw(self.props.draw.id, 'black', {});
+		
+			this.props.draw.options = {};
+			this.draw(this.props.draw.id, 'black', {});
 			return true;
-		}));	
+		} else {
+			var url = "http://dwslgrid.ece.drexel.edu:5000/radioControl";
+			this.api.post(url, {
+				'_id': 		 'node'+node1,
+				'type': 	 (type == 1) ? 'capture' : 'mgen',
+				'completed': String(false),
+				'date': 	 new Date().toISOString(),
+				'time': 	 String(time),
+				'direction': String(1),
+				'rxGain': 	 $('#rxGain_'+window._id+'_radio_knob').val(),
+				'txGain': 	 $('#txGain_'+window._id+'_radio_knob').val(),
+				'power': 	 $('#power_'+window._id+'_radio_knob').val(),
+				'freq': 	 $('#frequency_'+window._id+'_radio_knob').val(),
+				'nodeToCapture': String(node2)
+			}, (function(data){
+				if (type == 1){
+					$('#gridConfirmation').text('Node #'+node1+' capturing Node #'+node2);
+				} else {
+					$('#gridConfirmation').text('MGEN started from Node #'+node1+' to Node #'+node2);
+				}
+				$('#gridConfirmation').css('display', 'block');
+				setTimeout((function(){$('#gridConfirmation').text(''); $('#gridConfirmation').css('display', 'none');}), 2000);
+				
+				self.props.draw.options = {};
+				self.draw(self.props.draw.id, 'black', {});
+				return true;
+			}));
+		}	
 	}
 
 	updateRadio(node){
@@ -124,22 +137,24 @@ class KeyboardCanvas extends React.Component {
 		Send radio information updates to the Flask Server through the API post(), then 
 		call transformData() and setRadio() to display the radio information to the user.
 	*/
-		var self = this
-		// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
-		var url = "http://dwslgrid.ece.drexel.edu:5000/radio/"+node;
-		this.api.post(url, {
-			'_id': 		 		{value: node},
-			'rxGain': 	 		{value: $('#rxGain_'+window._id+'_radio_knob').val()},
-			'txGain': 	 		{value: $('#txGain_'+window._id+'_radio_knob').val()},
-			'normalFrequency': 	{value: $('#frequency_'+window._id+'_radio_knob').val()},
-			'power': 	 		{value: $('#power_'+window._id+'_radio_knob').val()},
-			'sampleRate': 		{value: $('#sampleRate'+window._id+'_radio_knob').val()},
-			'frameSize': 		{value: $('#rxGain_'+window._id+'_radio_knob').val()},
-		}, (function(data){
-			data = self.transformData(data);
-			console.log(data)
-			// self.setRadio(data)
-		}));
+		if (!TEST_MODE){
+			var self = this
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
+			var url = "http://dwslgrid.ece.drexel.edu:5000/radio/"+node;
+			this.api.post(url, {
+				'_id': 		 		{value: node},
+				'rxGain': 	 		{value: $('#rxGain_'+window._id+'_radio_knob').val()},
+				'txGain': 	 		{value: $('#txGain_'+window._id+'_radio_knob').val()},
+				'normalFrequency': 	{value: $('#frequency_'+window._id+'_radio_knob').val()},
+				'power': 	 		{value: $('#power_'+window._id+'_radio_knob').val()},
+				'sampleRate': 		{value: $('#sampleRate'+window._id+'_radio_knob').val()},
+				'frameSize': 		{value: $('#rxGain_'+window._id+'_radio_knob').val()},
+			}, (function(data){
+				data = self.transformData(data);
+				console.log(data)
+				// self.setRadio(data)
+			}));
+		}
 	}
 
 	transformData(data){

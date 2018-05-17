@@ -13,13 +13,13 @@
 		return array(10, 14, 5, 16, 17, 15);
 	}
 	function getParentColors(){
-		return array('#1abc9c', '#f1c40f', '#d35400', '#e74c3c', '#3498db', '#8e44ad');
+		return array('#3498db', '#f1c40f', '#d35400', '#e74c3c', '#1abc9c', '#8e44ad');
 	}
 	function getChild(){
 		return array(18, 13, 9, 11, 50, 12, 8, 6, 7);
 	}
 	function getChildOwner(){
-		return array('', '#1abc9c', '#f1c40f', '#d35400', '', '#e74c3c', '#3498db', '', '#8e44ad');
+		return array('', '#3498db', '#f1c40f', '#d35400', '', '#e74c3c', '#1abc9c', '', '#8e44ad');
 	}
 
 	function round1($m){
@@ -52,13 +52,13 @@
 
 			foreach (getChildOwner() as $key2 => $chOwn) {
 				if ( $chOwn == $c[$key] ) {
-					if ($par == 10 && $t <= 5){
+					if ($par == 10 && $t <= 11){
 						$packetsReceived['node'.$chi[$key2]] = $t*$t;
 						$data['packetsReceived'] = $packetsReceived;
-					} elseif ( $par != 10 && $t > 4 && $t <= 11){
+					} elseif ( $par != 10 && $par != 13 && $t > 4 && $t <= 11){
 						$packetsReceived['node'.$chi[$key2]] = $t*$t;
 						$data['packetsReceived'] = $packetsReceived;
-					} elseif ( $par != 10 && $t > 14 && $t < 18 ) {
+					} elseif ( $par != 10 && $par != 13 && $t > 14 && $t < 18 ) {
 						$packetsReceived['node'.$chi[$key2]] = $t*$t;
 						$data['packetsReceived'] = $packetsReceived;
 					}
@@ -68,24 +68,28 @@
 			array_push($ret, $data);
 		}
 
-		// 13 captures 50
-		if ( $t > 5){
+		// 10 captures 13
+		if ( $t >= 11){
 			$par = 13;
 			$data = array();
 			$packetsReceived = array();
 			$data['_id'] = "node".$par;
 			$data['owner'] = '#1abc9c';
 			if ( $t > 6 && $t <= 10){
-				$packetsReceived['node50'] = $t*$t;
+				$packetsReceived['node13'] = $t*$t;
 				$data['packetsReceived'] = $packetsReceived;
 			}
 			array_push($ret, $data);
 		}
-		if ( $t >= 10){
-			$par = 50;
+
+		// 13 tries to capture 9
+		if ( $t >= 15 && $t <= 17){
+			$par = 13;
 			$data = array();
 			$packetsReceived = array();
+			$packetsReceived['node9'] = $t*$t;
 			$data['_id'] = "node".$par;
+			$data['packetsReceived'] = $packetsReceived;
 			$data['owner'] = '#1abc9c';
 			array_push($ret, $data);
 		}

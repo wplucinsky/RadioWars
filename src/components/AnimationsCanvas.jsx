@@ -6,7 +6,7 @@ class AnimationsCanvas extends React.Component {
 		this.nodes = new Nodes();
 		this.api = new API();
 		this.currNode = null;
-		this.m = 0;
+		this.m = 18;
 		this.animCount = 0;
 		this.timer = null;
 		
@@ -48,9 +48,9 @@ class AnimationsCanvas extends React.Component {
 		var self = this;
 
 		if (TEST_MODE) {
-			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?test=1&m="+this.m; // used for testing
-			var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
+			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump"
 
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {

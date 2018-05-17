@@ -99,7 +99,12 @@ class Content extends React.Component {
 				}
 			});
 
-			event.preventDefault();
+			let chng = [m, s, i, c, rs, d, esc, id, m_id].some(function(elem){
+				return elem !== 0
+			});
+			if (chng) {
+				event.preventDefault();
+			}
 		});
 
 		var elem = document.getElementById('clickCanvas');

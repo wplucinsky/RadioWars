@@ -87,15 +87,17 @@ class Antenna extends React.Component {
 	}
 
 	callAPI(){
-		var url = "http://dwslgrid.ece.drexel.edu:5000/radioAntennaState",
-			self = this;
-		
-		this.api.post(url, {
-			'_id': 		'node'+this.node,
-			'state': 	this.getDirFromState(this.node, this.state.direction),
-		}, (function(data){
+		if (!TEST_MODE) {
+			var url = "http://dwslgrid.ece.drexel.edu:5000/radioAntennaState",
+				self = this;
 			
-		}));
+			this.api.post(url, {
+				'_id': 		'node'+this.node,
+				'state': 	this.getDirFromState(this.node, this.state.direction),
+			}, (function(data){
+				
+			}));
+		}
 	}
 
 	render() { 

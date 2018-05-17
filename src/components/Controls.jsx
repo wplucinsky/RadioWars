@@ -30,8 +30,8 @@ class Controls extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		this.props = nextProps;
 
-		if(this.props.keyboardUpdate){
-			if ( this.props.keyboard.cselect != 0 && this.props.type == 'radio' ) {
+		if(this.props.keyboardUpdate && this.props.type == 'radio'){
+			if ( this.props.keyboard.cselect != 0 ) {
 				if (this.props.keyboard.cselect == -1 ){
 					this.control = (this.control == 0) ? 5 : this.control-1;
 				} else if (this.props.keyboard.cselect == -2 ) {
