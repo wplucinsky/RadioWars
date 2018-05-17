@@ -3,7 +3,6 @@ class AnimationsCanvas extends React.Component {
 		super(props);
 
 		this.grid = new Grid();
-		this.nodes = new Nodes();
 		this.api = new API();
 		this.currNode = null;
 		this.m = 18;
@@ -19,7 +18,7 @@ class AnimationsCanvas extends React.Component {
 		// setup
 		this.canvas = document.getElementById('animations');
 		this.elem = this.canvas.getContext('2d');
-		this.currNode = this.nodes.getNodeLocation(window._node);
+		this.currNode = window._nodes.getNodeLocation(window._node);
 		this.grid.setup([], 'grid', undefined);
 		this.rects = this.grid.getRectangles();
 		this.apiCallGet(true);
@@ -106,7 +105,7 @@ class AnimationsCanvas extends React.Component {
 					if (old || to == 0){
 						continue;
 					}
-					animationData[i][k] = this.getAnimationData(this.nodes.getNodeLocation(from), this.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
+					animationData[i][k] = this.getAnimationData(window._nodes.getNodeLocation(from), window._nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
 					var offset = this.getOffset(i,k); // how many packets have been sent so far
 					
@@ -330,7 +329,8 @@ class AnimationsCanvas extends React.Component {
 		}
 		for (let i = 0; i < nodes.length; i++) {
 			nodes[i].owner = (nodes[i].owner.toLowerCase() == 'neutral') ? 'rgb(201, 203, 207)' : nodes[i].owner.toLowerCase();
-			this.grid.on(this.nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1)
+			window._nodes.takeNode(nodes[i]._id.replace('node',''), nodes[i].owner);
+			this.grid.on(window._nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1);
 		}
 	}
 

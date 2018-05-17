@@ -50,7 +50,7 @@ $(function() {
 					document.getElementById('root')
 				);
 				$('#loading-blocker').toggleClass('hidden');
-				$('.line').css('background-color', 'rgb(54, 162, 235)');
+				$('.line').css('background-color', window._teamColor);
 				setup();
 			} else if(document.getElementById('viewer') != null){
 				ReactDOM.render(
@@ -61,7 +61,7 @@ $(function() {
 					document.getElementById('viewer')
 				);
 				$('#loading-blocker').toggleClass('hidden');
-				$('.line').css('background-color', 'rgb(54, 162, 235)');
+				$('.line').css('background-color', window._teamColor);
 				setup();
 			}
 		})
@@ -76,7 +76,7 @@ $(function() {
 				document.getElementById('root')
 			);
 			$('#loading-blocker').toggleClass('hidden');
-			$('.line').css('background-color', 'rgb(54, 162, 235)');
+			$('.line').css('background-color', window._teamColor);
 			setup();
 		} else if(document.getElementById('viewer') != null){
 			ReactDOM.render(
@@ -87,7 +87,7 @@ $(function() {
 				document.getElementById('viewer')
 			);
 			$('#loading-blocker').toggleClass('hidden');
-			$('.line').css('background-color', 'rgb(54, 162, 235)');
+			$('.line').css('background-color', window._teamColor);
 			setup();
 		}
 	}
@@ -103,7 +103,9 @@ $(function() {
 	} else {
 		window._id = parseInt(window._id)
 	}
+	window._nodes = new Nodes();
 	window._node = 11; // js layout
+	window._teamColor = '#3498db';
 
 
 

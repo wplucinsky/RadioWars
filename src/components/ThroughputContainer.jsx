@@ -5,15 +5,14 @@ class ThroughputContainer extends React.Component {
 			cnt: [1,]
 		};
 
-		this.nodes = new Nodes();
-		this.availableNodes = this.nodes.getRealLocations();
+		this.availableNodes = window._nodes.getRealLocations();
 
 		this.handleClick = this.handleClick.bind(this);
 		this.remove = this.remove.bind(this);
 	}
 
 	componentDidMount(){
-		$('.line').css('background-color', 'rgb(54, 162, 235)');
+		$('.line').css('background-color', window._teamColor);
 	}
 
 
@@ -57,7 +56,7 @@ class ThroughputContainer extends React.Component {
 								remove={this.remove} 
 								data={this.props.data} 
 								startNode={this.props.startNode} 
-								startNodeReal={this.nodes.getNodeLocationReal(this.props.startNode)}
+								startNodeReal={window._nodes.getNodeLocationReal(this.props.startNode)}
 								key={i} 
 								cnt={item}
 								availableNodes={this.availableNodes}/>

@@ -16,14 +16,14 @@ class GridContainer extends React.Component {
 			}
 		}
 
-		this.nodes = new Nodes();
 		this.grid = new Grid();
 
+		// this.isOwnedNode = this.isOwnedNode.bind(this);
 		this.processKeyboard = this.processKeyboard.bind(this);
 	}
 
 	componentDidMount(){
-		$('.line').css('background-color', 'rgb(54, 162, 235)');
+		$('.line').css('background-color', window._teamColor);
 		if (this.props.viewer == 0){
 			this.setState({
 				draw: { 
@@ -55,7 +55,7 @@ class GridContainer extends React.Component {
 		and sends them to the canvas elements created by this component.
 	*/
 		var ctrl = this.state,
-			nearby = this.nodes.getSurroundingNodes(ctrl.currNode),
+			nearby = window._nodes.getSurroundingNodes(ctrl.currNode),
 			data = {
 				draw: null,
 				capture: {
@@ -87,6 +87,8 @@ class GridContainer extends React.Component {
 
 		// capture (part 1): start
 		else if ( this.props.keyboard.id == 1) {
+			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
+
 			data.capture.id = 2;
 			data.capture.node = ctrl.currNode;
 			data.currNode = ctrl.currNode;
@@ -98,6 +100,8 @@ class GridContainer extends React.Component {
 
 		// mgen (part 1): start
 		else if ( this.props.keyboard.m_id == 1) {
+			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
+
 			data.capture.m_id = 2;
 			data.capture.m_node = ctrl.currNode;
 			data.currNode = ctrl.currNode;
@@ -182,13 +186,15 @@ class GridContainer extends React.Component {
 
 		// update radio
 		else if ( this.props.keyboard.select == 1) {
+			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
 			ctrl.capture.id = 0;
 			data.currNode = ctrl.currNode;
 			data.draw = { id: ctrl.currNode, color: 'green', options: {select: 1}};
 		} 
 
 		// start interference
-		else if ( this.props.keyboard.interference  == 1) {
+		else if ( this.props.keyboard.interference  == 1 ) {
+			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
 			data.currNode = ctrl.currNode;
 			data.draw = { id: ctrl.currNode, color: 'orange', options: {interference: 1}};
 		}
@@ -271,6 +277,25 @@ class GridContainer extends React.Component {
 			ctrl.currNode = data.currNode;
 			this.props.returnClick(1)
 		}
+	}
+
+	isOwnedNode(node){
+	/*
+		Returns a boolean and displays an error message to the user if no 
+		one owns the node, or if someone else owns the node.
+	*/
+		var ownedNodes = window._nodes.getTakenNodes();
+		if ( ownedNodes[node] == null || ownedNodes[node] != window._teamColor ){
+			$('#gridConfirmChanges').text('you don\'t own this node');
+			$('#gridConfirmChanges').css('display', 'block');
+			setTimeout((function(){$('#gridConfirmChanges').text(''); $('#gridConfirmChanges').css('display', 'none');}), 2000);
+			
+			return false;
+		}
+
+		$('#gridConfirmChanges').text('');
+		$('#gridConfirmChanges').css('display', 'none');
+		return true;
 	}
 	
 	render() { 

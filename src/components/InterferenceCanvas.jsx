@@ -3,7 +3,6 @@ class InterferenceCanvas extends React.Component {
 		super(props);
 
 		this.grid = new Grid();
-		this.nodes = new Nodes();
 		this.api = new API();
 		this.currNode = null;
 		
@@ -18,7 +17,7 @@ class InterferenceCanvas extends React.Component {
 		// setup
 		this.canvas = document.getElementById('keyboard');
 		this.elem = this.canvas.getContext('2d');
-		this.currNode = this.nodes.getNodeLocation(window._node);
+		this.currNode = window._nodes.getNodeLocation(window._node);
 		this.grid.setup([], 'keyboard', false);
 
 		this.rects = this.grid.getRectangles();
@@ -43,7 +42,7 @@ class InterferenceCanvas extends React.Component {
 		if (this.props.keyboardUpdate && this.props.draw != undefined && this.props.draw.options != undefined) {
 			var o = processOptions(this.props.draw.options);
 			if (o.interference == 1) {
-				this.startInterference(this.nodes.getNodeLocationReal(this.props.currNode))
+				this.startInterference(window._nodes.getNodeLocationReal(this.props.currNode))
 			}
 		}
 	}
@@ -54,11 +53,11 @@ class InterferenceCanvas extends React.Component {
 		if the response is successful then an interference animation is drawn for the 
 		time specified. When finished the index in this.control is set to null.
 	*/
-		var time = 3;
+		var time = 6;
 		$('#interferenceControlsConfirmChanges').css('display', 'none')
 
 		if (TEST_MODE) {
-			let n = this.nodes.getNodeLocation(node)
+			let n = window._nodes.getNodeLocation(node)
 			if (this.control[n] == undefined || this.control[n] == null) {
 				this.control[n] = {}
 				this.control[n].fn = new InterferenceAnimation();
@@ -103,7 +102,7 @@ class InterferenceCanvas extends React.Component {
 			var a = new Date(data[i].date); var time = (a-t)/1000; // get time remaining
 			if (data[i].date >= t.toISOString()) {
 				if (data[i].type.toLowerCase() == 'jammer' ) {
-					let n = self.nodes.getNodeLocation(data[i]._id.replace('node', ''))
+					let n = window._nodes.getNodeLocation(data[i]._id.replace('node', ''))
 					
 					// display interference
 					if (self.control[n] == undefined || self.control[n] == null) {
@@ -127,7 +126,7 @@ class InterferenceCanvas extends React.Component {
 		var t = '', control = this.control;
 		for (let i in control){
 			if ( control[i] != null ){
-				var n = this.nodes.getNodeLocationReal(i);
+				var n = window._nodes.getNodeLocationReal(i);
 				t = t + 'Interference on Node #'+n+'! '
 			}
 		}

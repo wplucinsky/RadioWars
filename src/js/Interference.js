@@ -10,7 +10,6 @@ function Interference(){
 	// specific
 	this.grid = new Grid();
 	this.api = new API();
-	this.nodes = new Nodes();
 	this.control = [];
 
 	this.setup = function(teams, id){
@@ -130,7 +129,7 @@ function Interference(){
 			t = new Date(); t.setSeconds(t.getSeconds() - data[i].time); // check if interference hasn't elapsed
 			a = new Date(data[i].date); time = (a-t)/1000; // get time remaining
 			if (data[i].date >= t.toISOString()) {
-				n = self.nodes.getNodeLocation(data[i]._id.replace('node', ''))
+				n = window._nodes.getNodeLocation(data[i]._id.replace('node', ''))
 				if (data[i].type.toLowerCase() == 'jammer' ) {
 					// display interference
 					if (self.control[n] == undefined || self.control[n] == null) {

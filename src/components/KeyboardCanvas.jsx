@@ -5,7 +5,6 @@ class KeyboardCanvas extends React.Component {
 
 		this.eventListeners = null;
 		this.grid = new Grid();
-		this.nodes = new Nodes();
 		this.api = new API();
 		this.currNode = null;
 		this.currNodeReal = null;
@@ -18,7 +17,7 @@ class KeyboardCanvas extends React.Component {
 		this.canvas = document.getElementById('keyboard');
 		this.elem = this.canvas.getContext('2d');
 		this.currNodeReal = window._node;
-		this.currNode = this.nodes.getNodeLocation(window._node);
+		this.currNode = window._nodes.getNodeLocation(window._node);
 		this.grid.setup([], 'keyboard', false);
 
 		this.rects = this.grid.getRectangles();
@@ -51,7 +50,7 @@ class KeyboardCanvas extends React.Component {
 		if (o.clear == 1) {
 			this.elem.clearRect(this.rects[this.currNode].x-6, this.rects[this.currNode].y-6, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
 			this.currNode = node; // javascript layout node
-			this.currNodeReal = this.nodes.getNodeLocationReal(node); // grid layout node
+			this.currNodeReal = window._nodes.getNodeLocationReal(node); // grid layout node
 		}
 
 		this.elem.beginPath();
@@ -67,12 +66,12 @@ class KeyboardCanvas extends React.Component {
 
 		if (o.select == 1) {
 			$('#radioControlsConfirmChanges').css('display', 'none');
-			this.updateRadio(this.nodes.getNodeLocationReal(node));
+			this.updateRadio(window._nodes.getNodeLocationReal(node));
 		}
 		if (o.capture >= 1) {
 			this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			$('#gridConfirmChanges').css('display', 'none');
-			this.startNodeControl(o.capture, this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
+			this.startNodeControl(o.capture, window._nodes.getNodeLocationReal(o.node1), window._nodes.getNodeLocationReal(o.node2));
 		}
 		if (o.redraw != -1) {
 			this.draw(o.redraw, 'green', {dash: 1, clear: 0})

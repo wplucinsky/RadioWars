@@ -9,7 +9,6 @@ function Capture(){
 	// specific
 	this.grid = new Grid();
 	this.api = new API();
-	this.nodes = new Nodes();
 
 	this.setup = function(teams, id){
 		this.teams = teams;

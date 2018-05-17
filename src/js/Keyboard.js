@@ -10,7 +10,6 @@ function Keyboard(){
 	// specific
 	this.eventListeners = null;
 	this.grid = new Grid();
-	this.nodes = new Nodes();
 	this.currNode = null;
 	this.currNodeReal = null;
 	this.interference = new Interference();
@@ -28,7 +27,7 @@ function Keyboard(){
 		console.log(id)
 		this.team = window._id;
 		this.currNodeReal = self.data.teams[window._id].radio._id.value;
-		this.currNode = this.nodes.getNodeLocation(self.data.teams[window._id].radio._id.value);
+		this.currNode = window._nodes.getNodeLocation(self.data.teams[window._id].radio._id.value);
 		this.grid.setup(teams, id, true);
 	}
 
@@ -215,7 +214,7 @@ function Keyboard(){
 		if (o.clear == 1) {
 			this.elem.clearRect(this.rects[this.currNode].x-6, this.rects[this.currNode].y-6, this.rects[this.currNode].width+13, this.rects[this.currNode].height+13);
 			this.currNode = node; // javascript layout node
-			this.currNodeReal = this.nodes.getNodeLocationReal(node); // grid layout node
+			this.currNodeReal = window._nodes.getNodeLocationReal(node); // grid layout node
 		}
 
 		this.elem.beginPath();
@@ -238,7 +237,7 @@ function Keyboard(){
 		if (o.capture == 1) {
 			this.elem.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			$('#gridConfirmChanges').css('display', 'none');
-			this.capture.fn.startNodeControl(this.nodes.getNodeLocationReal(o.node1), this.nodes.getNodeLocationReal(o.node2));
+			this.capture.fn.startNodeControl(window._nodes.getNodeLocationReal(o.node1), window._nodes.getNodeLocationReal(o.node2));
 		}
 		if (o.redraw != -1) {
 			return this.draw(o.redraw, 'green', {dash: 1, clear: 0})

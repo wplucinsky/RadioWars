@@ -3,7 +3,6 @@ class GridCanvas extends React.Component {
 		super(props);
 		
 		this.grid = new Grid(); // src/js/Grid.js
-		this.nodes = new Nodes();
 		this.currNode = 0;
 	}
 

@@ -16,7 +16,7 @@ function Animations(){
 	this.gridDirty = false;
 	this.grid = new Grid();
 	this.api = new API();
-	this.nodes = new Nodes();
+	
 	this.colors = {
 		red: 'rgb(255, 99, 132)',
 		orange: 'rgb(255, 159, 64)',
@@ -119,7 +119,7 @@ function Animations(){
 					if (old || to == 0){
 						continue;
 					}
-					animationData[i][k] = this.getAnimationData(this.nodes.getNodeLocation(from), this.nodes.getNodeLocation(to), diff, i, k, data[i].owner);
+					animationData[i][k] = this.getAnimationData(window._nodes.getNodeLocation(from), window._nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
 					offset = this.getOffset(i,k); // how many packets have been sent so far
 
@@ -372,7 +372,7 @@ function Animations(){
 		}
 		for (let i = 0; i < nodes.length; i++) {
 			nodes[i].owner = (nodes[i].owner.toLowerCase() == 'neutral') ? 'rgb(201, 203, 207)' : nodes[i].owner.toLowerCase();
-			this.grid.on(this.nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1)
+			this.grid.on(window._nodes.getNodeLocation(nodes[i]._id.replace('node','')), nodes[i].owner, 1)
 		}
 	}
 

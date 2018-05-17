@@ -11,7 +11,7 @@ class Controls extends React.Component {
 	}
 
 	componentDidMount(){
-		$('.line').css('background-color', 'rgb(54, 162, 235)');
+		$('.line').css('background-color', window._teamColor);
 		$(".knob").knob({
 			release : function (value) {
 				if (this.$.attr('id').indexOf('interference_') !== -1 ) {

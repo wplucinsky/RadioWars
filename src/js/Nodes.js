@@ -14,16 +14,15 @@ function Nodes(){
 		 	11 	50 	7
 		5				15 	
 */
-	this.takenNodes = [];
 	// this.direction = ['Up', 'UpLeft', 'Left', 'DownLeft', 'Down', 'DownRight', 'Right', 'Up'];
 	this.direction = ['Up', 'Left', 'Left', 'Left', 'Down', 'Right', 'Right', 'Up'];
 
-	this.takeNode = function(node_id) {
-		this.takenNodes.push(node_id);
+	this.takeNode = function(node_id, color) {
+		this.takenNodes[node_id] = color;
 	}
 
 	this.untakeNode = function(node_id) {
-		delete this.takenNodes[this.takenNodes.indexOf(node_id)];
+		this.takenNodes[node_id] = null;
 	}
 
 	this.getTakenNodes = function(){
@@ -270,5 +269,11 @@ function Nodes(){
 		} while (new_node != null && this.takenNodes.indexOf(new_node) != -1) 
 
 		return new_node;
+	}
+
+	this.takenNodes = {};
+	var nodes = this.getRealLocations();
+	for (var i in nodes){
+		this.takenNodes[nodes[i]] = null
 	}
 }

@@ -8,7 +8,7 @@ class ServerOutput extends React.Component {
 	}
 
 	componentDidMount(){
-		$('.line').css('background-color', 'rgb(54, 162, 235)');
+		$('.line').css('background-color', window._teamColor);
 		
 		return fetch('http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m=1')
 			.then((response) => response.json())
