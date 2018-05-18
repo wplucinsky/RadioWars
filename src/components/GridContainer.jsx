@@ -18,7 +18,6 @@ class GridContainer extends React.Component {
 
 		this.grid = new Grid();
 
-		// this.isOwnedNode = this.isOwnedNode.bind(this);
 		this.processKeyboard = this.processKeyboard.bind(this);
 	}
 
@@ -28,7 +27,7 @@ class GridContainer extends React.Component {
 			this.setState({
 				draw: { 
 					id: this.state.currNode, 
-					color: 'black', 
+					color: 'black',
 					options: null
 				}
 			});
@@ -56,6 +55,7 @@ class GridContainer extends React.Component {
 	*/
 		var ctrl = this.state,
 			nearby = window._nodes.getSurroundingNodes(ctrl.currNode),
+			control = {c_start: -1, m_start: -1},
 			data = {
 				draw: null,
 				capture: {
@@ -86,9 +86,10 @@ class GridContainer extends React.Component {
 		} 
 
 		// capture (part 1): start
-		else if ( this.props.keyboard.id == 1) {
+		else if ( this.props.keyboard.id == 1 && this.props.keyboard.c_start == 0 && this.props.keyboard.m_start == 0) {
 			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
 
+			control.c_start = 1;
 			data.capture.id = 2;
 			data.capture.node = ctrl.currNode;
 			data.currNode = ctrl.currNode;
@@ -99,9 +100,9 @@ class GridContainer extends React.Component {
 		} 
 
 		// mgen (part 1): start
-		else if ( this.props.keyboard.m_id == 1) {
+		else if ( this.props.keyboard.m_id == 1 && this.props.keyboard.c_start == 0 && this.props.keyboard.m_start == 0) {
+			control.m_start = 1;
 			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
-
 			data.capture.m_id = 2;
 			data.capture.m_node = ctrl.currNode;
 			data.currNode = ctrl.currNode;
@@ -113,6 +114,7 @@ class GridContainer extends React.Component {
 
 		// capture (part 3): finish
 		else if ( ctrl.capture.id == 3 && this.props.keyboard.select == 1) {
+			control.c_start = 0;
 			$('#gridConfirmChanges').css('display', 'none');
 			data.draw = { id: ctrl.capture.node, color: 'black', options: {capture: 1, node1: ctrl.capture.node, node2: ctrl.currNode}};
 			data.currNode = ctrl.capture.node;
@@ -124,6 +126,7 @@ class GridContainer extends React.Component {
 
 		// megen (part 3): finish
 		else if ( ctrl.capture.m_id == 3 && this.props.keyboard.select == 1) {
+			control.m_start = 0;
 			$('#gridConfirmChanges').css('display', 'none');
 			data.draw = { id: ctrl.capture.m_node, color: 'black', options: {capture: 2, node1: ctrl.capture.m_node, node2: ctrl.currNode}};
 			data.currNode = ctrl.capture.m_node;
@@ -135,6 +138,7 @@ class GridContainer extends React.Component {
 
 		// capture (part 2) move
 		else if ( ctrl.capture.id >= 2) {
+			control.c_start = 1;
 			if ( this.props.keyboard.mdirection != -1 && 
 				nearby[this.props.keyboard.mdirection] != -1 && 
 				nearby[this.props.keyboard.mdirection] != ctrl.capture.node
@@ -155,6 +159,7 @@ class GridContainer extends React.Component {
 
 		// mgen (part 2) move
 		else if ( ctrl.capture.m_id >= 2) {
+			control.m_start = 1;
 			if ( this.props.keyboard.mdirection != -1 && 
 				nearby[this.props.keyboard.mdirection] != -1 && 
 				nearby[this.props.keyboard.mdirection] != ctrl.capture.m_node
@@ -211,7 +216,7 @@ class GridContainer extends React.Component {
 		ctrl.draw = data.draw;
 		ctrl.capture = (data.capture.id == 0 && data.capture.node == -1) && (data.capture.m_id == 0 && data.capture.m_node == -1) ? ctrl.capture : data.capture;
 		ctrl.currNode = data.currNode;
-		this.props.returnKeyboard(data.currNode)
+		this.props.returnKeyboard(data.currNode, control)
 	}
 
 	processClick() {

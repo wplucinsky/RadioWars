@@ -14,6 +14,9 @@ class Content extends React.Component {
 				id: 		  0,
 				m_id: 		  0,
 				old_id: 	  0,
+				old_m_id: 	  0,
+				c_start: 	  0,
+				m_start: 	  0,
 			},
 			data: null,
 			currNode: window._node,
@@ -51,7 +54,9 @@ class Content extends React.Component {
 				m_id = 0,// mgen
 				j = -1,  // move directon
 				old_id   = self.state.keyboard.id,
-				old_m_id = self.state.keyboard.m_id;
+				old_m_id = self.state.keyboard.m_id,
+				c_start  = self.state.keyboard.c_start,
+				m_start  = self.state.keyboard.m_start;
 
 			// help modal
 			if (event.key == 'h') { $('#helpModal').modal(); self.keyboard = 1; }
@@ -96,6 +101,8 @@ class Content extends React.Component {
 					m_id: 		  m_id,
 					old_id: 	  old_id,
 					old_m_id: 	  old_m_id,
+					c_start:  	  c_start,
+					m_start:      m_start,
 				}
 			});
 
@@ -131,11 +138,23 @@ class Content extends React.Component {
 		});
 	}
 
-	returnKeyboard(currNode){
+	returnKeyboard(currNode, control){
 	/*
 		Used with the GridContainer component to distinguish between a new
 		keyboard command and an old keyboard command.
 	*/
+		var ctrl = this.state;
+		if (control.c_start != -1){
+			ctrl.keyboard.c_start = control.c_start;
+		}
+		if (control.m_start != -1){
+			ctrl.keyboard.m_start = control.m_start;
+		}
+
+		this.setState({
+			ctrl
+		});
+
 		this.keyboard = currNode;
 		this.state.currNode = currNode;
 	}
