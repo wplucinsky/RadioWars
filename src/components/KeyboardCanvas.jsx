@@ -111,10 +111,10 @@ class KeyboardCanvas extends React.Component {
 				'date': 	 new Date().toISOString(),
 				'time': 	 String(time),
 				'direction': String(1),
-				'rxGain': 	 $('#rxGain_'+window._id+'_radio_knob').val(),
-				'txGain': 	 $('#txGain_'+window._id+'_radio_knob').val(),
-				'power': 	 $('#power_'+window._id+'_radio_knob').val(),
-				'freq': 	 $('#frequency_'+window._id+'_radio_knob').val(),
+				'rxGain': 	 $('#rxGain_'+window._id+'_radio_knob').val() == undefined ? '35' : $('#rxGain_'+window._id+'_radio_knob').val(),
+				'txGain': 	 $('#txGain_'+window._id+'_radio_knob').val() == undefined ? '35' : $('#txGain_'+window._id+'_radio_knob').val(),
+				'power': 	 $('#power_'+window._id+'_radio_knob').val() == undefined ? '900' : $('#power_'+window._id+'_radio_knob').val(),
+				'freq': 	 $('#frequency_'+window._id+'_radio_knob').val() == undefined ? '900' : $('#frequency_'+window._id+'_radio_knob').val(),
 				'nodeToCapture': String(node2)
 			}, (function(data){
 				if (type == 1){
@@ -136,11 +136,16 @@ class KeyboardCanvas extends React.Component {
 	/*	
 		Send radio information updates to the Flask Server through the API post(), then 
 		call transformData() and setRadio() to display the radio information to the user.
+
+		The post request does not happen if the radio controls component is not visible.
 	*/
 		if (!TEST_MODE){
 			var self = this
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/mockdata.php?post=1";  // used for testing
 			var url = 'http://'+document.domain+':'+location.port+'/radio/'+node;
+			if ( $('#rxGain_'+window._id+'_radio_knob').val() == undefined ){
+				return; 
+			}
 			this.api.post(url, {
 				'_id': 		 		{value: node},
 				'rxGain': 	 		{value: $('#rxGain_'+window._id+'_radio_knob').val()},

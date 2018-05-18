@@ -76,10 +76,10 @@ class InterferenceCanvas extends React.Component {
 				'date': 	 new Date().toISOString(),
 				'time': 	 String(time),
 				'direction': String(1),
-				'rxGain': 	 $('#rxGain_'+window._id+'_interference_knob').val(),
-				'txGain': 	 $('#txtGain_'+window._id+'_interference_knob').val(),
-				'power': 	 $('#power_'+window._id+'_interference_knob').val(),
-				'freq': 	 $('#frequency_'+window._id+'_interference_knob').val(),
+				'rxGain': 	 $('#rxGain_'+window._id+'_interference_knob').val() == undefined ? '35' : $('#rxGain_'+window._id+'_interference_knob').val(),
+				'txGain': 	 $('#txGain_'+window._id+'_interference_knob').val() == undefined ? '35' : $('#txGain_'+window._id+'_interference_knob').val(),
+				'power': 	 $('#power_'+window._id+'_interference_knob').val() == undefined ? '900' : $('#power_'+window._id+'_interference_knob').val(),
+				'freq': 	 $('#frequency_'+window._id+'_interference_knob').val() == undefined ? '900' : $('#frequency_'+window._id+'_interference_knob').val(),
 				'nodeToCapture': String(node)
 			}, (function(data){
 				// subscribe to control processes data
