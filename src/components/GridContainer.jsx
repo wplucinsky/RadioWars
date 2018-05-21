@@ -68,7 +68,9 @@ class GridContainer extends React.Component {
 			};
 
 		// escape capture / do nothing
-		if ( this.props.keyboard.esc == 1) {				
+		if ( this.props.keyboard.esc == 1) {
+			control.c_start = 0;
+			control.m_start = 0;			
 			if ( ctrl.capture.id > 0 ){
 				ctrl.capture.id = 0;
 				data.currNode = ctrl.capture.node;

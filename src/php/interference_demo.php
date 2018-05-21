@@ -160,10 +160,21 @@
 		return $ret;
 	}
 
+	function appendTDMA(&$data) {
+		foreach ($data as $key => &$value) {
+			$value['network'] = 6;
+			$value['frameSize'] = 0.0600;
+			$value['tdmaPos'] = rand(1, 6);
+			$value['Fnode'] = 11;
+		}
+	}
+
 	if ( isset($_GET['demo']) && $_GET['m'] == 1 ) {
 		$data = round1($_GET['m']);
+		appendTDMA($data);
 	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 20 ) {
 		$data = round2(5, $_GET['m']);
+		appendTDMA($data);
 	} 
 	// elseif ( isset($_GET['demo']) && $_GET['m'] <= 20 ) {
 	// 	$data = round3($_GET['m']);

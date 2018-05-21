@@ -29,7 +29,7 @@ class Content extends React.Component {
 	}
 
 	componentDidMount(){
-		this.startListener()
+		this.startListener();
 	}
 
 	startListener(){

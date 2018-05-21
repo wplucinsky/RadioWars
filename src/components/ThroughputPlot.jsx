@@ -6,6 +6,7 @@ class ThroughputPlot extends React.Component {
 			id: 'throughput-'+this.props.cnt,
 			canvas: null,
 			elem: null,
+			type: 'line'
 		}
 
 		this.update = this.update.bind(this);
@@ -18,6 +19,11 @@ class ThroughputPlot extends React.Component {
 
 
 	componentDidUpdate() {
+		if ( this.props.data.type != this.chart.type ){
+			this.chart.type = this.props.data.type;
+			this.chart.elem.destroy();
+			this.chart.elem = new Chart(this.chart.canvas, this.props.data);
+		}
 		this.update();
 	}
 

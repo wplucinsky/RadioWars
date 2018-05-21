@@ -68,31 +68,38 @@ class Throughput extends React.Component {
 	}
 
 	handleChange(event){
-	/*
-		Set selectedNode in the state to the dropdown selected node. Also update the
-		chart title, and remove all data from the chart in the state.
-	*/
-		let chart_data = this.state.chart_data;
-		chart_data.options.title.text = capitalize(this.state.type)+' Plot - Node '+event.target.value;
-		chart_data.data.labels = [];
-		chart_data.data.datasets = [];
-
-		this.setState({
-			chart_data: chart_data,
-			selectedNode: event.target.value
-		});
+		this.change(this.state.type, event.target.value);
 	}
 
 	handleTypeChange(event){
+		this.change(event.target.value, this.state.selectedNode);
+	}
+
+	change(type, node){
+	/*
+		Called by handleChange() and handleTypeChange(). Sets selectedNode in the 
+		state to the dropdown selected node. Also update the chart title, and remove 
+		all data from the chart in the state. Sets a variety of chart_date based on
+		the selected value.
+	*/
 		let chart_data = this.state.chart_data;
-		chart_data.options.title.text = capitalize(event.target.value)+' Plot - Node '+this.state.selectedNode;
-		chart_data.options.scales.yAxes[0].scaleLabel.labelString = (event.target.value == 'throughput') ? 'bytes/sec' : 'dB';
+		chart_data.options.title.text = capitalize(type)+' Plot - Node '+node;
 		chart_data.data.labels = [];
 		chart_data.data.datasets = [];
 
+		if (type == 'tdma') {
+			chart_data.type = 'bar';
+			chart_data.options.scales.yAxes[0].scaleLabel.labelString = '';
+		} else if (type == 'throughput') {
+			chart_data.options.scales.yAxes[0].scaleLabel.labelString = 'bytes/sec';
+		} else {
+			chart_data.options.scales.yAxes[0].scaleLabel.labelString = 'dB';
+		}
+
 		this.setState({
 			chart_data: chart_data,
-			type: event.target.value
+			type: type,
+			selectedNode: node
 		});
 	}
 
@@ -101,6 +108,11 @@ class Throughput extends React.Component {
 		
 		let chart_data = this.state.chart_data;
 		for (let i = 0; i < data.length; i++){
+			/*
+				Line Plot: Add a dataset if there are no datasets, then append the new
+				data to that dataset's data array. Append a 1 to the labels array. 
+				Shorten both the data and labels to a maximum length of 16.
+			*/
 			if (data[i]._id == ('node'+this.state.selectedNode) && data[i][this.state.type] != undefined ){
 				
 				if (chart_data.data.datasets.length == 0) {
@@ -111,13 +123,74 @@ class Throughput extends React.Component {
 						fill: false,
 					});
 				}
-
+				
 				chart_data.data.datasets[0].data.push(parseFloat(data[i][this.state.type]));
 				chart_data.data.labels.push(1);
 
 				if (chart_data.data.datasets[0].data.length >= 16) {
 					chart_data.data.datasets[0].data.shift();
 					chart_data.data.labels = Array.apply(null, Array(chart_data.data.datasets[0].data.length)).map(Number.prototype.valueOf,1)
+				}
+			} 
+			/*
+				TDMA Bar Plot: Create a dataset if it doesn't exist. If it's a new
+				dataset or if the timeslot count changed or the position in the 
+				timeslot changed then recreate the dateset's data array. Current node
+				timeslot is highlighted in blue, all others are black. Add a subtitle
+				with the spacing of the timeslots.
+			*/
+			else if (this.state.type == 'tdma' && data[i]._id == ('node'+this.state.selectedNode)){
+				if (chart_data.data.datasets.length == 0) {
+					chart_data.data.datasets.push({
+						label: 'Node '+ this.state.selectedNode,
+						borderColor: 'black',
+						data: [],
+						fill: false,
+					});
+				}
+
+				if (chart_data.data.datasets.length == 0 ||
+					(chart_data.data.datasets[0] != undefined && 
+						(chart_data.data.datasets[0].rw_count != data[i]['network'] || 
+						chart_data.data.datasets[0].rw_pos != data[i]['tdmaPos']
+						)
+					)
+				) {
+					chart_data.data.datasets = [];
+					chart_data.data.labels = [1];
+					var count 	= data[i]['network'],
+						spacing = data[i]['frameSize'],
+						start 	= data[i]['Fnode'],
+						pos 	= data[i]['tdmaPos'];
+					
+					chart_data.options.title.text = [capitalize(this.state.type)+' Plot - Node '+this.state.selectedNode, 'Spacing: '+(parseFloat(count)/parseFloat(spacing))]
+					if (count != undefined && spacing != undefined && start != undefined){
+						chart_data.data.datasets.push({
+							borderColor: [],
+							backgroundColor: [],
+							data: [],
+							fill: true,
+						});
+						
+						chart_data.data.datasets[0].borderColor.push('#FFFFFF');
+						chart_data.data.datasets[0].backgroundColor.push('#FFFFFF');
+						chart_data.data.datasets[0].data.push(0);
+						
+						for (var j = start; j <= count + start; j++){
+							var color = (j - start == pos) ? window._teamColor : '#000000';
+							chart_data.data.datasets[0].borderColor.push(color);
+							chart_data.data.datasets[0].backgroundColor.push(color);
+							chart_data.data.datasets[0].data.push(100);
+							
+							chart_data.data.datasets[0].rw_count = count;
+							chart_data.data.datasets[0].rw_pos = pos;
+						}
+						chart_data.data.datasets[0].borderColor.push('#FFFFFF');
+						chart_data.data.datasets[0].backgroundColor.push('#FFFFFF');
+						chart_data.data.datasets[0].data.push(0);
+
+						chart_data.data.labels = Array.apply(null, Array(chart_data.data.datasets[0].data.length)).map(Number.prototype.valueOf,1)
+					}
 				}
 			}
 		}
@@ -171,6 +244,7 @@ class Throughput extends React.Component {
 							<option value='throughput'>Throughput</option>
 							<option value='rssi'>RSSI</option>
 							<option value='evm'>EVM</option>
+							<option value='tdma'>TDMA</option>
 						</select>
 					</div>
 					<ThroughputPlot data={this.state.chart_data} node={this.state.selectedNode} cnt={this.props.cnt}/>
