@@ -163,10 +163,10 @@ const config = {
 	modules: [
 		{
 			name: 'Radio Controls',
-			active: 1,
+			active: 0,
 		},{
 			name: 'Antenna Controls',
-			active: 1,
+			active: 0,
 		},{
 			name: 'Interference Controls',
 			active: 0,

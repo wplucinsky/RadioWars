@@ -125,6 +125,8 @@ class AnimationsCanvas extends React.Component {
 					this.sendPacket();
 				}
 			} 
+		} else {
+			this.setNodeColor()
 		}
 	}
 
@@ -315,6 +317,17 @@ class AnimationsCanvas extends React.Component {
 		if coloring is needed after the grid nodes are redrawn with
 		drawRectangles().
 	*/
+		if (data == undefined) {
+			var nodes = window._nodes.getTakenNodes();
+			for(let i in nodes){
+				if ( nodes[i] != null) {
+					window._nodes.untakeNode(i);
+					this.grid.off(window._nodes.getNodeLocation(i));
+				}
+			}
+			return;
+		}
+
 		var nodes = data.filter(function(val){ return val.owner != undefined; });
 		if ( this.previousData != null ) {
 			var prev = this.previousData.filter(function(val){ return val.owner != undefined; })
