@@ -41,7 +41,7 @@ $(function() {
 			console.log('socket is connected')
 		});
 
-		var mode = 'interference';
+		var mode = (window.location.hash) ? window.location.hash.substring(1) : 'interference';
 		api.get('http://'+document.domain+':'+location.port+'/config/'+mode, function(config){
 			if(document.getElementById('root') != null){
 				ReactDOM.render(
