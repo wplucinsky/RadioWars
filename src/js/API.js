@@ -162,8 +162,11 @@ const config = {
 	],
 	modules: [
 		{
-			name: 'Encryption',
+			name: 'Spoofing',
 			active: 1,
+		},{
+			name: 'Encryption',
+			active: 0,
 		},{
 			name: 'Radio Controls',
 			active: 0,

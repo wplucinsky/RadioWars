@@ -548,3 +548,8 @@ button:disabled {
 	float: right;
 	margin-bottom: 10px;
 }
+.spoof-node {
+	text-align: center;
+	font-weight: 700;
+	margin-top: 0px;
+}
