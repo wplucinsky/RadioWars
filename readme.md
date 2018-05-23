@@ -53,6 +53,27 @@ The goal of this repository is provide a user interface to the students taking p
 - if it's a static component it can follow `/src/components/Nav.jsx`, dynamic components should build off of `/src/components/Base.jsx`
 - once the component is saved, it should be included in the HTML file such as `index.html` and/or `viewer.html`
 
+## Add a New Radio Characteristics Option
+- these charts are made using [ChartJS](http://www.chartjs.org/) so any chart that can be made using ChartJS can be plotted here
+- in `src/components/Throughput.jsx` `render()` add an option for the select dropdown like 
+```
+<option value='example'>Example</option>
+```
+- add axes label names in `change()` where the variable type is the name given in `value=`
+- for line charts
+  - add a radio parameter to the radio code with the exact name and case given in `value=` above
+  - open website, select a node with that radio information and select the graph type
+  - no further changes necessary
+- for all other plots
+  - also set ChartJS graph type in `change()`
+  - add radio parameters to the radio code with the relevant information
+  - in `processData()` add the following where type is the name given in `value=`
+```
+else if (this.state.type == '{type}' && data[i]._id == ('node'+this.state.selectedNode)){}
+``` 
+  - follow the ChartJS documentation for adding data and it the the `else if` block above
+  - radio parameter information can be accessed from `data[i][{type}]` where type is the name given to the radio parameter(s)
+
 ## Adding/Modifying the Grid Nodes Component
 - to modify, determine what canvas component should be altered and either change the data coming from `/src/components/GridContainer.jsx` or how that data is handled within the canvas component
 - changes to how the data is displayed should take place in `/src/js/Grid.js` or `/src/components/<canvas_name>Canvas.js`
