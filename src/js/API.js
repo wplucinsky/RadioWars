@@ -162,11 +162,14 @@ const config = {
 	],
 	modules: [
 		{
+			name: 'Encryption',
+			active: 1,
+		},{
 			name: 'Radio Controls',
 			active: 0,
 		},{
 			name: 'Antenna Controls',
-			active: 0,
+			active: 1,
 		},{
 			name: 'Interference Controls',
 			active: 0,

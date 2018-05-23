@@ -538,3 +538,13 @@ button:disabled {
 	width: 40%;
 	float: right;
 }
+.encr-sel-l {
+	width: 40%;
+	float: left;
+	margin-bottom: 10px;
+}
+.encr-sel-r {
+	width: 60%;
+	float: right;
+	margin-bottom: 10px;
+}

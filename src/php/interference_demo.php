@@ -74,7 +74,7 @@
 			$data = array();
 			$packetsReceived = array();
 			$data['_id'] = "node".$par;
-			$data['owner'] = '#1abc9c';
+			$data['owner'] = '#3498db';
 			if ( $t > 6 && $t <= 10){
 				$packetsReceived['node13'] = $t*$t;
 				$data['packetsReceived'] = $packetsReceived;
@@ -90,7 +90,7 @@
 			$packetsReceived['node9'] = $t*$t;
 			$data['_id'] = "node".$par;
 			$data['packetsReceived'] = $packetsReceived;
-			$data['owner'] = '#1abc9c';
+			$data['owner'] = '#3498db';
 			array_push($ret, $data);
 		}
 

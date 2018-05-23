@@ -47,7 +47,8 @@ class AnimationsCanvas extends React.Component {
 		var self = this;
 
 		if (TEST_MODE) {
-			var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for demo
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for interference demo
+			var url = "http://www.craigslistadsaver.com/cgi-bin/encryption_demo.php?demo=1&m="+this.m; // used for encryption demo
 			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump" // if on dragonfly3 with DWSL server running this will work
 
 			if (start) {this.startTimer();}
@@ -126,7 +127,7 @@ class AnimationsCanvas extends React.Component {
 				}
 			} 
 		} else {
-			this.setNodeColor()
+			this.setNodeColor(data);
 		}
 	}
 
@@ -317,7 +318,7 @@ class AnimationsCanvas extends React.Component {
 		if coloring is needed after the grid nodes are redrawn with
 		drawRectangles().
 	*/
-		if (data == undefined) {
+		if (data == null || data == undefined || data.length == 0) {
 			var nodes = window._nodes.getTakenNodes();
 			for(let i in nodes){
 				if ( nodes[i] != null) {

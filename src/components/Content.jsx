@@ -222,6 +222,9 @@ class Content extends React.Component {
 								}
 							</div>
 							<div className="col-md-4 col-sm-12 col-xs-12">
+								{activeModules.indexOf('Encryption') != -1 ? 
+									(<Encryption  data={this.state.data}/>) : ''
+								}
 								{activeModules.indexOf('Radio Controls') != -1 ? 
 									(<Controls keyboardUpdate={this.keyboard == -1} type={'radio'} control={this.props.data.radio_controls} keyboard={this.state.keyboard} />) : ''
 								}	
