@@ -3,11 +3,23 @@ class Antenna extends React.Component {
 		super(props);
 		this.api = new API();
 		this.state = this.props;
+		this.state = {
+			direction: this.props.direction,
+			node: 3
+		}
 
-		this.node = 3;
+		/*
+			this.availableNodes should use PERMISSIONS boolean and 
+			window._nodes.getTakenNodes() as well as window._teamColor 
+			to restrict nodes that the antenna can be changed on once
+			reconfigurable antennas are on all nodes. Should also be 
+			moved into the state.
+		*/
+		this.availableNodes = [3, 4];
 		this.listeners = [];
-		this.set = true;
+
 		this.callAPI = this.callAPI.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentDidMount(){
@@ -17,20 +29,20 @@ class Antenna extends React.Component {
 
 	componentWillReceiveProps(nextProps){
 	/*
-		Sets the initial antenna direction to the state.
+		Updates the direction state based on information coming from the radio.
 	*/
 		this.props = nextProps;
-		if (this.set && this.data != null) {
-			this.set = false; // on node change, this.set = true;
-			var self = this;
-			this.props.data.filter(function(item){
-				if (item._id == 'node'+self.node ) {
-					let state = (item.state == undefined) ? 'omni' : item.state;
-					self.setState({
-						direction: self.getDirFromState(self.node, state),
-					});
+
+		var data = this.props.data;
+		for (let i = 0; i < data.length; i++){
+			if ( data[i]['_id'] == 'node'+this.state.node) {
+				if (data[i]['direction'] != undefined){
+					var self = this;
+					this.setState({
+						direction: self.getDirFromState(self.state.node, data[i]['direction'])
+					})
 				}
-			});
+			}
 		}
 	}
 
@@ -92,44 +104,62 @@ class Antenna extends React.Component {
 				self = this;
 			
 			this.api.post(url, {
-				'_id': 		'node'+this.node,
-				'state': 	this.getDirFromState(this.node, this.state.direction),
+				'_id': 		'node'+this.state.node,
+				'state': 	this.getDirFromState(this.state.node, this.state.direction),
 			}, (function(data){
 				
 			}));
 		}
 	}
 
+	handleChange(event){
+		this.setState({
+			node: event.target.value
+		})
+	}
+
 	render() { 
 		return (
 			<div className="row" id="antenna_controls_container">
-				<h4 className="text-center">Antenna Controls</h4>
-				<div className="line"></div>
-				<div className="row">
-					<div className="col-md-12">
-						<div className="dpad-div">
-							<div className="dpad-absolute-container" id="dpad-2">
-								<div>
-									<div className="dpad-arrow dpad-arrow-up"></div>
-									<div className="dpad-arrow dpad-arrow-down"></div>
-									<div className="dpad-arrow dpad-arrow-left"></div>
-									<div className="dpad-arrow dpad-arrow-right"></div>
+				<div className="col-md-12 team_x">
+					<h4 className="text-center">Antenna Controls</h4>
+					<div className="line"></div>
+					<div className="row">
+						<div className="col-md-12">
+							<label htmlFor="node" className="encr-sel-l">Node ID: </label>
+							<select name="node" className="form-control encr-sel-r" value={this.state.node} onChange={this.handleChange}>	
+								{this.availableNodes.map((item, key) => {
+									return <option key={key} value={item}>{item}</option>;
+								})}
+							</select>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-md-12">
+							<div className="dpad-div">
+								<div className="dpad-absolute-container" id="dpad-2">
+									<div>
+										<div className="dpad-arrow dpad-arrow-up"></div>
+										<div className="dpad-arrow dpad-arrow-down"></div>
+										<div className="dpad-arrow dpad-arrow-left"></div>
+										<div className="dpad-arrow dpad-arrow-right"></div>
+									</div>
+								</div>
+							</div>
+							<div className="btn-div">
+								<div className="logo">
+									<div id="omni" className="button-80 control_btn"><div className="button-text control_btn_text">OMNI</div></div>
+								</div>
+								<div className="logo">
+									<div id="confirm" className="button-80 control_btn"><div className="button-text control_btn_text">Confirm</div></div>
 								</div>
 							</div>
 						</div>
-						<div className="btn-div">
-							<div className="logo">
-								<div id="omni" className="button-80 control_btn"><div className="button-text control_btn_text">OMNI</div></div>
-							</div>
-							<div className="logo">
-								<div id="confirm" className="button-80 control_btn"><div className="button-text control_btn_text">Confirm</div></div>
-							</div>
-						</div>
 					</div>
-				</div>
-				<div className="row">
-					<div className="col-md-12">
-						<div className="pattern"><img src={"src/img/Pattern"+capitalize(this.state.direction)+".png"}></img></div>
+					<div className="row">
+						<div className="col-md-12">
+							<div className="pattern"><img src={"src/img/Pattern"+capitalize(this.state.direction)+".png"}></img></div>
+						</div>
 					</div>
 				</div>
 			</div>
