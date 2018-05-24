@@ -53,7 +53,7 @@
 		return $ret;
 	}
 
-	function round3($m, $t = 0){
+	function round3($m, $t = 0, $spoof){
 	/*
 		Packets go from spoofed 15 ( actually 10 ) to 3
 	*/
@@ -69,7 +69,7 @@
 			array_push($ret, $data);
 		}
 
-		$par = 15;
+		$par = $spoof;
 		$data = array();
 		$packetsReceived = array();
 		$data['_id'] = "node".$par;
@@ -85,8 +85,8 @@
 		$data = round1();
 	} elseif ( isset($_GET['demo']) && $_GET['m'] <= 6 ) {
 		$data = round2(5, $_GET['m']-1);
-	} elseif ( isset($_GET['demo']) && $_GET['m'] >= 9 && $_GET['m'] <= 14 ) {
-		$data = round3(5, $_GET['m']-9);
+	} elseif ( isset($_GET['demo']) && $_GET['m'] >= 9 && $_GET['m'] <= 30 ) {
+		$data = round3(5, $_GET['m']-9, $_GET['spoof']);
 	} else {
 		$data = round1();
 	}

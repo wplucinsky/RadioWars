@@ -49,7 +49,7 @@ class AnimationsCanvas extends React.Component {
 		if (TEST_MODE) {
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for interference demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/encryption_demo.php?demo=1&m="+this.m; // used for encryption demo
-			var url = "http://www.craigslistadsaver.com/cgi-bin/spoofing_demo.php?demo=1&m="+this.m; // used for spoofing demo
+			var url = "http://www.craigslistadsaver.com/cgi-bin/spoofing_demo.php?demo=1&m="+this.m+"&spoof="+window._spoof; // used for spoofing demo
 			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump" // if on dragonfly3 with DWSL server running this will work
 
 			if (start) {this.startTimer();}

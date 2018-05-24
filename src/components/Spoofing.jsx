@@ -5,6 +5,7 @@ class Spoofing extends React.Component {
 			node: window._nodes.getNodeLocationReal(window._node),
 			spoof: window._nodes.getNodeLocationReal(window._node)
 		}
+		window._spoof = 15; // temp spoofing demo value
 
 		this.availableNodes = window._nodes.getRealLocations();
 
@@ -22,6 +23,8 @@ class Spoofing extends React.Component {
 	handleChange(event){
 		let ctrl = this.state;
 		ctrl.spoof = event.target.value;
+		
+		window._spoof = event.target.value; // temp spoofing demo value
 
 		if (!TEST_MODE) {
 			var url = 'http://'+document.domain+':'+location.port+'/radioControl';
