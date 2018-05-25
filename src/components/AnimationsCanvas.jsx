@@ -51,7 +51,7 @@ class AnimationsCanvas extends React.Component {
 				prev = '';
 			if (prevData != undefined) {
 				prevData = JSON.parse(prevData);
-				var prev = prevData[0].previous;
+				var prev = (prevData[0] != undefined) ? prevData[0].previous : '';
 			}
 			if (window._spoof == undefined){ // used for spoof & authentication demo
 				window._spoof = 15;

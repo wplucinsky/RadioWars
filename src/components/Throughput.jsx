@@ -113,7 +113,9 @@ class Throughput extends React.Component {
 				data to that dataset's data array. Append a 1 to the labels array. 
 				Shorten both the data and labels to a maximum length of 16.
 			*/
-			if (data[i]._id == ('node'+this.state.selectedNode) && data[i][this.state.type] != undefined ){
+			
+			var node = parseInt(data[i]._id.replace('node', ''), 10);
+			if (node == this.state.selectedNode && data[i][this.state.type] != undefined ){
 				
 				if (chart_data.data.datasets.length == 0) {
 					chart_data.data.datasets.push({
@@ -139,7 +141,7 @@ class Throughput extends React.Component {
 				timeslot is highlighted in blue, all others are black. Add a subtitle
 				with the spacing of the timeslots.
 			*/
-			else if (this.state.type == 'tdma' && data[i]._id == ('node'+this.state.selectedNode)){
+			else if (this.state.type == 'tdma' && node == this.state.selectedNode){
 				if (chart_data.data.datasets.length == 0) {
 					chart_data.data.datasets.push({
 						label: 'Node '+ this.state.selectedNode,
@@ -158,12 +160,12 @@ class Throughput extends React.Component {
 				) {
 					chart_data.data.datasets = [];
 					chart_data.data.labels = [1];
-					var count 	= data[i]['network'],
-						spacing = data[i]['frameSize'],
-						start 	= data[i]['Fnode'],
-						pos 	= data[i]['tdmaPos'];
+					var count 	= parseInt(data[i]['network'],10),
+						spacing = parseFloat(data[i]['frameSize']),
+						start 	= parseInt(data[i]['Fnode'],10),
+						pos 	= parseInt(data[i]['tdmaPos'], 10);
 					
-					chart_data.options.title.text = [capitalize(this.state.type)+' Plot - Node '+this.state.selectedNode, 'Spacing: '+(parseFloat(count)/parseFloat(spacing))]
+					chart_data.options.title.text = [capitalize(this.state.type)+' Plot - Node '+this.state.selectedNode, 'Spacing: '+(parseFloat(spacing)/parseFloat(count)) + 's']
 					if (count != undefined && spacing != undefined && start != undefined){
 						chart_data.data.datasets.push({
 							borderColor: [],
