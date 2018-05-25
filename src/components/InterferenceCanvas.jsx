@@ -53,7 +53,7 @@ class InterferenceCanvas extends React.Component {
 		if the response is successful then an interference animation is drawn for the 
 		time specified. When finished the index in this.control is set to null.
 	*/
-		var time = 6;
+		var time = 17;
 		$('#interferenceControlsConfirmChanges').css('display', 'none')
 
 		if (TEST_MODE) {

@@ -257,7 +257,7 @@ button:disabled {
 #gridConfirmChanges, #radioControlsConfirmChanges, #interferenceControlsConfirmChanges{
 	position: absolute;
 	top: 43px;
-	font-size: 9px;
+	font-size: 13px;
 	right: 17px;
 	color: red;
 	display: none;
@@ -454,6 +454,7 @@ button:disabled {
 }
 .color-div span{
 	margin-left: 4px;
+	font-size: 18px;
 }
 .pointer {
 	cursor: pointer;
@@ -552,4 +553,18 @@ button:disabled {
 	text-align: center;
 	font-weight: 700;
 	margin-top: 0px;
+}
+
+.btn-container {
+	width: 155px;
+    margin: auto;
+}
+#btnred {
+	margin-right: 20px;
+	background-color: red;
+	color: white;
+}
+#btnblue {
+	background-color: blue;
+	color: white;
 }

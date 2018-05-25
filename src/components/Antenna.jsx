@@ -34,13 +34,15 @@ class Antenna extends React.Component {
 		this.props = nextProps;
 
 		var data = this.props.data;
-		for (let i = 0; i < data.length; i++){
-			if ( data[i]['_id'] == 'node'+this.state.node) {
-				if (data[i]['direction'] != undefined){
-					var self = this;
-					this.setState({
-						direction: self.getDirFromState(self.state.node, data[i]['direction'])
-					})
+		if (data != undefined) {
+			for (let i = 0; i < data.length; i++){
+				if ( data[i]['_id'] == 'node'+this.state.node) {
+					if (data[i]['direction'] != undefined){
+						var self = this;
+						this.setState({
+							direction: self.getDirFromState(self.state.node, data[i]['direction'])
+						})
+					}
 				}
 			}
 		}

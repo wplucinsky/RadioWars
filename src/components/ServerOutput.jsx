@@ -10,19 +10,19 @@ class ServerOutput extends React.Component {
 	componentDidMount(){
 		$('.line').css('background-color', window._teamColor);
 		
-		return fetch('http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m=1')
-			.then((response) => response.json())
-			.then((responseJson) => {
-				this.setState({
-					serverGet: responseJson,
-				}, function(){
+		// return fetch('http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m=1')
+		// 	.then((response) => response.json())
+		// 	.then((responseJson) => {
+		// 		this.setState({
+		// 			serverGet: responseJson,
+		// 		}, function(){
 
-				});
+		// 		});
 
-			})
-			.catch((error) =>{
-				console.error(error);
-			});
+		// 	})
+		// 	.catch((error) =>{
+		// 		console.error(error);
+		// 	});
 	}
 
 	render() { 

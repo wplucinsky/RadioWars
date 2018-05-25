@@ -3,7 +3,7 @@ class Spoofing extends React.Component {
 		super(props)
 		this.state = {
 			node: window._nodes.getNodeLocationReal(window._node),
-			spoof: window._nodes.getNodeLocationReal(window._node)
+			spoof: 15 //window._nodes.getNodeLocationReal(window._node)
 		}
 		window._spoof = 15; // temp spoofing demo value
 

@@ -298,8 +298,10 @@ class GridContainer extends React.Component {
 		var ownedNodes = window._nodes.getTakenNodes();
 		if ( ownedNodes[node] == null || ownedNodes[node] != window._teamColor ){
 			$('#gridConfirmChanges').text('you don\'t own this node');
-			$('#gridConfirmChanges').css('display', 'block');
-			setTimeout((function(){$('#gridConfirmChanges').text(''); $('#gridConfirmChanges').css('display', 'none');}), 2000);
+			if ($('#gridConfirmChanges').css('display') == 'none'){
+				$('#gridConfirmChanges').css('display', 'block');
+				setTimeout((function(){$('#gridConfirmChanges').text(''); $('#gridConfirmChanges').css('display', 'none');}), 2000);
+			}
 			
 			return false;
 		}
