@@ -1,6 +1,7 @@
 var TEST_MODE = (window.location.hostname == "" || window.location.hostname == "localhost") ? true : false,
-	PERMISSIONS = false,  //(TEST_MODE) ? false : true,
-	socket = null;
+	PERMISSIONS = true,  //(TEST_MODE) ? false : true,
+	socket = null,
+	DEMO = true;
 function capitalize(string) { return string.charAt(0).toUpperCase() + string.slice(1); }
 function formatDate(date) { return date.toLocaleDateString(); }
 function debouncer( func , timeout ) { var timeoutID , timeout = timeout || 200; return function () { var scope = this , args = arguments; clearTimeout( timeoutID ); timeoutID = setTimeout( function () { func.apply( scope , Array.prototype.slice.call( args ) ); } , timeout ); } }
@@ -44,15 +45,19 @@ $(function() {
 		var mode = (window.location.hash) ? window.location.hash.substring(1) : 'interference';
 		api.get('http://'+document.domain+':'+location.port+'/config/'+mode, function(config){
 			if(document.getElementById('root') != null){
-				ReactDOM.render(
-					<App 
-						data={config} 
-					/>,
-					document.getElementById('root')
-				);
-				$('#loading-blocker').toggleClass('hidden');
-				$('.line').css('background-color', window._teamColor);
-				setup();
+				if (DEMO){
+					teamSelector();
+				} else {
+					ReactDOM.render(
+						<App 
+							data={config} 
+						/>,
+						document.getElementById('root')
+					);
+					$('#loading-blocker').toggleClass('hidden');
+					$('.line').css('background-color', window._teamColor);
+					setup();
+				}
 			} else if(document.getElementById('viewer') != null){
 				ReactDOM.render(
 					<App 
@@ -70,15 +75,19 @@ $(function() {
 
 	test_mode = function() {
 		if(document.getElementById('root') != null){
-			ReactDOM.render(
-				<App 
-					data={config} 
-				/>,
-				document.getElementById('root')
-			);
-			$('#loading-blocker').toggleClass('hidden');
-			$('.line').css('background-color', window._teamColor);
-			setup();
+			if (DEMO){
+				teamSelector();
+			} else {
+				ReactDOM.render(
+					<App 
+						data={config} 
+					/>,
+					document.getElementById('root')
+				);
+				$('#loading-blocker').toggleClass('hidden');
+				$('.line').css('background-color', window._teamColor);
+				setup();
+			}		
 		} else if(document.getElementById('viewer') != null){
 			ReactDOM.render(
 				<App 
@@ -91,6 +100,42 @@ $(function() {
 			$('.line').css('background-color', window._teamColor);
 			setup();
 		}
+	}
+
+	teamSelector = function(){
+		// bring up team selection modal
+		$('#colorSelector').modal();
+
+		$('#btnred').click(function(){
+			window._teamColor = 'red';
+			window._node = 4; // js layout
+			$('#colorSelector').modal('toggle');
+
+			ReactDOM.render(
+				<App 
+					data={config} 
+				/>,
+				document.getElementById('root')
+			);
+			$('#loading-blocker').toggleClass('hidden');
+			$('.line').css('background-color', window._teamColor);
+			setup();
+		});
+		$('#btnblue').click(function(){
+			window._teamColor = 'blue';
+			window._node = 5; // js layout
+			$('#colorSelector').modal('toggle');
+
+			ReactDOM.render(
+				<App 
+					data={config} 
+				/>,
+				document.getElementById('root')
+			);
+			$('#loading-blocker').toggleClass('hidden');
+			$('.line').css('background-color', window._teamColor);
+			setup();
+		});
 	}
 
 	// check if logged in
