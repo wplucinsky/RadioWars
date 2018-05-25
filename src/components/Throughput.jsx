@@ -86,6 +86,7 @@ class Throughput extends React.Component {
 		chart_data.options.title.text = capitalize(type)+' Plot - Node '+node;
 		chart_data.data.labels = [];
 		chart_data.data.datasets = [];
+		chart_data.type = 'line';
 
 		if (type == 'tdma') {
 			chart_data.type = 'bar';
@@ -138,8 +139,8 @@ class Throughput extends React.Component {
 				TDMA Bar Plot: Create a dataset if it doesn't exist. If it's a new
 				dataset or if the timeslot count changed or the position in the 
 				timeslot changed then recreate the dateset's data array. Current node
-				timeslot is highlighted in blue, all others are black. Add a subtitle
-				with the spacing of the timeslots.
+				timeslot is highlighted in the team color, all others are black. Add 
+				a subtitle with the spacing of the timeslots.
 			*/
 			else if (this.state.type == 'tdma' && node == this.state.selectedNode){
 				if (chart_data.data.datasets.length == 0) {
