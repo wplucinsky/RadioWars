@@ -65,7 +65,7 @@ class AnimationsCanvas extends React.Component {
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
 				if (DEMO && data != null){ // make exterior nodes black as they're not in use
-					var n = [10, 14, 5, 16, 17, 15];
+					var n = [10, 14, 5, 16, 17, 15, 18, 12];
 					for (let i in n){
 						data.push({
 							_id: 'node'+n[i],
@@ -81,7 +81,7 @@ class AnimationsCanvas extends React.Component {
 			socket.on('gridNodes', function (msg) {
 				var data = JSON.parse(msg.data);
 				if (DEMO && data != null){ // make exterior nodes black as they're not in use
-					var n = [10, 14, 5, 16, 17, 15];
+					var n = [10, 14, 5, 16, 17, 15, 18, 12];
 					for (let i in n){
 						data.push({
 							_id: 'node'+n[i],
