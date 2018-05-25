@@ -46,7 +46,7 @@ $(function() {
 		api.get('http://'+document.domain+':'+location.port+'/config/'+mode, function(config){
 			if(document.getElementById('root') != null){
 				if (DEMO){
-					teamSelector();
+					teamSelector(config);
 				} else {
 					ReactDOM.render(
 						<App 
@@ -76,7 +76,7 @@ $(function() {
 	test_mode = function() {
 		if(document.getElementById('root') != null){
 			if (DEMO){
-				teamSelector();
+				teamSelector(config);
 			} else {
 				ReactDOM.render(
 					<App 
@@ -102,7 +102,7 @@ $(function() {
 		}
 	}
 
-	teamSelector = function(){
+	teamSelector = function(config){
 		// bring up team selection modal
 		$('#colorSelector').modal();
 
