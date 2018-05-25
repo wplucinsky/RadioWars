@@ -47,10 +47,20 @@ class AnimationsCanvas extends React.Component {
 		var self = this;
 
 		if (TEST_MODE) {
+			var prevData = this.getPreviousUntouchedData(),
+				prev = '';
+			if (prevData != undefined) {
+				prevData = JSON.parse(prevData);
+				var prev = prevData[0].previous;
+			}
+			if (window._spoof == undefined){ // used for spoof & authentication demo
+				window._spoof = 15;
+			}
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/interference_demo.php?demo=1&m="+this.m; // used for interference demo
 			// var url = "http://www.craigslistadsaver.com/cgi-bin/encryption_demo.php?demo=1&m="+this.m; // used for encryption demo
-			var url = "http://www.craigslistadsaver.com/cgi-bin/spoofing_demo.php?demo=1&m="+this.m+"&spoof="+window._spoof; // used for spoofing demo
-			// var url = "http://dwslgrid.ece.drexel.edu:5000/dump" // if on dragonfly3 with DWSL server running this will work
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/spoofing_demo.php?demo=1&m="+this.m+"&spoof="+window._spoof; // used for spoofing demo
+			// var url = "http://www.craigslistadsaver.com/cgi-bin/authentication_demo.php?demo=1&m="+this.m+"&spoof="+window._spoof+"&prev="+prev; // used for authentication demo
+			var url = "http://dwslgrid.ece.drexel.edu:5000/dump" // if on dragonfly3 with DWSL server running this will work
 
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
@@ -61,7 +71,7 @@ class AnimationsCanvas extends React.Component {
 			var self = this
 			socket.on('gridNodes', function (msg) {
 				self.props.returnData(JSON.parse(msg.data));
-				self.processData(JSON.parse(msg.data))
+				self.processData(JSON.parse(msg.data));
 			});
 		}
 		this.m++;
@@ -89,9 +99,10 @@ class AnimationsCanvas extends React.Component {
 			for ( let i in data ) {
 				animationData[i] = {}
 				let old = ((Math.round(new Date()/1000) - data[i].lastPacketRecieved) > 2000 && data[i].lastPacketRecieved != undefined ) ? true : false;
-				
+
 				for ( let j in data[i].packetsReceived) {
-					var from = data[i]._id.replace('node',''),
+					if (j == 'nodeundefined') { continue; } // weeeeeird bug
+					var _from = data[i]._id.replace('node',''),
 						to = j.replace('node','');
 					if (this.checkPreviousData(i, j)) {
 						data[i].packetsReceived[j+'_altered'] = this.getNodeCount(data[i].packetsReceived[j]);
@@ -106,7 +117,7 @@ class AnimationsCanvas extends React.Component {
 					if (old || to == 0){
 						continue;
 					}
-					animationData[i][k] = this.getAnimationData(window._nodes.getNodeLocation(from), window._nodes.getNodeLocation(to), diff, i, k, data[i].owner);
+					animationData[i][k] = this.getAnimationData(window._nodes.getNodeLocation(_from), window._nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
 					var offset = this.getOffset(i,k); // how many packets have been sent so far
 					
@@ -114,7 +125,7 @@ class AnimationsCanvas extends React.Component {
 						animationData[i][k][offset].wait = 0;
 						count = this.addToCount(diff)
 
-						// console.log(from, '->', to, ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
+						// console.log(_from, '->', to, ' \ttotal '+data[i].packetsReceived[j+'_altered'], ' \tprev '+ offset, ' \tcnt '+ count)
 					}
 					k++;
 				}
@@ -132,9 +143,9 @@ class AnimationsCanvas extends React.Component {
 		}
 	}
 
-	getAnimationData(from, to, count, i, k, color) {
+	getAnimationData(_from, to, count, i, k, color) {
 	/*
-		Adds x number of copies of node[from] to node[to] where
+		Adds x number of copies of node[_from] to node[to] where
 		x in the total count of new packets received. In the form
 		{
 			0:{},
@@ -158,14 +169,15 @@ class AnimationsCanvas extends React.Component {
 				offset = 0;
 			}
 		}
+		
 		var data = {
-				xDif:  this.rects[to].x - this.rects[from].x,
-				yDif:  this.rects[to].y - this.rects[from].y,
-				x: 	   this.rects[from].x + 18,
-				y: 	   this.rects[from].y + 18,
+				xDif:  this.rects[to].x - this.rects[_from].x,
+				yDif:  this.rects[to].y - this.rects[_from].y,
+				x: 	   this.rects[_from].x + 18,
+				y: 	   this.rects[_from].y + 18,
 				step:  30,
 				cStep: 0,
-				from:  from,
+				from:  _from,
 				to:    to,
 				stop:  0,
 				wait:  1,
@@ -271,7 +283,7 @@ class AnimationsCanvas extends React.Component {
 		return Math.min(dif, 8)
 	}
 
-	getDataDifference(from, to, count){
+	getDataDifference(_from, to, count){
 	/*
 		This gets the packet count difference from the previous server
 		data to the new server data. 
@@ -281,7 +293,7 @@ class AnimationsCanvas extends React.Component {
 		} else {
 			for ( let i in this.previousData ) {
 				for ( let j in this.previousData[i].packetsReceived) {
-					if ( from == this.previousData[i]._id.replace('node','') ) {
+					if ( _from == this.previousData[i]._id.replace('node','') ) {
 						if ( to == j.replace('node','') ){
 							return Math.max(count - this.previousData[i].packetsReceived[j+'_altered'], 0);
 						}
@@ -330,14 +342,20 @@ class AnimationsCanvas extends React.Component {
 			return;
 		}
 
-		var nodes = data.filter(function(val){ return val.owner != undefined; });
+		var nodes = [data[0]];
+		if ( data.length > 1 ){
+			var nodes = data.filter(function(val){ return val.owner != undefined; });
+		} 
+		
 		if ( this.previousData != null ) {
-			var prev = this.previousData.filter(function(val){ return val.owner != undefined; })
+			var prev = [data[0]];
+			if ( this.previousData.length > 1 ){
+				var prev = this.previousData.filter(function(val){ return val.owner != undefined; });
+			}
 		}
 		if ( JSON.stringify(nodes) == JSON.stringify(prev) ){
 			return;
 		}
-
 		if ( nodes.length > 0 ){
 			this.grid.drawRectangles();
 		}
