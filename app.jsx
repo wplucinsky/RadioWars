@@ -108,7 +108,7 @@ $(function() {
 
 		$('#btnred').click(function(){
 			window._teamColor = 'red';
-			window._node = 4; // js layout
+			window._node = 5; // js layout, actually 3
 			$('#colorSelector').modal('toggle');
 
 			ReactDOM.render(
@@ -123,7 +123,7 @@ $(function() {
 		});
 		$('#btnblue').click(function(){
 			window._teamColor = 'blue';
-			window._node = 5; // js layout
+			window._node = 4; // js layout, actually 4
 			$('#colorSelector').modal('toggle');
 
 			ReactDOM.render(
