@@ -42,6 +42,14 @@ class InterferenceCanvas extends React.Component {
 		if (this.props.keyboardUpdate && this.props.draw != undefined && this.props.draw.options != undefined) {
 			var o = processOptions(this.props.draw.options);
 			if (o.interference == 1) {
+				if (DEMO && window._nodes.getNodeLocationReal(this.props.currNode) != 11){
+					$('#gridConfirmChanges').text('interference can only be on node 11');
+					if ($('#gridConfirmChanges').css('display') == 'none'){
+						$('#gridConfirmChanges').css('display', 'block');
+						setTimeout((function(){$('#gridConfirmChanges').text(''); $('#gridConfirmChanges').css('display', 'none');}), 2000);
+					}
+					return;
+				}
 				this.startInterference(window._nodes.getNodeLocationReal(this.props.currNode))
 			}
 		}
