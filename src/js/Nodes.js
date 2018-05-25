@@ -18,11 +18,11 @@ function Nodes(){
 	this.direction = ['Up', 'Left', 'Left', 'Left', 'Down', 'Right', 'Right', 'Up'];
 
 	this.takeNode = function(node_id, color) {
-		this.takenNodes[node_id] = color;
+		this.takenNodes[parseInt(node_id, 10)] = color.toLowerCase();
 	}
 
 	this.untakeNode = function(node_id) {
-		this.takenNodes[node_id] = null;
+		this.takenNodes[parseInt(node_id, 10)] = null;
 	}
 
 	this.getTakenNodes = function(){
