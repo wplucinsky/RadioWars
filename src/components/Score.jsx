@@ -20,10 +20,16 @@ class Score extends React.Component {
 		if (TEST_MODE){
 			this.startTimer()
 		} else {
-			var self = this
+			var self = this,
+				data = null;
+			
 			socket.on('teams', function (msg) {
-				self.processData(JSON.parse(msg.data))
+				data = JSON.parse(msg.data);
 			});
+
+			this.timer = window.setInterval(function(){
+				self.processData(data)
+			}, 2000);
 		}
 	}
 
