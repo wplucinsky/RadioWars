@@ -72,6 +72,10 @@ class AnimationsCanvas extends React.Component {
 							owner: 'black'
 						});
 					}
+					data.push({
+						_id: 'node11',
+						owner: 'orange'
+					});
 				}
 				self.props.returnData(data);
 				self.processData(data, start)
@@ -88,6 +92,10 @@ class AnimationsCanvas extends React.Component {
 							owner: 'black'
 						});
 					}
+					data.push({
+						_id: 'node11',
+						owner: 'orange'
+					});
 				}
 				
 				self.props.returnData(data);
