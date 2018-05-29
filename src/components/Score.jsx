@@ -217,6 +217,7 @@ const zoom_chart = {
 			text: 'Lifetime Score'
 		},
 		tooltips: {
+			enabled: false,
 			mode: 'index',
 			intersect: false,
 		},
@@ -259,6 +260,7 @@ const lifetime_chart = {
 			text: 'Lifetime Score'
 		},
 		tooltips: {
+			enabled: false,
 			mode: 'index',
 			intersect: false,
 		},
