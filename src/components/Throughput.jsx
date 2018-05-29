@@ -21,6 +21,7 @@ class Throughput extends React.Component {
 						text: 'Throughput Plot - Node '+this.props.startNodeReal
 					},
 					tooltips: {
+						enabled: false,
 						mode: 'index',
 						intersect: false,
 					},
