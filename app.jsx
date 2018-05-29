@@ -141,7 +141,7 @@ $(function() {
 	// check if logged in
 	window._id = api.getCookie('team_id');
 	if (window._id == undefined){
-		if (TEST_MODE) {
+		if (TEST_MODE || DEMO) {
 			window._id = 1
 		} else {
 			window.location.href = '/login.html';

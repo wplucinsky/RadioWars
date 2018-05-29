@@ -85,6 +85,10 @@ else if (this.state.type == '{type}' && data[i]._id == ('node'+this.state.select
 - pass the necessary data in from GridContainer, or back to GridContainer by creating a function in GridContainer and passing that function to the component
 - once the component is saved, it should be included in `index.html` and/or `viewer.html`
 
+## Known Issues
+- Antenna [controls](https://rawgit.com/AirConsole/airconsole-controls/master/examples/example-controller.html) do not work on a Lenovo running Windows 10 in Chrome
+- Going to different windows/tabs then back to Radio Wars causes the grid animations to run very quickly occasionally
+
 ## React Interference Layout
 ![ReactLayout](https://github.com/wplucinsky/RadioWars/blob/master/src/img/ReactLayout.png)
 
