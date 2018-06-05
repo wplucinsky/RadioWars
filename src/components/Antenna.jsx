@@ -5,7 +5,7 @@ class Antenna extends React.Component {
 		this.state = this.props;
 		this.state = {
 			direction: this.props.direction,
-			node: 3
+			node: window._nodes.getNodeLocationReal(window._node)
 		}
 
 		/*
@@ -15,7 +15,7 @@ class Antenna extends React.Component {
 			reconfigurable antennas are on all nodes. Should also be 
 			moved into the state.
 		*/
-		this.availableNodes = [3, 4];
+		this.availableNodes = [window._nodes.getNodeLocationReal(window._node)];
 		this.listeners = [];
 
 		this.callAPI = this.callAPI.bind(this);

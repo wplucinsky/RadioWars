@@ -64,14 +64,22 @@ class AnimationsCanvas extends React.Component {
 
 			if (start) {this.startTimer();}
 			this.api.get(url, function(data) {
+				if (DEMO && data != null){
+					data = self.addDemoData(data);
+				}
 				self.props.returnData(data);
 				self.processData(data, start)
 			});
 		} else {
 			var self = this
 			socket.on('gridNodes', function (msg) {
-				self.props.returnData(JSON.parse(msg.data));
-				self.processData(JSON.parse(msg.data));
+				var data = JSON.parse(msg.data);
+				if (DEMO && data != null){
+					data = self.addDemoData(data);
+				}
+				
+				self.props.returnData(data);
+				self.processData(data);
 			});
 		}
 		this.m++;
@@ -120,7 +128,6 @@ class AnimationsCanvas extends React.Component {
 					animationData[i][k] = this.getAnimationData(window._nodes.getNodeLocation(_from), window._nodes.getNodeLocation(to), diff, i, k, data[i].owner);
 
 					var offset = this.getOffset(i,k); // how many packets have been sent so far
-					
 					if ( animationData[i][k][offset] != undefined ){
 						animationData[i][k][offset].wait = 0;
 						count = this.addToCount(diff)
@@ -272,7 +279,7 @@ class AnimationsCanvas extends React.Component {
 				stop++;
 				requestAnimationFrame(animate);
 			} else {
-				// every packets has finished sending
+				// every packet has finished sending
 				self.sending = false;
 				self.resetCount();
 			}
@@ -317,7 +324,7 @@ class AnimationsCanvas extends React.Component {
 			k = Object.keys(animData);
 			for (let j = 0; j < k.length; j++) {
 				if (animData[k[j]].stop == 0){
-					return k[j]
+					return parseInt(k[j], 10);
 				}
 			}
 		}
@@ -407,6 +414,27 @@ class AnimationsCanvas extends React.Component {
 				|| this.previousData[i] == undefined 
 				|| this.previousData[i].packetsReceived == undefined 
 				|| this.previousData[i].packetsReceived[j+'_altered'] == undefined;
+	}
+
+	addDemoData(data){
+	/*
+		Called when in DEMO mode. Makes the perimeter nodes black to 
+		symbolize an off state. Sets node11 to orange to symbolize it
+		as the interference node.
+	*/
+		var n = [10, 14, 5, 16, 17, 15, 18, 12, 50];
+		for (let i in n){
+			data.push({
+				_id: 'node'+n[i],
+				owner: 'black'
+			});
+		}
+		data.push({
+			_id: 'node11',
+			owner: 'orange'
+		});
+
+		return data;
 	}
 
 	getData(){

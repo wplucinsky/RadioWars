@@ -201,7 +201,8 @@ class GridContainer extends React.Component {
 
 		// start interference
 		else if ( this.props.keyboard.interference  == 1 ) {
-			if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
+			// temporarily disable check
+			// if (!this.isOwnedNode(window._nodes.getNodeLocationReal(ctrl.currNode))) { return; }
 			data.currNode = ctrl.currNode;
 			data.draw = { id: ctrl.currNode, color: 'orange', options: {interference: 1}};
 		}
